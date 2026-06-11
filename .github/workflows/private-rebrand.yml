@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write  # enables edits to workflow files, if needed
 
 jobs:
   replace-hermes-with-private:
