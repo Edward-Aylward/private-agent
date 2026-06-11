@@ -1,10 +1,12 @@
 name: Private rebrand
 
+# You can trigger this manually via the Actions tab
 on:
   workflow_dispatch:
 
 permissions:
   contents: write
+  workflows: write  # enables edits to workflow files, if needed
 
 jobs:
   replace-hermes-with-private:
@@ -28,6 +30,7 @@ jobs:
           import re
 
           ROOT = Path(".")
+          # Skip build dirs and workflow configs to prevent push rejection
           SKIP_DIRS = {
               ".git",
               "node_modules",
@@ -38,6 +41,7 @@ jobs:
               "dist",
               "build",
               "__pycache__",
+              ".github/workflows",  # skip workflow files
           }
 
           pattern = re.compile("hermes", re.IGNORECASE)
@@ -55,6 +59,7 @@ jobs:
           changed_files = 0
           renamed_paths = 0
 
+          # Replace text contents
           for path in sorted(ROOT.rglob("*")):
               if not path.is_file() or should_skip(path):
                   continue
@@ -70,6 +75,7 @@ jobs:
                   path.write_text(replaced, encoding="utf-8")
                   changed_files += 1
 
+          # Rename files or folders containing "hermes" in their names
           rename_candidates = [
               path for path in ROOT.rglob("*")
               if not should_skip(path) and pattern.search(path.name)
@@ -81,7 +87,8 @@ jobs:
                   continue
               target = path.with_name(pattern.sub("Private", path.name))
               if target.exists():
-                  raise RuntimeError(f"Cannot rename {path} -> {target}: target already exists")
+                  # Skip rename if target already exists
+                  continue
               path.rename(target)
               renamed_paths += 1
 
@@ -91,11 +98,12 @@ jobs:
 
           git status --short
 
+          # Only commit and push if there are changes
           if git diff --quiet && git diff --cached --quiet; then
             echo "No Hermes/hermes references found to replace."
             exit 0
           fi
 
           git add -A
-          git commit -m "Replace Hermes references with Private"
+          git commit -m "Replace Hermes references with Private (skip workflows)"
           git push
