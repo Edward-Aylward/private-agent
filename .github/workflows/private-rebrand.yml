@@ -29,9 +29,10 @@ jobs:
           import re
 
           ROOT = Path(".")
-          # Skip build dirs and workflow configs to prevent push rejection
+          # Skip build dirs and GitHub metadata to prevent push rejection
           SKIP_DIRS = {
               ".git",
+              ".github",
               "node_modules",
               ".next",
               ".turbo",
@@ -40,7 +41,6 @@ jobs:
               "dist",
               "build",
               "__pycache__",
-              ".github/workflows",  # skip workflow files
           }
 
           pattern = re.compile("hermes", re.IGNORECASE)
@@ -104,5 +104,5 @@ jobs:
           fi
 
           git add -A
-          git commit -m "Replace Hermes references with Private (skip workflows)"
+          git commit -m "Replace Hermes references with Private (skip .github)"
           git push
