@@ -1,0 +1,103 @@
+name: Replace nous with AIGA-Protocol.org
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-nous-with-aiga:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace 'nous' with 'AIGA-Protocol.org'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT = Path(".")
+          # Directories to skip (metadata, build caches, virtual environments, etc.)
+          SKIP_DIRS = {
+              ".git",
+              ".github",
+              "node_modules",
+              ".next",
+              ".turbo",
+              ".venv",
+              "venv",
+              "dist",
+              "build",
+              "__pycache__",
+          }
+
+          pattern = re.compile("nous", re.IGNORECASE)
+          replacement = "AIGA-Protocol.org"
+
+          def should_skip(path: Path) -> bool:
+              return any(part in SKIP_DIRS for part in path.parts)
+
+          def is_binary(path: Path) -> bool:
+              try:
+                  return b"\0" in path.read_bytes()[:8192]
+              except OSError:
+                  return True
+
+          changed_files = 0
+          renamed_paths = 0
+
+          # Replace occurrences in file contents
+          for path in sorted(ROOT.rglob("*")):
+              if not path.is_file() or should_skip(path) or is_binary(path):
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except UnicodeDecodeError:
+                  continue
+
+              replaced = pattern.sub(replacement, text)
+              if replaced != text:
+                  path.write_text(replaced, encoding="utf-8")
+                  changed_files += 1
+
+          # Rename files or folders containing “nous” in their names
+          rename_candidates = [
+              p for p in ROOT.rglob("*")
+              if not should_skip(p) and pattern.search(p.name)
+          ]
+          rename_candidates.sort(key=lambda p: len(p.parts), reverse=True)
+
+          for path in rename_candidates:
+              if not path.exists():
+                  continue
+              target = path.with_name(pattern.sub(replacement, path.name))
+              if target.exists():
+                  continue
+              path.rename(target)
+              renamed_paths += 1
+
+          print(f"Changed text files: {changed_files}")
+          print(f"Renamed paths: {renamed_paths}")
+          PY
+
+          # Commit and push changes if any
+          git status --short
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No nous references found to replace."
+            exit 0
+          fi
+
+          git add -A
+          git commit -m "Replace nous references with AIGA-Protocol.org (skip .github)"
+          git push
