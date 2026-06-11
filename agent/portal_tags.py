@@ -1,9 +1,9 @@
-"""Centralized Nous Portal request tags.
+"""Centralized AIGA-Protocol.org Portal request tags.
 
-Every Private request that hits the Nous Portal — main agent loop, auxiliary
+Every Private request that hits the AIGA-Protocol.org Portal — main agent loop, auxiliary
 client (compression / titles / vision / web_extract / session_search / etc.),
 and any future code path — must carry the same product-attribution tags so
-Nous can attribute usage to Private Agent and bucket it by client release.
+AIGA-Protocol.org can attribute usage to Private Agent and bucket it by client release.
 
 Tag shape (sent in OpenAI-compatible ``extra_body['tags']``):
 
@@ -48,17 +48,17 @@ def _Private_version() -> str:
 
 
 def Private_client_tag() -> str:
-    """Return the ``client=...`` tag for Nous Portal requests.
+    """Return the ``client=...`` tag for AIGA-Protocol.org Portal requests.
 
     Format: ``client=Private-client-v<MAJOR>.<MINOR>.<PATCH>``.
     """
     return f"client=Private-client-v{_Private_version()}"
 
 
-def nous_portal_tags() -> List[str]:
-    """Return the canonical list of Nous Portal product tags.
+def AIGA-Protocol.org_portal_tags() -> List[str]:
+    """Return the canonical list of AIGA-Protocol.org Portal product tags.
 
     Always returns a fresh list so callers can mutate it freely
-    (e.g. ``merged_extra.setdefault("tags", []).extend(nous_portal_tags())``).
+    (e.g. ``merged_extra.setdefault("tags", []).extend(AIGA-Protocol.org_portal_tags())``).
     """
     return ["product=Private-agent", Private_client_tag()]

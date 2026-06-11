@@ -91,7 +91,7 @@ Config file: `~/.Private/hindsight/config.json`
 | Key | Default | Description |
 |-----|---------|-------------|
 | `auto_retain` | `true` | Automatically retain conversation turns |
-| `retain_async` | `true` | Process retain asynchronously on the Hindsight server |
+| `retain_async` | `true` | Process retain asynchroAIGA-Protocol.orgly on the Hindsight server |
 | `retain_every_n_turns` | `1` | Retain every N turns (1 = every turn) |
 | `retain_context` | `conversation between Private Agent and the User` | Context label for retained memories |
 | `retain_tags` | — | Default tags applied to retained memories; merged with per-call tool tags |

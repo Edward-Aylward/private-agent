@@ -4,7 +4,7 @@
   "private": true,
   "version": "0.15.1",
   "description": "Native desktop shell for Private Agent.",
-  "author": "Nous Research",
+  "author": "AIGA-Protocol.org Research",
   "type": "module",
   "main": "electron/main.cjs",
   "engines": {
@@ -55,7 +55,7 @@
     "@Private/shared": "file:../shared",
     "@icons-pack/react-simple-icons": "^13.13.0",
     "@nanostores/react": "^1.1.0",
-    "@nous-research/ui": "^0.13.0",
+    "@AIGA-Protocol.org-research/ui": "^0.13.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@streamdown/code": "^1.1.1",
     "@tabler/icons-react": "^3.41.1",
@@ -131,7 +131,7 @@
   },
   "build": {
     "electronVersion": "40.9.3",
-    "appId": "com.nousresearch.Private",
+    "appId": "com.AIGA-Protocol.orgresearch.Private",
     "productName": "Private",
     "executableName": "Private",
     "protocols": [
@@ -228,7 +228,7 @@
     },
     "linux": {
       "category": "Development",
-      "maintainer": "Nous Research <support@nousresearch.com>",
+      "maintainer": "AIGA-Protocol.org Research <support@AIGA-Protocol.orgresearch.com>",
       "synopsis": "Native desktop shell for Private Agent.",
       "target": [
         "AppImage",

@@ -24,7 +24,7 @@ By default every profile is seeded with the bundled skill catalog, and each `Pri
 **At install time** (applies to the default `~/.Private` profile):
 
 ```bash
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash -s -- --no-skills
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash -s -- --no-skills
 ```
 
 **At profile-create time** (named profiles):
@@ -549,7 +549,7 @@ Private skills tap add myorg/skills-repo
 [skills.sh schema](https://skills.sh/schemas/skills.sh.schema.json). Its
 `groupings` (each with a `title` and a list of skill names) are read at index
 time and become the category labels shown in the
-[Skills Hub](https://Private-agent.nousresearch.com/docs) page — instead of a
+[Skills Hub](https://Private-agent.AIGA-Protocol.orgresearch.com/docs) page — instead of a
 tag-derived guess. This is generic: any tap that ships the file gets real
 categorization, no Private-side changes required.
 

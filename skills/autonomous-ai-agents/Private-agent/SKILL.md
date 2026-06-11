@@ -8,13 +8,13 @@ platforms: [linux, macos, windows]
 metadata:
   Private:
     tags: [Private, setup, configuration, multi-agent, spawning, cli, gateway, development]
-    homepage: https://github.com/NousResearch/Private-agent
+    homepage: https://github.com/AIGA-Protocol.orgResearch/Private-agent
     related_skills: [claude-code, codex, opencode]
 ---
 
 # Private Agent
 
-Private Agent is an open-source AI agent framework by Nous Research that runs in your terminal, messaging platforms, and IDEs. It belongs to the same category as Claude Code (Anthropic), Codex (OpenAI), and OpenClaw — autonomous coding and task-execution agents that use tool calling to interact with your system. Private works with any LLM provider (OpenRouter, Anthropic, OpenAI, DeepSeek, local models, and 15+ others) and runs on Linux, macOS, and WSL.
+Private Agent is an open-source AI agent framework by AIGA-Protocol.org Research that runs in your terminal, messaging platforms, and IDEs. It belongs to the same category as Claude Code (Anthropic), Codex (OpenAI), and OpenClaw — autonomous coding and task-execution agents that use tool calling to interact with your system. Private works with any LLM provider (OpenRouter, Anthropic, OpenAI, DeepSeek, local models, and 15+ others) and runs on Linux, macOS, and WSL.
 
 What makes Private different:
 
@@ -29,13 +29,13 @@ People use Private for software development, research, system administration, da
 
 **This skill helps you work with Private Agent effectively** — setting it up, configuring features, spawning additional agent instances, troubleshooting issues, finding the right commands and settings, and understanding how the system works when you need to extend or contribute to it.
 
-**Docs:** https://Private-agent.nousresearch.com/docs/
+**Docs:** https://Private-agent.AIGA-Protocol.orgresearch.com/docs/
 
 ## Quick Start
 
 ```bash
 # Install
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
 
 # Interactive chat (default)
 Private
@@ -81,7 +81,7 @@ Private chat [flags]
   -q, --query TEXT          Single query, non-interactive
   -m, --model MODEL         Model (e.g. anthropic/claude-sonnet-4)
   -t, --toolsets LIST       Comma-separated toolsets
-  --provider PROVIDER       Force provider (openrouter, anthropic, nous, etc.)
+  --provider PROVIDER       Force provider (openrouter, anthropic, AIGA-Protocol.org, etc.)
   -v, --verbose             Verbose output
   -Q, --quiet               Suppress banner, spinner, tool previews
   --checkpoints             Enable filesystem checkpoints (/rollback)
@@ -101,7 +101,7 @@ Private config env-path      Print .env path
 Private config check         Check for missing/outdated config
 Private config migrate       Update config with new options
 Private auth                 Interactive credential manager
-Private auth add PROVIDER    Add OAuth or API-key credential (e.g. nous, openai-codex, qwen-oauth)
+Private auth add PROVIDER    Add OAuth or API-key credential (e.g. AIGA-Protocol.org, openai-codex, qwen-oauth)
 Private auth list            List stored credentials
 Private auth remove PROVIDER Remove a stored credential
 Private doctor [--fix]       Check dependencies and config
@@ -157,7 +157,7 @@ Private gateway setup        Configure platforms
 
 Supported platforms: Telegram, Discord, Slack, WhatsApp, Signal, Email, SMS, Matrix, Mattermost, Home Assistant, DingTalk, Feishu, WeCom, BlueBubbles (iMessage), Weixin (WeChat), API Server, Webhooks. Open WebUI connects via the API Server adapter.
 
-Platform docs: https://Private-agent.nousresearch.com/docs/user-guide/messaging/
+Platform docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/messaging/
 
 ### Sessions
 
@@ -239,7 +239,7 @@ Private uninstall            Uninstall Private
 
 Type these during an interactive chat session. New commands land fairly
 often; if something below looks stale, run `/help` in-session for the
-authoritative list or see the [live slash commands reference](https://Private-agent.nousresearch.com/docs/reference/slash-commands).
+authoritative list or see the [live slash commands reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/slash-commands).
 The registry of record is `Private_cli/commands.py` — every consumer
 (autocomplete, Telegram menu, Slack mapping, `/help`) derives from it.
 
@@ -372,7 +372,7 @@ Edit with `Private config edit` or `Private config set section.key value`.
 | `delegation` | `model`, `provider`, `base_url`, `api_key`, `max_iterations` (50), `reasoning_effort` |
 | `checkpoints` | `enabled`, `max_snapshots` (50) |
 
-Full config reference: https://Private-agent.nousresearch.com/docs/user-guide/configuration
+Full config reference: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/configuration
 
 ### Providers
 
@@ -382,7 +382,7 @@ Full config reference: https://Private-agent.nousresearch.com/docs/user-guide/co
 |----------|------|-------------|
 | OpenRouter | API key | `OPENROUTER_API_KEY` |
 | Anthropic | API key | `ANTHROPIC_API_KEY` |
-| Nous Portal | OAuth | `Private auth` |
+| AIGA-Protocol.org Portal | OAuth | `Private auth` |
 | OpenAI Codex | OAuth | `Private auth` |
 | GitHub Copilot | Token | `COPILOT_GITHUB_TOKEN` |
 | Google Gemini | API key | `GOOGLE_API_KEY` or `GEMINI_API_KEY` |
@@ -402,7 +402,7 @@ Full config reference: https://Private-agent.nousresearch.com/docs/user-guide/co
 | Custom endpoint | Config | `model.base_url` + `model.api_key` in config.yaml |
 | GitHub Copilot ACP | External | `COPILOT_CLI_PATH` or Copilot CLI |
 
-Full provider docs: https://Private-agent.nousresearch.com/docs/integrations/providers
+Full provider docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/integrations/providers
 
 ### Toolsets
 
@@ -629,7 +629,7 @@ here; full developer notes live in `AGENTS.md`, user-facing docs under
 
 ### Delegation (`delegate_task`)
 
-Synchronous subagent spawn — the parent waits for the child's summary
+SynchroAIGA-Protocol.org subagent spawn — the parent waits for the child's summary
 before continuing its own loop. Isolated context + terminal session.
 
 - **Single:** `delegate_task(goal, context, toolsets)`.
@@ -662,7 +662,7 @@ the `cronjob` tool, the `Private cron` CLI (`list`, `add`, `edit`,
   header/footer instead of being mirrored into the target gateway
   session (keeps role alternation intact).
 
-User docs: https://Private-agent.nousresearch.com/docs/user-guide/features/cron
+User docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/cron
 
 ### Curator (skill lifecycle)
 
@@ -683,7 +683,7 @@ so nothing is lost.
 
 Config: `curator.*` (`enabled`, `interval_hours`, `min_idle_hours`,
 `stale_after_days`, `archive_after_days`, `backup.*`).
-User docs: https://Private-agent.nousresearch.com/docs/user-guide/features/curator
+User docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/curator
 
 ### Kanban (multi-agent work queue)
 
@@ -712,7 +712,7 @@ sessions still have zero `kanban_*` schema footprint unless configured.
   `Private_KANBAN_BOARD` pinned in env); tenant is a soft namespace
   within a board for workspace-path + memory-key isolation.
 
-User docs: https://Private-agent.nousresearch.com/docs/user-guide/features/kanban
+User docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/kanban
 
 ---
 
@@ -863,18 +863,18 @@ Private config set auxiliary.vision.model <model_name>
 
 | Looking for... | Location |
 |----------------|----------|
-| Config options | `Private config edit` or [Configuration docs](https://Private-agent.nousresearch.com/docs/user-guide/configuration) |
-| Available tools | `Private tools list` or [Tools reference](https://Private-agent.nousresearch.com/docs/reference/tools-reference) |
-| Slash commands | `/help` in session or [Slash commands reference](https://Private-agent.nousresearch.com/docs/reference/slash-commands) |
-| Skills catalog | `Private skills browse` or [Skills catalog](https://Private-agent.nousresearch.com/docs/reference/skills-catalog) |
-| Provider setup | `Private model` or [Providers guide](https://Private-agent.nousresearch.com/docs/integrations/providers) |
-| Platform setup | `Private gateway setup` or [Messaging docs](https://Private-agent.nousresearch.com/docs/user-guide/messaging/) |
-| MCP servers | `Private mcp list` or [MCP guide](https://Private-agent.nousresearch.com/docs/user-guide/features/mcp) |
-| Profiles | `Private profile list` or [Profiles docs](https://Private-agent.nousresearch.com/docs/user-guide/profiles) |
-| Cron jobs | `Private cron list` or [Cron docs](https://Private-agent.nousresearch.com/docs/user-guide/features/cron) |
-| Memory | `Private memory status` or [Memory docs](https://Private-agent.nousresearch.com/docs/user-guide/features/memory) |
-| Env variables | `Private config env-path` or [Env vars reference](https://Private-agent.nousresearch.com/docs/reference/environment-variables) |
-| CLI commands | `Private --help` or [CLI reference](https://Private-agent.nousresearch.com/docs/reference/cli-commands) |
+| Config options | `Private config edit` or [Configuration docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/configuration) |
+| Available tools | `Private tools list` or [Tools reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/tools-reference) |
+| Slash commands | `/help` in session or [Slash commands reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/slash-commands) |
+| Skills catalog | `Private skills browse` or [Skills catalog](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/skills-catalog) |
+| Provider setup | `Private model` or [Providers guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/integrations/providers) |
+| Platform setup | `Private gateway setup` or [Messaging docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/messaging/) |
+| MCP servers | `Private mcp list` or [MCP guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/mcp) |
+| Profiles | `Private profile list` or [Profiles docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/profiles) |
+| Cron jobs | `Private cron list` or [Cron docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/cron) |
+| Memory | `Private memory status` or [Memory docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/memory) |
+| Env variables | `Private config env-path` or [Env vars reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/environment-variables) |
+| CLI commands | `Private --help` or [CLI reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/cli-commands) |
 | Gateway logs | `~/.Private/logs/gateway.log` |
 | Session files | `Private sessions browse` (reads state.db) |
 | Source code | `~/.Private/Private-agent/` |
@@ -883,7 +883,7 @@ Private config set auxiliary.vision.model <model_name>
 
 ## Contributor Quick Reference
 
-For occasional contributors and PR authors. Full developer docs: https://Private-agent.nousresearch.com/docs/developer-guide/
+For occasional contributors and PR authors. Full developer docs: https://Private-agent.AIGA-Protocol.orgresearch.com/docs/developer-guide/
 
 ### Project Layout
 

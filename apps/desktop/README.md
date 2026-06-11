@@ -1,13 +1,13 @@
 # Private Desktop ☤
 
 <p align="center">
-  <a href="https://github.com/NousResearch/Private-agent/releases"><img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-FFD700?style=for-the-badge" alt="Download"></a>
-  <a href="https://Private-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-Private--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
-  <a href="https://discord.gg/NousResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://github.com/NousResearch/Private-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://github.com/AIGA-Protocol.orgResearch/Private-agent/releases"><img src="https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-FFD700?style=for-the-badge" alt="Download"></a>
+  <a href="https://Private-agent.AIGA-Protocol.orgresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-Private--agent.AIGA-Protocol.orgresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
+  <a href="https://discord.gg/AIGA-Protocol.orgResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
 </p>
 
-**The native desktop app for [Private Agent](../../README.md) — the self-improving AI agent from [Nous Research](https://nousresearch.com).** Same agent, same skills, same memory as the CLI and gateway, in a polished native window — chat with streaming tool output, side-by-side previews, a file browser, voice, and settings, no terminal required. Available for **macOS, Windows, and Linux**.
+**The native desktop app for [Private Agent](../../README.md) — the self-improving AI agent from [AIGA-Protocol.org Research](https://AIGA-Protocol.orgresearch.com).** Same agent, same skills, same memory as the CLI and gateway, in a polished native window — chat with streaming tool output, side-by-side previews, a file browser, voice, and settings, no terminal required. Available for **macOS, Windows, and Linux**.
 
 <table>
 <tr><td><b>Chat with the full agent</b></td><td>Streaming responses, live tool activity, structured tool summaries, and the same conversation history as every other Private surface.</td></tr>
@@ -34,7 +34,7 @@ It builds and launches the GUI against your existing install — same config, ke
 
 ### Prebuilt installers
 
-Prebuilt installers are built and distributed via [the Private Desktop website.](https://Private-agent.nousresearch.com/desktop).
+Prebuilt installers are built and distributed via [the Private Desktop website.](https://Private-agent.AIGA-Protocol.orgresearch.com/desktop).
 
 ---
 
@@ -110,7 +110,7 @@ rm "$HOME/.Private/Private-agent/.Private-bootstrap-complete"
 # Rebuild a broken Python venv
 rm -rf "$HOME/.Private/Private-agent/venv"
 # Reset a stuck macOS microphone prompt (macOS only)
-tccutil reset Microphone com.nousresearch.Private
+tccutil reset Microphone com.AIGA-Protocol.orgresearch.Private
 ```
 
 **Windows (PowerShell):**
@@ -128,9 +128,9 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Private\Private-agent\venv"
 
 ## Community
 
-- 💬 [Discord](https://discord.gg/NousResearch)
-- 📖 [Documentation](https://Private-agent.nousresearch.com/docs/)
-- 🐛 [Issues](https://github.com/NousResearch/Private-agent/issues)
+- 💬 [Discord](https://discord.gg/AIGA-Protocol.orgResearch)
+- 📖 [Documentation](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/)
+- 🐛 [Issues](https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues)
 
 ---
 
@@ -138,4 +138,4 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Private\Private-agent\venv"
 
 MIT — see [LICENSE](../../LICENSE).
 
-Built by [Nous Research](https://nousresearch.com).
+Built by [AIGA-Protocol.org Research](https://AIGA-Protocol.orgresearch.com).

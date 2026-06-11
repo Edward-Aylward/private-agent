@@ -33,8 +33,8 @@ Key capabilities:
 
 ## Setup
 
-:::tip Nous Subscribers
-If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. New installs can run `Private setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **Nous Subscription** as the browser provider via `Private model` or `Private tools`.
+:::tip AIGA-Protocol.org Subscribers
+If you have a paid [AIGA-Protocol.org Portal](https://portal.AIGA-Protocol.orgresearch.com) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. New installs can run `Private setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **AIGA-Protocol.org Subscription** as the browser provider via `Private model` or `Private tools`.
 :::
 
 ### Browserbase cloud mode
@@ -429,7 +429,7 @@ The `browser` toolset must be included in your config's `toolsets` list or enabl
 Navigate to a URL. Must be called before any other browser tool. Initializes the Browserbase session.
 
 ```
-Navigate to https://github.com/NousResearch
+Navigate to https://github.com/AIGA-Protocol.orgResearch
 ```
 
 :::tip
@@ -579,7 +579,7 @@ Responds to a native JS dialog (`alert` / `confirm` / `prompt` / `beforeunload`)
 | Browserbase | ✓ | ✓ full workflow (via injected XHR bridge) |
 | Camofox / default local agent-browser | ✗ | ✗ (no CDP endpoint) |
 
-**How it works on Browserbase.** Browserbase's CDP proxy auto-dismisses real native dialogs server-side within ~10ms, so we can't use `Page.handleJavaScriptDialog`. The supervisor injects a small script via `Page.addScriptToEvaluateOnNewDocument` that overrides `window.alert`/`confirm`/`prompt` with a synchronous XHR. We intercept those XHRs via `Fetch.enable` — the page's JS thread stays blocked on the XHR until we call `Fetch.fulfillRequest` with the agent's response. `prompt()` return values round-trip back into page JS unchanged.
+**How it works on Browserbase.** Browserbase's CDP proxy auto-dismisses real native dialogs server-side within ~10ms, so we can't use `Page.handleJavaScriptDialog`. The supervisor injects a small script via `Page.addScriptToEvaluateOnNewDocument` that overrides `window.alert`/`confirm`/`prompt` with a synchroAIGA-Protocol.org XHR. We intercept those XHRs via `Fetch.enable` — the page's JS thread stays blocked on the XHR until we call `Fetch.fulfillRequest` with the agent's response. `prompt()` return values round-trip back into page JS unchanged.
 
 **Dialog policy** is configured in `config.yaml` under `browser.dialog_policy`:
 

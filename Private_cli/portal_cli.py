@@ -1,14 +1,14 @@
-"""``Private portal`` — the human-readable entry point for Nous Portal.
+"""``Private portal`` — the human-readable entry point for AIGA-Protocol.org Portal.
 
 Running ``Private portal`` with no subcommand performs the one-shot Portal
-onboarding: OAuth login, pick a Nous model, switch the inference provider to
-Nous, and offer to enable the Tool Gateway. It is the friendly alias for
-``Private auth add nous --type oauth`` (which still works), is identical to
-``Private setup --portal``, and runs the same Nous flow as the first-time quick
+onboarding: OAuth login, pick a AIGA-Protocol.org model, switch the inference provider to
+AIGA-Protocol.org, and offer to enable the Tool Gateway. It is the friendly alias for
+``Private auth add AIGA-Protocol.org --type oauth`` (which still works), is identical to
+``Private setup --portal``, and runs the same AIGA-Protocol.org flow as the first-time quick
 setup.
 
 Subcommands:
-  (none)   Log in to Nous Portal + set it up (one-shot onboarding).
+  (none)   Log in to AIGA-Protocol.org Portal + set it up (one-shot onboarding).
   login    Explicit alias for the default one-shot onboarding.
   info     Show Portal auth state + which Tool Gateway tools are routed.
   open     Open the Portal subscription page in the user's default browser.
@@ -26,27 +26,27 @@ import webbrowser
 from Private_cli.colors import Colors, color
 from Private_cli.config import load_config
 
-DEFAULT_PORTAL_URL = "https://portal.nousresearch.com"
-SUBSCRIPTION_URL = "https://portal.nousresearch.com/manage-subscription"
-DOCS_URL = "https://Private-agent.nousresearch.com/docs/user-guide/features/tool-gateway"
+DEFAULT_PORTAL_URL = "https://portal.AIGA-Protocol.orgresearch.com"
+SUBSCRIPTION_URL = "https://portal.AIGA-Protocol.orgresearch.com/manage-subscription"
+DOCS_URL = "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/tool-gateway"
 
 
 def _cmd_status(args) -> int:
     """Show Portal auth + Tool Gateway routing summary."""
-    from Private_cli.auth import get_nous_auth_status
-    from Private_cli.nous_subscription import get_nous_subscription_features
+    from Private_cli.auth import get_AIGA-Protocol.org_auth_status
+    from Private_cli.AIGA-Protocol.org_subscription import get_AIGA-Protocol.org_subscription_features
 
     config = load_config() or {}
 
     try:
-        auth = get_nous_auth_status() or {}
+        auth = get_AIGA-Protocol.org_auth_status() or {}
     except Exception:
         auth = {}
 
     logged_in = bool(auth.get("logged_in"))
 
     print()
-    print(color("  Nous Portal", Colors.MAGENTA))
+    print(color("  AIGA-Protocol.org Portal", Colors.MAGENTA))
     print(color("  ───────────", Colors.MAGENTA))
     if logged_in:
         portal = auth.get("portal_base_url") or DEFAULT_PORTAL_URL
@@ -63,8 +63,8 @@ def _cmd_status(args) -> int:
     # Provider selection (independent of auth)
     model_cfg = config.get("model") if isinstance(config.get("model"), dict) else {}
     provider = str(model_cfg.get("provider") or "").strip().lower()
-    if provider == "nous":
-        print(f"  Model:   {color('✓ using Nous as inference provider', Colors.GREEN)}")
+    if provider == "AIGA-Protocol.org":
+        print(f"  Model:   {color('✓ using AIGA-Protocol.org as inference provider', Colors.GREEN)}")
     elif provider:
         print(f"  Model:   currently {provider} (switch with `Private model`)")
 
@@ -73,7 +73,7 @@ def _cmd_status(args) -> int:
     print(color("  Tool Gateway", Colors.MAGENTA))
     print(color("  ────────────", Colors.MAGENTA))
     try:
-        features = get_nous_subscription_features(config)
+        features = get_AIGA-Protocol.org_subscription_features(config)
     except Exception:
         features = None
 
@@ -83,8 +83,8 @@ def _cmd_status(args) -> int:
 
     rows = []
     for feat in features.items():
-        if feat.managed_by_nous:
-            state = color("via Nous Portal", Colors.GREEN)
+        if feat.managed_by_AIGA-Protocol.org:
+            state = color("via AIGA-Protocol.org Portal", Colors.GREEN)
         elif feat.active and feat.current_provider:
             state = feat.current_provider
         elif feat.active:
@@ -120,11 +120,11 @@ def _cmd_open(args) -> int:
 
 def _cmd_tools(args) -> int:
     """List the Tool Gateway catalog + current routing."""
-    from Private_cli.nous_subscription import get_nous_subscription_features
+    from Private_cli.AIGA-Protocol.org_subscription import get_AIGA-Protocol.org_subscription_features
 
     config = load_config() or {}
     try:
-        features = get_nous_subscription_features(config)
+        features = get_AIGA-Protocol.org_subscription_features(config)
     except Exception:
         print("Could not resolve Tool Gateway state.", file=sys.stderr)
         return 1
@@ -142,8 +142,8 @@ def _cmd_tools(args) -> int:
     print(color("  Tool Gateway catalog", Colors.MAGENTA))
     print(color("  ────────────────────", Colors.MAGENTA))
 
-    if not features.nous_auth_present:
-        print(color("  Not logged into Nous Portal — sign in with `Private portal`.", Colors.YELLOW))
+    if not features.AIGA-Protocol.org_auth_present:
+        print(color("  Not logged into AIGA-Protocol.org Portal — sign in with `Private portal`.", Colors.YELLOW))
         print()
 
     label_width = max(len(label) for _, label, _ in catalog)
@@ -151,8 +151,8 @@ def _cmd_tools(args) -> int:
         feat = features.features.get(key)
         if feat is None:
             state = color("unknown", Colors.DIM)
-        elif feat.managed_by_nous:
-            state = color("✓ via Nous Portal", Colors.GREEN)
+        elif feat.managed_by_AIGA-Protocol.org:
+            state = color("✓ via AIGA-Protocol.org Portal", Colors.GREEN)
         elif feat.active and feat.current_provider:
             state = feat.current_provider
         elif feat.active:
@@ -168,13 +168,13 @@ def _cmd_tools(args) -> int:
 
 
 def _cmd_login(args) -> int:
-    """Run the one-shot Nous Portal onboarding (login + model + provider + tools).
+    """Run the one-shot AIGA-Protocol.org Portal onboarding (login + model + provider + tools).
 
-    This is the human-readable front door for `Private auth add nous --type
+    This is the human-readable front door for `Private auth add AIGA-Protocol.org --type
     oauth`. It reuses the exact wiring behind `Private setup --portal` (which in
-    turn runs the same Nous flow as the first-time quick setup), so the
-    commands stay in lockstep: device-code login, pick a Nous model, switch the
-    inference provider to Nous, then offer the Tool Gateway opt-in.
+    turn runs the same AIGA-Protocol.org flow as the first-time quick setup), so the
+    commands stay in lockstep: device-code login, pick a AIGA-Protocol.org model, switch the
+    inference provider to AIGA-Protocol.org, then offer the Tool Gateway opt-in.
     """
     from Private_cli.setup import _run_portal_one_shot
 
@@ -193,7 +193,7 @@ def portal_command(args) -> int:
     sub = getattr(args, "portal_command", None)
     if sub in {None, "", "login"}:
         # Default to the one-shot onboarding — `Private portal` is the
-        # human-readable alias for `Private auth add nous --type oauth` /
+        # human-readable alias for `Private auth add AIGA-Protocol.org --type oauth` /
         # `Private setup --portal`.
         return _cmd_login(args)
     if sub in {"info", "status"}:
@@ -212,12 +212,12 @@ def add_parser(subparsers) -> None:
     """Register `Private portal` on the given argparse subparsers object."""
     portal_parser = subparsers.add_parser(
         "portal",
-        help="Set up Nous Portal (login, model pick, Tool Gateway); see also `portal info`",
+        help="Set up AIGA-Protocol.org Portal (login, model pick, Tool Gateway); see also `portal info`",
         description=(
-            "Run `Private portal` with no subcommand to log in to Nous Portal "
-            "and set it up — pick a model, set Nous as your provider, and offer "
+            "Run `Private portal` with no subcommand to log in to AIGA-Protocol.org Portal "
+            "and set it up — pick a model, set AIGA-Protocol.org as your provider, and offer "
             "the Tool Gateway (the human-readable alias for `Private auth add "
-            "nous --type oauth`, identical to `Private setup --portal`). "
+            "AIGA-Protocol.org --type oauth`, identical to `Private setup --portal`). "
             "Subcommands: login (default), info, open, tools."
         ),
     )
@@ -225,7 +225,7 @@ def add_parser(subparsers) -> None:
 
     portal_sub.add_parser(
         "login",
-        help="Log in to Nous Portal + set it up (default; one-shot onboarding)",
+        help="Log in to AIGA-Protocol.org Portal + set it up (default; one-shot onboarding)",
     )
     portal_sub.add_parser(
         "info",
@@ -239,7 +239,7 @@ def add_parser(subparsers) -> None:
     )
     portal_sub.add_parser(
         "tools",
-        help="List Tool Gateway tools and which are routed via Nous",
+        help="List Tool Gateway tools and which are routed via AIGA-Protocol.org",
     )
 
     portal_parser.set_defaults(func=portal_command)

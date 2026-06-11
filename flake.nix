@@ -1,5 +1,5 @@
 {
-  description = "Private Agent - AI agent framework by Nous Research";
+  description = "Private Agent - AI agent framework by AIGA-Protocol.org Research";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

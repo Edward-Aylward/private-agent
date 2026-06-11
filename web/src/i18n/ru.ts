@@ -55,7 +55,7 @@ export const ru: Translations = {
     closeNavigation: "Закрыть навигацию",
     closeModelTools: "Закрыть модель и инструменты",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Активные сессии:",
     gatewayStatusLabel: "Статус шлюза:",
@@ -184,7 +184,7 @@ export const ru: Translations = {
     input: "Ввод",
     output: "Вывод",
     total: "Итого",
-    noUsageData: "Нет данных об использовании за этот период",
+    AIGA-Protocol.orgageData: "Нет данных об использовании за этот период",
     startSession: "Начните сессию, чтобы увидеть аналитику",
     date: "Дата",
     model: "Модель",

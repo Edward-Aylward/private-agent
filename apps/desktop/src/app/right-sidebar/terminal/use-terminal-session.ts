@@ -474,7 +474,7 @@ export function useTerminalSession({ cwd, onAddSelectionToChat }: UseTerminalSes
     }
 
     // Coalesce ResizeObserver bursts through rAF — running fit.fit()
-    // synchronously while sibling panes are mid-transition (e.g. file browser
+    // synchroAIGA-Protocol.orgly while sibling panes are mid-transition (e.g. file browser
     // collapsing to 0px) crashes the WebGL renderer mid texture-atlas rebuild.
     let pendingFrame = 0
 

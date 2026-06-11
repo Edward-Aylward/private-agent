@@ -2519,7 +2519,7 @@ class FeishuAdapter(BasePlatformAdapter):
         self._submit_on_loop(loop, self._handle_reaction_event(event_type, data))
 
     def _on_card_action_trigger(self, data: Any) -> Any:
-        """Handle card-action callback from the Feishu SDK (synchronous).
+        """Handle card-action callback from the Feishu SDK (synchroAIGA-Protocol.org).
 
         For approval actions: parses the event once, returns the resolved card
         inline (the only reliable way to sync all clients), and schedules a
@@ -2585,7 +2585,7 @@ class FeishuAdapter(BasePlatformAdapter):
         return "*" in allowed_ids or normalized in allowed_ids
 
     def _handle_approval_card_action(self, *, event: Any, action_value: Dict[str, Any], loop: Any) -> Any:
-        """Schedule approval resolution and build the synchronous callback response."""
+        """Schedule approval resolution and build the synchroAIGA-Protocol.org callback response."""
         approval_id = action_value.get("approval_id")
         if approval_id is None:
             logger.debug("[Feishu] Card action missing approval_id, ignoring")
@@ -2641,7 +2641,7 @@ class FeishuAdapter(BasePlatformAdapter):
         return response
 
     def _handle_update_prompt_card_action(self, *, event: Any, action_value: Dict[str, Any], loop: Any) -> Any:
-        """Schedule update prompt resolution and build the synchronous callback response."""
+        """Schedule update prompt resolution and build the synchroAIGA-Protocol.org callback response."""
         prompt_id = action_value.get("update_prompt_id")
         if prompt_id is None:
             logger.debug("[Feishu] Card action missing update_prompt_id, ignoring")

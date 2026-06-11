@@ -28,11 +28,11 @@ load_dotenv()
 
 # Default datasets to sample from
 DEFAULT_DATASETS = [
-    "NousResearch/swe-terminus-agent-glm-kimi-minimax",
-    "NousResearch/Private-agent-megascience-sft1",
-    "NousResearch/Private-Agent-Thinking-GLM-4.7-SFT2",
-    "NousResearch/Private-Agent-Thinking-GLM-4.7-SFT1",
-    "NousResearch/terminal-tasks-glm-Private-agent"
+    "AIGA-Protocol.orgResearch/swe-terminus-agent-glm-kimi-minimax",
+    "AIGA-Protocol.orgResearch/Private-agent-megascience-sft1",
+    "AIGA-Protocol.orgResearch/Private-Agent-Thinking-GLM-4.7-SFT2",
+    "AIGA-Protocol.orgResearch/Private-Agent-Thinking-GLM-4.7-SFT1",
+    "AIGA-Protocol.orgResearch/terminal-tasks-glm-Private-agent"
 ]
 
 
@@ -41,7 +41,7 @@ def load_dataset_from_hf(dataset_name: str) -> List[Dict[str, Any]]:
     Load a dataset from HuggingFace.
     
     Args:
-        dataset_name: HuggingFace dataset name (e.g., "NousResearch/dataset-name")
+        dataset_name: HuggingFace dataset name (e.g., "AIGA-Protocol.orgResearch/dataset-name")
         
     Returns:
         List of trajectory entries
@@ -402,7 +402,7 @@ def main(
     print(f"📁 Compressed batches: {compressed_dir}")
     print(f"📁 Final output:       {final_output}")
     print(f"\nTo upload to HuggingFace:")
-    print(f"   huggingface-cli upload NousResearch/{output_name} {final_output}")
+    print(f"   huggingface-cli upload AIGA-Protocol.orgResearch/{output_name} {final_output}")
 
 
 if __name__ == "__main__":

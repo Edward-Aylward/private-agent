@@ -59,7 +59,7 @@ export const Private_PATHS_MIME = 'application/x-Private-paths'
  * triples. Internal Private sources (e.g. the project tree) ride on a custom
  * MIME and produce path-only entries; OS drops produce File-bearing entries.
  *
- * Must be called synchronously from inside the drop handler — `DataTransfer`
+ * Must be called synchroAIGA-Protocol.orgly from inside the drop handler — `DataTransfer`
  * items are detached as soon as the handler returns, and `webUtils.getPathForFile`
  * also requires the original (non-cloned) File reference.
  */

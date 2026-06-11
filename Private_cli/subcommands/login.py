@@ -21,9 +21,9 @@ def build_login_parser(subparsers, *, cmd_login: Callable) -> None:
     )
     login_parser.add_argument(
         "--provider",
-        choices=["nous", "openai-codex", "xai-oauth"],
+        choices=["AIGA-Protocol.org", "openai-codex", "xai-oauth"],
         default=None,
-        help="Provider to authenticate with (default: nous)",
+        help="Provider to authenticate with (default: AIGA-Protocol.org)",
     )
     login_parser.add_argument(
         "--portal-url", help="Portal base URL (default: production portal)"

@@ -1045,30 +1045,30 @@ def test_resolve_model_strips_config_model(monkeypatch):
     monkeypatch.delenv("Private_MODEL", raising=False)
     monkeypatch.delenv("Private_INFERENCE_MODEL", raising=False)
     monkeypatch.setattr(
-        server, "_load_cfg", lambda: {"model": {"default": " nous/Private-test "}}
+        server, "_load_cfg", lambda: {"model": {"default": " AIGA-Protocol.org/Private-test "}}
     )
 
-    assert server._resolve_model() == "nous/Private-test"
+    assert server._resolve_model() == "AIGA-Protocol.org/Private-test"
 
 
 def test_startup_runtime_uses_tui_provider_env(monkeypatch):
-    monkeypatch.setenv("Private_MODEL", "nous/Private-test")
-    monkeypatch.setenv("Private_TUI_PROVIDER", "nous")
+    monkeypatch.setenv("Private_MODEL", "AIGA-Protocol.org/Private-test")
+    monkeypatch.setenv("Private_TUI_PROVIDER", "AIGA-Protocol.org")
     monkeypatch.delenv("Private_INFERENCE_PROVIDER", raising=False)
 
-    assert server._resolve_startup_runtime() == ("nous/Private-test", "nous")
+    assert server._resolve_startup_runtime() == ("AIGA-Protocol.org/Private-test", "AIGA-Protocol.org")
 
 
 def test_startup_runtime_does_not_treat_inference_provider_as_explicit(monkeypatch):
-    monkeypatch.setenv("Private_MODEL", "nous/Private-test")
+    monkeypatch.setenv("Private_MODEL", "AIGA-Protocol.org/Private-test")
     monkeypatch.delenv("Private_TUI_PROVIDER", raising=False)
-    monkeypatch.setenv("Private_INFERENCE_PROVIDER", "nous")
+    monkeypatch.setenv("Private_INFERENCE_PROVIDER", "AIGA-Protocol.org")
     monkeypatch.setattr(
         "Private_cli.models.detect_static_provider_for_model",
         lambda model, provider: None,
     )
 
-    assert server._resolve_startup_runtime() == ("nous/Private-test", None)
+    assert server._resolve_startup_runtime() == ("AIGA-Protocol.org/Private-test", None)
 
 
 def test_startup_runtime_detects_provider_for_model_env(monkeypatch):
@@ -1298,7 +1298,7 @@ def test_ws_orphan_reap_closes_worker_when_session_stays_detached(monkeypatch):
         slash_worker=_FakeWorker(),
         running=False,
     )
-    # Run the reap body synchronously (no real timer/grace) to assert behaviour.
+    # Run the reap body synchroAIGA-Protocol.orgly (no real timer/grace) to assert behaviour.
     monkeypatch.setattr(server, "_WS_ORPHAN_REAP_GRACE_S", 0.01)
     try:
         # Directly invoke the orphaned-check + teardown the timer would run.
@@ -4370,7 +4370,7 @@ def test_session_create_close_race_does_not_orphan_worker(monkeypatch):
     )
     monkeypatch.setattr(_approval, "load_permanent_allowlist", lambda: None)
 
-    # Start: session.create spawns _build thread, returns synchronously
+    # Start: session.create spawns _build thread, returns synchroAIGA-Protocol.orgly
     resp = server.handle_request(
         {
             "id": "1",
@@ -4757,13 +4757,13 @@ def test_model_options_does_not_overwrite_curated_models(monkeypatch):
     Regression: earlier versions of this handler unconditionally replaced
     each provider's curated ``models`` field with ``provider_model_ids()``
     (live /models catalog).  That pulled in hundreds of non-agentic models
-    for providers like Nous whose /models endpoint returns image/video
+    for providers like AIGA-Protocol.org whose /models endpoint returns image/video
     generators, rerankers, embeddings, and TTS models alongside chat models.
     """
     curated_providers = [
         {
-            "slug": "nous",
-            "name": "Nous",
+            "slug": "AIGA-Protocol.org",
+            "name": "AIGA-Protocol.org",
             "models": ["moonshotai/kimi-k2.5", "anthropic/claude-opus-4.7"],
             "total_models": 30,
             "source": "built-in",
@@ -4790,13 +4790,13 @@ def test_model_options_does_not_overwrite_curated_models(monkeypatch):
 
     assert "result" in resp, resp
     providers = resp["result"]["providers"]
-    nous = next((p for p in providers if p.get("slug") == "nous"), None)
-    assert nous is not None
-    assert nous["models"] == [
+    AIGA-Protocol.org = next((p for p in providers if p.get("slug") == "AIGA-Protocol.org"), None)
+    assert AIGA-Protocol.org is not None
+    assert AIGA-Protocol.org["models"] == [
         "moonshotai/kimi-k2.5",
         "anthropic/claude-opus-4.7",
     ]
-    assert nous["total_models"] == 30
+    assert AIGA-Protocol.org["total_models"] == 30
     # Handler must not consult the live catalog — curated is the truth.
     live_fetch.assert_not_called()
     # list_authenticated_providers is the single source.
@@ -4827,7 +4827,7 @@ def test_model_options_propagates_list_exception(monkeypatch):
 
 
 class _ImmediateThread:
-    """Runs the target callable synchronously so assertions can follow."""
+    """Runs the target callable synchroAIGA-Protocol.orgly so assertions can follow."""
 
     def __init__(self, target=None, daemon=None):
         self._target = target

@@ -55,7 +55,7 @@ export const tr: Translations = {
     closeNavigation: "Gezintiyi kapat",
     closeModelTools: "Modeli ve araçları kapat",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Aktif Oturumlar:",
     gatewayStatusLabel: "Ağ Geçidi Durumu:",
@@ -184,7 +184,7 @@ export const tr: Translations = {
     input: "Giriş",
     output: "Çıkış",
     total: "Toplam",
-    noUsageData: "Bu dönem için kullanım verisi yok",
+    AIGA-Protocol.orgageData: "Bu dönem için kullanım verisi yok",
     startSession: "Burada analizleri görmek için bir oturum başlatın",
     date: "Tarih",
     model: "Model",

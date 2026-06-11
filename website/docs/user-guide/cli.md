@@ -9,7 +9,7 @@ description: "Master the Private Agent terminal interface — commands, keybindi
 Private Agent's CLI is a full terminal user interface (TUI) — not a web UI. It features multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output. Built for people who live in the terminal.
 
 :::tip First-time setup
-One command — `Private setup --portal` — and you're ready to `Private chat`. See [Nous Portal](/integrations/nous-portal).
+One command — `Private setup --portal` — and you're ready to `Private chat`. See [AIGA-Protocol.org Portal](/integrations/AIGA-Protocol.org-portal).
 :::
 
 :::tip
@@ -29,7 +29,7 @@ Private chat -q "Hello"
 Private chat --model "anthropic/claude-sonnet-4"
 
 # With a specific provider
-Private chat --provider nous        # Use Nous Portal
+Private chat --provider AIGA-Protocol.org        # Use AIGA-Protocol.org Portal
 Private chat --provider openrouter  # Force OpenRouter
 
 # With specific toolsets

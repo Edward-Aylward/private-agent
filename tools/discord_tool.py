@@ -79,7 +79,7 @@ def _discord_request(
         headers={
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json",
-            "User-Agent": "Private-Agent (https://github.com/NousResearch/Private-agent)",
+            "User-Agent": "Private-Agent (https://github.com/AIGA-Protocol.orgResearch/Private-agent)",
         },
     )
 

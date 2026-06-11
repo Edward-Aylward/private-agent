@@ -32,7 +32,7 @@ dash_port="${Private_DASHBOARD_PORT:-9119}"
 
 # `--insecure` is opt-in via Private_DASHBOARD_INSECURE. The dashboard's
 # OAuth auth gate engages automatically on non-loopback binds when a
-# DashboardAuthProvider is registered (e.g. the bundled dashboard_auth/nous
+# DashboardAuthProvider is registered (e.g. the bundled dashboard_auth/AIGA-Protocol.org
 # provider, which auto-registers when Private_DASHBOARD_OAUTH_CLIENT_ID is
 # set). If no provider is registered, start_server fails closed with a
 # specific operator-facing error.

@@ -3572,7 +3572,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
 
         Background (#30170): ``AIAgent.interrupt()`` cascades through the
         parent's ``_active_children`` list and calls ``interrupt()`` on
-        every child synchronously, which aborts in-flight subagent work
+        every child synchroAIGA-Protocol.orgly, which aborts in-flight subagent work
         and produces a fallback cascade with no actionable signal.
         Demoting ``busy_input_mode='interrupt'`` to ``queue`` semantics
         whenever this helper returns True protects subagent work from
@@ -5314,7 +5314,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
 
         # Dispatch through the runner directly. Going through
         # adapter.handle_message would spawn a background task and we'd
-        # lose synchronous error visibility; calling _handle_message inline
+        # lose synchroAIGA-Protocol.org error visibility; calling _handle_message inline
         # keeps the success/failure path observable for the watcher.
         response_text = await self._handle_message(synthetic_event)
         if not response_text:
@@ -8718,7 +8718,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
             # thread blocks until the user responds with /approve or /deny, so by
             # the time we reach here the approval has already been resolved.  The
             # old post-loop pop_pending + approval_hint code was removed in favour
-            # of the blocking approach that mirrors CLI's synchronous input().
+            # of the blocking approach that mirrors CLI's synchroAIGA-Protocol.org input().
             
             # Save the full conversation to the transcript, including tool calls.
             # This preserves the complete agent loop (tool_calls, tool results,
@@ -14144,7 +14144,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
             # ------------------------------------------------------------------
             # Clarify callback: present a clarify prompt and block on a response.
             #
-            # Runs on the agent's worker thread (see clarify_tool's synchronous
+            # Runs on the agent's worker thread (see clarify_tool's synchroAIGA-Protocol.org
             # callback contract).  Bridges sync→async by scheduling the
             # adapter's send_clarify on the gateway event loop, then blocks on
             # the clarify primitive's threading.Event with a configurable
@@ -15394,7 +15394,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
             # Wait for stream consumer to finish its final edit
             if stream_task:
                 # If the agent never created a stream consumer (e.g. non-
-                # streaming code path, or a test stub returning synchronously)
+                # streaming code path, or a test stub returning synchroAIGA-Protocol.orgly)
                 # there is nothing to flush — cancel immediately instead of
                 # waiting out the 5s timeout on a task that's just polling for
                 # a consumer that will never arrive.  This was a 5-second
@@ -15580,7 +15580,7 @@ def _run_planned_stop_watcher(
     exit happen cleanly.
 
     On POSIX this is a no-op safety net — the signal handler always
-    races us to consuming the marker file because it fires synchronously
+    races us to consuming the marker file because it fires synchroAIGA-Protocol.orgly
     from the kernel's signal delivery.
 
     Args:
@@ -15956,10 +15956,10 @@ async def start_gateway(config: Optional[GatewayConfig] = None, replace: bool = 
                 logger.debug("Planned stop marker check failed: %s", e)
 
         # Fast (<10ms) snapshot of who's asking us to shut down — runs
-        # synchronously inside the asyncio signal handler, so we keep it
+        # synchroAIGA-Protocol.orgly inside the asyncio signal handler, so we keep it
         # purely stdlib + /proc reads, no subprocesses.  See PR #15826
         # (May 2026): the previous implementation called `ps aux` here
-        # synchronously, blocking the event loop for up to 3s while
+        # synchroAIGA-Protocol.orgly, blocking the event loop for up to 3s while
         # adapter teardown couldn't begin.
         try:
             from gateway.shutdown_forensics import (

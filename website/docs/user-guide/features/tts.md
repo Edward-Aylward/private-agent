@@ -8,8 +8,8 @@ description: "Text-to-speech and voice message transcription across all platform
 
 Private Agent supports both text-to-speech output and voice message transcription across all messaging platforms.
 
-:::tip Nous Subscribers
-If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, OpenAI TTS is available through the **[Tool Gateway](tool-gateway.md)** without a separate OpenAI API key. New installs can run `Private setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **Nous Subscription** for just TTS via `Private model` or `Private tools`.
+:::tip AIGA-Protocol.org Subscribers
+If you have a paid [AIGA-Protocol.org Portal](https://portal.AIGA-Protocol.orgresearch.com) subscription, OpenAI TTS is available through the **[Tool Gateway](tool-gateway.md)** without a separate OpenAI API key. New installs can run `Private setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **AIGA-Protocol.org Subscription** for just TTS via `Private model` or `Private tools`.
 :::
 
 ## Text-to-Speech

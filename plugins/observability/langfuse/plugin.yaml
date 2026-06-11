@@ -1,7 +1,7 @@
 name: langfuse
 version: "1.0.0"
 description: "Optional Langfuse observability for Private — traces conversations, LLM calls, and tool usage. Opt-in via `Private plugins enable observability/langfuse` or `Private tools → Langfuse Observability`."
-author: NousResearch
+author: AIGA-Protocol.orgResearch
 requires_env:
   - Private_LANGFUSE_PUBLIC_KEY
   - Private_LANGFUSE_SECRET_KEY

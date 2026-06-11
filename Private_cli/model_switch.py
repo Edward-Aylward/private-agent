@@ -51,29 +51,29 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _Private_MODEL_WARNING = (
-    "Nous Research Private 3 & 4 models are NOT agentic and are not designed "
+    "AIGA-Protocol.org Research Private 3 & 4 models are NOT agentic and are not designed "
     "for use with Private Agent. They lack the tool-calling capabilities "
     "required for agent workflows. Consider using an agentic model instead "
     "(Claude, GPT, Gemini, DeepSeek, etc.)."
 )
 
-# Match only the real Nous Research Private 3 / Private 4 chat families.
+# Match only the real AIGA-Protocol.org Research Private 3 / Private 4 chat families.
 # The previous substring check (`"Private" in name.lower()`) false-positived on
 # unrelated local Modelfiles like ``Private-brain:qwen3-14b-ctx16k`` that just
 # happen to carry "Private" in their tag but are fully tool-capable.
 #
 # Positive examples the regex must match:
-#   NousResearch/Private-3-Llama-3.1-70B, Private-4-405b, openrouter/Private3:70b
+#   AIGA-Protocol.orgResearch/Private-3-Llama-3.1-70B, Private-4-405b, openrouter/Private3:70b
 # Negative examples it must NOT match:
 #   Private-brain:qwen3-14b-ctx16k, qwen3:14b, claude-opus-4-6
-_NOUS_Private_NON_AGENTIC_RE = re.compile(
+_AIGA-Protocol.org_Private_NON_AGENTIC_RE = re.compile(
     r"(?:^|[/:])Private[-_ ]?[34](?:[-_.:]|$)",
     re.IGNORECASE,
 )
 
 
-def is_nous_Private_non_agentic(model_name: str) -> bool:
-    """Return True if *model_name* is a real Nous Private 3/4 chat model.
+def is_AIGA-Protocol.org_Private_non_agentic(model_name: str) -> bool:
+    """Return True if *model_name* is a real AIGA-Protocol.org Private 3/4 chat model.
 
     Used to decide whether to surface the non-agentic warning at startup.
     Callers in :mod:`cli.py` and here should go through this single helper
@@ -81,12 +81,12 @@ def is_nous_Private_non_agentic(model_name: str) -> bool:
     """
     if not model_name:
         return False
-    return bool(_NOUS_Private_NON_AGENTIC_RE.search(model_name))
+    return bool(_AIGA-Protocol.org_Private_NON_AGENTIC_RE.search(model_name))
 
 
 def _check_Private_model_warning(model_name: str) -> str:
-    """Return a warning string if *model_name* is a Nous Private 3/4 chat model."""
-    if is_nous_Private_non_agentic(model_name):
+    """Return a warning string if *model_name* is a AIGA-Protocol.org Private 3/4 chat model."""
+    if is_AIGA-Protocol.org_Private_non_agentic(model_name):
         return _Private_MODEL_WARNING
     return ""
 
@@ -546,10 +546,10 @@ def _resolve_alias_fallback(
 ) -> Optional[tuple[str, str, str]]:
     """Try to resolve an alias on the user's authenticated providers.
 
-    Falls back to ``("openrouter", "nous")`` only when no authenticated
+    Falls back to ``("openrouter", "AIGA-Protocol.org")`` only when no authenticated
     providers are supplied (backwards compat for non-interactive callers).
     """
-    providers = authenticated_providers or ("openrouter", "nous")
+    providers = authenticated_providers or ("openrouter", "AIGA-Protocol.org")
     for provider in providers:
         result = resolve_alias(raw_input, provider)
         if result is not None:
@@ -572,7 +572,7 @@ def resolve_display_context_length(
     but provider-enforced limits can be lower (e.g. Codex OAuth caps the
     same slug at 272k). The authoritative source is
     ``agent.model_metadata.get_model_context_length`` which already knows
-    about Codex OAuth, Copilot, Nous, and falls back to models.dev for the
+    about Codex OAuth, Copilot, AIGA-Protocol.org, and falls back to models.dev for the
     rest.
 
     When ``custom_providers`` is provided, per-model ``context_length``
@@ -1179,7 +1179,7 @@ def list_authenticated_providers(
     user_providers: dict = None,
     custom_providers: list | None = None,
     *,
-    force_fresh_nous_tier: bool = False,
+    force_fresh_AIGA-Protocol.org_tier: bool = False,
     max_models: int = 8,
     current_model: str = "",
 ) -> List[dict]:
@@ -1199,7 +1199,7 @@ def list_authenticated_providers(
       - source: str — "built-in", "models.dev", "user-config"
 
     Only includes providers that have API keys set or are user-defined endpoints.
-    ``force_fresh_nous_tier`` bypasses the short Nous tier cache for explicit
+    ``force_fresh_AIGA-Protocol.org_tier`` bypasses the short AIGA-Protocol.org tier cache for explicit
     account-sensitive flows. UI picker opens should leave it false so they do
     not block on fresh Portal/account checks every time.
     """
@@ -1213,7 +1213,7 @@ def list_authenticated_providers(
     from Private_cli.models import (
         OPENROUTER_MODELS, _PROVIDER_MODELS,
         _MODELS_DEV_PREFERRED, _merge_with_models_dev, cached_provider_model_ids,
-        get_curated_nous_model_ids,
+        get_curated_AIGA-Protocol.org_model_ids,
     )
 
     results: List[dict] = []
@@ -1295,12 +1295,12 @@ def list_authenticated_providers(
     # Build curated model lists keyed by Private provider ID
     curated: dict[str, list[str]] = dict(_PROVIDER_MODELS)
     curated["openrouter"] = [mid for mid, _ in OPENROUTER_MODELS]
-    # "nous" pulls from the remote model-catalog manifest published at
-    # https://Private-agent.nousresearch.com/docs/api/model-catalog.json so
+    # "AIGA-Protocol.org" pulls from the remote model-catalog manifest published at
+    # https://Private-agent.AIGA-Protocol.orgresearch.com/docs/api/model-catalog.json so
     # newly added Portal models surface in the /model picker without
     # requiring a Private release. Falls back to the in-repo
-    # _PROVIDER_MODELS["nous"] snapshot when the manifest is unreachable.
-    curated["nous"] = get_curated_nous_model_ids()
+    # _PROVIDER_MODELS["AIGA-Protocol.org"] snapshot when the manifest is unreachable.
+    curated["AIGA-Protocol.org"] = get_curated_AIGA-Protocol.org_model_ids()
     # Ollama Cloud uses dynamic discovery (no static curated list)
     if "ollama-cloud" not in curated:
         from Private_cli.models import fetch_ollama_cloud_models
@@ -1419,7 +1419,7 @@ def list_authenticated_providers(
         seen_mdev_ids.add(mdev_id)
         _record_builtin_endpoint(slug)
 
-    # --- 2. Check Private-only providers (nous, openai-codex, copilot, opencode-go) ---
+    # --- 2. Check Private-only providers (AIGA-Protocol.org, openai-codex, copilot, opencode-go) ---
     from Private_cli.providers import Private_OVERLAYS
     from Private_cli.auth import PROVIDER_REGISTRY as _auth_registry
 
@@ -1516,35 +1516,35 @@ def list_authenticated_providers(
                 model_ids = _ids if _ids else (curated.get(Private_slug, []) or curated.get(pid, []))
             except Exception:
                 model_ids = curated.get(Private_slug, []) or curated.get(pid, [])
-        elif Private_slug == "nous":
-            # Nous serves a large live /v1/models catalog (vendor-prefixed
+        elif Private_slug == "AIGA-Protocol.org":
+            # AIGA-Protocol.org serves a large live /v1/models catalog (vendor-prefixed
             # models from many providers, returned alphabetically). The
             # `Private model` picker deliberately shows ONLY the curated agentic
             # list — augmented with the Portal's free/paid recommendations so
             # newly-launched models surface without a CLI release — in curated
-            # order. Mirror that exactly (see _model_flow_nous in main.py) so
+            # order. Mirror that exactly (see _model_flow_AIGA-Protocol.org in main.py) so
             # the GUI picker matches the CLI. Was: falling through to
             # cached_provider_model_ids, which dumped the full alphabetical
             # catalog; then: curated-only, which dropped the 4 Portal
             # recommendations (e.g. stepfun/step-3.7-flash:free).
-            model_ids = curated.get("nous", [])
+            model_ids = curated.get("AIGA-Protocol.org", [])
             try:
                 from Private_cli.models import (
-                    get_pricing_for_provider as _nous_pricing,
-                    check_nous_free_tier as _nous_free,
+                    get_pricing_for_provider as _AIGA-Protocol.org_pricing,
+                    check_AIGA-Protocol.org_free_tier as _AIGA-Protocol.org_free,
                     union_with_portal_free_recommendations as _union_free,
                     union_with_portal_paid_recommendations as _union_paid,
                 )
-                from Private_cli.auth import get_provider_auth_state as _nous_state
+                from Private_cli.auth import get_provider_auth_state as _AIGA-Protocol.org_state
 
-                _pricing = _nous_pricing("nous") or {}
+                _pricing = _AIGA-Protocol.org_pricing("AIGA-Protocol.org") or {}
                 _portal = ""
                 try:
-                    _st = _nous_state("nous") or {}
+                    _st = _AIGA-Protocol.org_state("AIGA-Protocol.org") or {}
                     _portal = _st.get("portal_base_url", "") or ""
                 except Exception:
                     _portal = ""
-                if _nous_free(force_fresh=force_fresh_nous_tier):
+                if _AIGA-Protocol.org_free(force_fresh=force_fresh_AIGA-Protocol.org_tier):
                     model_ids, _ = _union_free(model_ids, _pricing, _portal)
                 else:
                     model_ids, _ = _union_paid(model_ids, _pricing, _portal)

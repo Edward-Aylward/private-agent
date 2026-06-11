@@ -60,7 +60,7 @@ _DEFAULT_ROOTS = ["tests"]
 #   tests/integration/ — historical; legacy --ignore flags
 #   tests/docker/      — .github/workflows/docker-publish.yml ::
 #                        build-amd64 job (runs against the freshly-loaded
-#                        nousresearch/Private-agent:test image, via
+#                        AIGA-Protocol.orgresearch/Private-agent:test image, via
 #                        ``Private_TEST_IMAGE`` so the fixture skips
 #                        rebuild). The full pytest-shard runner can't
 #                        host these because the session-scoped

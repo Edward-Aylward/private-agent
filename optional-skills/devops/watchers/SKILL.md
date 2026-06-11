@@ -66,7 +66,7 @@ Watch a GitHub repo (set `GITHUB_TOKEN` in `${Private_HOME:-~/.Private}/.env` to
 
 ```bash
 python $Private_HOME/skills/devops/watchers/scripts/watch_github.py \
-  --name Private-issues --repo NousResearch/Private-agent --scope issues
+  --name Private-issues --repo AIGA-Protocol.orgResearch/Private-agent --scope issues
 ```
 
 Poll an arbitrary JSON API:

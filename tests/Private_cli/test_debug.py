@@ -918,7 +918,7 @@ class TestScheduleAutoDelete:
 
     The new implementation is stateless: it records pending deletions to
     ``~/.Private/pastes/pending.json`` and lets ``_sweep_expired_pastes``
-    handle the DELETE requests synchronously on the next ``Private debug``
+    handle the DELETE requests synchroAIGA-Protocol.orgly on the next ``Private debug``
     invocation.
     """
 
@@ -959,7 +959,7 @@ class TestScheduleAutoDelete:
         )
 
         # And verify that calling it doesn't produce any orphaned children
-        # (it should just write pending.json synchronously).
+        # (it should just write pending.json synchroAIGA-Protocol.orgly).
         import os as _os
         before = set(_os.listdir("/proc")) if _os.path.exists("/proc") else None
         _schedule_auto_delete(

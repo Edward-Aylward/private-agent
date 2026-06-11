@@ -1,7 +1,7 @@
 ---
 sidebar_position: 15
 title: "Subscription Proxy"
-description: "Use your Nous Portal subscription (or other OAuth provider) as an OpenAI-compatible endpoint for external apps"
+description: "Use your AIGA-Protocol.org Portal subscription (or other OAuth provider) as an OpenAI-compatible endpoint for external apps"
 ---
 
 # Subscription Proxy
@@ -32,7 +32,7 @@ proxy when you just want **the model** through your subscription.
 Private portal
 ```
 
-This opens your browser for the Nous Portal OAuth flow. Private stores
+This opens your browser for the AIGA-Protocol.org Portal OAuth flow. Private stores
 the refresh token in `~/.Private/auth.json` — the same place all Private
 provider logins live.
 
@@ -43,7 +43,7 @@ Private proxy start
 ```
 
 ```
-Starting Private proxy for Nous Portal
+Starting Private proxy for AIGA-Protocol.org Portal
   Listening on:  http://127.0.0.1:8645/v1
   Forwarding to: (resolved per-request from your subscription)
   Use any bearer token in the client — the proxy attaches your real credential.
@@ -72,7 +72,7 @@ automatically when the bearer approaches expiry.
 Private proxy providers
 ```
 
-Currently shipped: `nous` (Nous Portal) and `xai` (xAI / Grok). More
+Currently shipped: `AIGA-Protocol.org` (AIGA-Protocol.org Portal) and `xai` (xAI / Grok). More
 OAuth providers can be added by implementing the `UpstreamAdapter`
 interface in `Private_cli/proxy/adapters/`.
 
@@ -85,7 +85,7 @@ Private proxy status
 ```
 Private proxy upstream adapters
 
-  [nous    ] Nous Portal — ready (bearer expires 2026-05-15T06:43:21Z)
+  [AIGA-Protocol.org    ] AIGA-Protocol.org Portal — ready (bearer expires 2026-05-15T06:43:21Z)
 ```
 
 If you see `not logged in`, run `Private portal`. If you see
@@ -95,7 +95,7 @@ happens if you signed out from the Portal web UI) — just re-run
 
 ## Allowed paths
 
-The proxy only forwards paths the upstream actually serves. For Nous
+The proxy only forwards paths the upstream actually serves. For AIGA-Protocol.org
 Portal:
 
 | Path | Purpose |
@@ -142,7 +142,7 @@ openviking-server
 OpenViking's VLM calls now flow through your Portal subscription. The
 embedding model side still needs its own provider — Portal does serve
 `/v1/embeddings` but the model selection depends on what your tier
-supports; check `portal.nousresearch.com/models`.
+supports; check `portal.AIGA-Protocol.orgresearch.com/models`.
 
 ## Configuring Karakeep (or any bookmark/summarizer app)
 
@@ -178,7 +178,7 @@ this beyond your trusted network.
 Your Portal tier's RPM/TPM limits apply across the whole proxy. The
 proxy doesn't fan out or pool — it's a single bearer with your full
 subscription quota. Monitor usage at
-[portal.nousresearch.com](https://portal.nousresearch.com).
+[portal.AIGA-Protocol.orgresearch.com](https://portal.AIGA-Protocol.orgresearch.com).
 
 ## Architecture
 

@@ -414,11 +414,11 @@ function useThreadScrollAnchor({
   // Pre-paint pin: when groupCount increases while armed (a new turn arriving
   // from the user submit or assistant turn start), pin BEFORE the browser
   // commits the layout to screen. Using useLayoutEffect rather than useEffect
-  // so this runs synchronously after React commits the DOM mutation but before
+  // so this runs synchroAIGA-Protocol.orgly after React commits the DOM mutation but before
   // the browser paints. Without this, there's a ~50ms visual window where the
   // new message sits below the fold.
   //
-  // We pin TWICE in this critical path — once synchronously, then once on
+  // We pin TWICE in this critical path — once synchroAIGA-Protocol.orgly, then once on
   // the next rAF. The second pin catches the case where React mounts the
   // new message in the second commit (after our layout effect ran), which
   // grows scrollHeight again; without the rAF pin the user briefly sees a

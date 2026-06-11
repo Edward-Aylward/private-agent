@@ -108,11 +108,11 @@ class TestFallbackChainInit:
             "fallback_providers": [
                 {"provider": "openrouter", "model": "anthropic/claude-sonnet-4.6"},
             ],
-            "fallback_model": {"provider": "nous", "model": "Private-4"},
+            "fallback_model": {"provider": "AIGA-Protocol.org", "model": "Private-4"},
         })
         assert cli._fallback_model == [
             {"provider": "openrouter", "model": "anthropic/claude-sonnet-4.6"},
-            {"provider": "nous", "model": "Private-4"},
+            {"provider": "AIGA-Protocol.org", "model": "Private-4"},
         ]
 
 

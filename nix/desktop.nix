@@ -101,7 +101,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Native Electron desktop shell for Private Agent";
-    homepage = "https://github.com/NousResearch/Private-agent";
+    homepage = "https://github.com/AIGA-Protocol.orgResearch/Private-agent";
     license = licenses.mit;
     platforms = platforms.unix;
     mainProgram = "Private-desktop";

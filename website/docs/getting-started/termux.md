@@ -46,7 +46,7 @@ That does not stop Private from working well as a phone-native CLI agent — it 
 Private now ships a Termux-aware installer path:
 
 ```bash
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
 ```
 
 On Termux, the installer automatically:
@@ -80,7 +80,7 @@ Why these packages?
 ### 2. Clone Private
 
 ```bash
-git clone https://github.com/NousResearch/Private-agent.git
+git clone https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 cd Private-agent
 ```
 

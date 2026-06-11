@@ -11,7 +11,7 @@ Chat with Private from Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email, H
 For the full voice feature set — including CLI microphone mode, spoken replies in messaging, and Discord voice-channel conversations — see [Voice Mode](/user-guide/features/voice-mode) and [Use Voice Mode with Private](/guides/use-voice-mode-with-Private).
 
 :::tip
-Bots need both a model provider and tool providers (TTS, web). A [Nous Portal](/integrations/nous-portal) subscription bundles all of them.
+Bots need both a model provider and tool providers (TTS, web). A [AIGA-Protocol.org Portal](/integrations/AIGA-Protocol.org-portal) subscription bundles all of them.
 :::
 
 ## Platform Comparison
@@ -325,7 +325,7 @@ Private confirms immediately:
 
 ### How It Works
 
-Each `/background` prompt spawns a **separate agent instance** that runs asynchronously:
+Each `/background` prompt spawns a **separate agent instance** that runs asynchroAIGA-Protocol.orgly:
 
 - **Isolated session** — the background agent has its own session with its own conversation history. It has no knowledge of your current chat context and receives only the prompt you provide.
 - **Same configuration** — inherits your model, provider, toolsets, reasoning settings, and provider routing from the current gateway setup.

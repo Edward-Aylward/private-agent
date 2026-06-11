@@ -55,7 +55,7 @@ export const hu: Translations = {
     closeNavigation: "Navigáció bezárása",
     closeModelTools: "Modell és eszközök bezárása",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Aktív munkamenetek:",
     gatewayStatusLabel: "Átjáró állapota:",
@@ -184,7 +184,7 @@ export const hu: Translations = {
     input: "Bemenet",
     output: "Kimenet",
     total: "Összesen",
-    noUsageData: "Nincs használati adat erre az időszakra",
+    AIGA-Protocol.orgageData: "Nincs használati adat erre az időszakra",
     startSession: "Indítson munkamenetet az analitika megtekintéséhez",
     date: "Dátum",
     model: "Modell",

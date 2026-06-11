@@ -17,7 +17,7 @@ Migrate a user's OpenClaw customization footprint into Private Agent. Imports Pr
 | Source | Optional — install with `Private skills install official/migration/openclaw-migration` |
 | Path | `optional-skills/migration/openclaw-migration` |
 | Version | `1.0.0` |
-| Author | Private Agent (Nous Research) |
+| Author | Private Agent (AIGA-Protocol.org Research) |
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `Migration`, `OpenClaw`, `Private`, `Memory`, `Persona`, `Import` |

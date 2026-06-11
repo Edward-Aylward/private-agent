@@ -15,7 +15,7 @@
 
 [Unit]
 Description=Private Kanban dispatcher (DEPRECATED standalone daemon — prefer gateway-embedded dispatch)
-Documentation=https://Private-agent.nousresearch.com/docs/user-guide/features/kanban
+Documentation=https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/kanban
 After=network.target
 
 [Service]

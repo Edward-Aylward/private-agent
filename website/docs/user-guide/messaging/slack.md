@@ -236,7 +236,7 @@ Private command with its description.
 
 Under the hood: Private ships with a generated Slack app manifest (see
 Step 1, Option A) that declares every command in
-[`COMMAND_REGISTRY`](https://github.com/NousResearch/Private-agent/blob/main/Private_cli/commands.py)
+[`COMMAND_REGISTRY`](https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/Private_cli/commands.py)
 as a slash command. In Socket Mode, Slack routes the command event
 through the WebSocket regardless of the manifest's `url` field.
 

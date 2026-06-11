@@ -6,7 +6,7 @@ Usage (via cron with --no-agent):
     Private cron create Private-issues \\
       --schedule "*/5 * * * *" --no-agent \\
       --script "$Private_HOME/skills/devops/watchers/scripts/watch_github.py" \\
-      --script-args "--name Private-issues --repo NousResearch/Private-agent --scope issues"
+      --script-args "--name Private-issues --repo AIGA-Protocol.orgResearch/Private-agent --scope issues"
 
 Set GITHUB_TOKEN (or GH_TOKEN) in the Private .env file
 (``${Private_HOME:-~/.Private}/.env``) to avoid the 60 req/hr

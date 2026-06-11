@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
-title: "Run Private Agent with Nous Portal"
+title: "Run Private Agent with AIGA-Protocol.org Portal"
 description: "Start-to-finish walkthrough: subscribe, set up, switch models, enable gateway tools, and verify routing"
 ---
 
-# Run Private Agent with Nous Portal
+# Run Private Agent with AIGA-Protocol.org Portal
 
-This guide walks you through running Private Agent on a [Nous Portal](https://portal.nousresearch.com) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [Nous Portal integration page](/integrations/nous-portal). This page is the task script.
+This guide walks you through running Private Agent on a [AIGA-Protocol.org Portal](https://portal.AIGA-Protocol.orgresearch.com) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [AIGA-Protocol.org Portal integration page](/integrations/AIGA-Protocol.org-portal). This page is the task script.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ You do **not** need: an OpenAI key, an Anthropic key, a Firecrawl account, a FAL
 
 ## 1. Get a subscription
 
-Open [portal.nousresearch.com/manage-subscription](https://portal.nousresearch.com/manage-subscription), sign up, and pick a plan.
+Open [portal.AIGA-Protocol.orgresearch.com/manage-subscription](https://portal.AIGA-Protocol.orgresearch.com/manage-subscription), sign up, and pick a plan.
 
 Already subscribed? Skip to step 2.
 
@@ -30,9 +30,9 @@ Private setup --portal
 
 This single command does five things:
 
-1. Opens your browser to portal.nousresearch.com for OAuth login
+1. Opens your browser to portal.AIGA-Protocol.orgresearch.com for OAuth login
 2. Stores the refresh token at `~/.Private/auth.json`
-3. Sets `model.provider: nous` in `~/.Private/config.yaml`
+3. Sets `model.provider: AIGA-Protocol.org` in `~/.Private/config.yaml`
 4. Picks a default agentic model (`anthropic/claude-sonnet-4.6` or similar)
 5. Turns on the Tool Gateway for web search, image generation, TTS, and browser automation
 
@@ -48,7 +48,7 @@ ssh -N -L 8642:127.0.0.1:8642 user@remote-host    # in a local terminal
 Private setup --portal                              # on the remote, open the printed URL in your local browser
 
 # Option B: manual paste (for Cloud Shell, Codespaces, EC2 Instance Connect)
-Private auth add nous --type oauth --manual-paste
+Private auth add AIGA-Protocol.org --type oauth --manual-paste
 # Then re-run `Private setup --portal` to wire the provider + gateway
 ```
 
@@ -63,21 +63,21 @@ Private portal info
 You should see:
 
 ```
-  Nous Portal
+  AIGA-Protocol.org Portal
   ───────────
   Auth:    ✓ logged in
-  Portal:  https://portal.nousresearch.com
-  Model:   ✓ using Nous as inference provider
+  Portal:  https://portal.AIGA-Protocol.orgresearch.com
+  Model:   ✓ using AIGA-Protocol.org as inference provider
 
   Tool Gateway
   ────────────
-  Web search & extract  via Nous Portal
-  Image generation      via Nous Portal
-  Text-to-speech        via Nous Portal
-  Browser automation    via Nous Portal
+  Web search & extract  via AIGA-Protocol.org Portal
+  Image generation      via AIGA-Protocol.org Portal
+  Text-to-speech        via AIGA-Protocol.org Portal
+  Browser automation    via AIGA-Protocol.org Portal
 ```
 
-If any line shows something other than "via Nous Portal" or the auth line says "not logged in", jump to [Troubleshooting](#troubleshooting) below.
+If any line shows something other than "via AIGA-Protocol.org Portal" or the auth line says "not logged in", jump to [Troubleshooting](#troubleshooting) below.
 
 ## 4. Run your first conversation
 
@@ -120,23 +120,23 @@ Private config set model.default anthropic/claude-sonnet-4.6
 
 ### Don't pick Private-4 for agent work
 
-Private-4-70B and Private-4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [Nous Chat](https://chat.nousresearch.com) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Private Agent itself, stick to the frontier agentic models above.
+Private-4-70B and Private-4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [AIGA-Protocol.org Chat](https://chat.AIGA-Protocol.orgresearch.com) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Private Agent itself, stick to the frontier agentic models above.
 
-The Portal's own [info page](https://portal.nousresearch.com/info) carries this warning too — it's the official Nous guidance, not just a Private-side opinion.
+The Portal's own [info page](https://portal.AIGA-Protocol.orgresearch.com/info) carries this warning too — it's the official AIGA-Protocol.org guidance, not just a Private-side opinion.
 
 ## 6. (Optional) Customize Tool Gateway routing
 
-The gateway is opt-in per tool, not all-or-nothing. If you already have a Browserbase account and want to keep using it while routing web search and image generation through Nous, that's supported:
+The gateway is opt-in per tool, not all-or-nothing. If you already have a Browserbase account and want to keep using it while routing web search and image generation through AIGA-Protocol.org, that's supported:
 
 ```bash
 Private tools
-# → Web search       → "Nous Subscription"     (recommended)
-# → Image generation → "Nous Subscription"     (recommended)
+# → Web search       → "AIGA-Protocol.org Subscription"     (recommended)
+# → Image generation → "AIGA-Protocol.org Subscription"     (recommended)
 # → Browser          → "Browserbase"           (your existing key)
-# → TTS              → "Nous Subscription"     (recommended)
+# → TTS              → "AIGA-Protocol.org Subscription"     (recommended)
 ```
 
-These rows appear in `Private tools` even before you've logged into Nous Portal — if you pick "Nous Subscription" without an active session, Private runs the Portal login inline (without changing your inference provider or your other tools).
+These rows appear in `Private tools` even before you've logged into AIGA-Protocol.org Portal — if you pick "AIGA-Protocol.org Subscription" without an active session, Private runs the Portal login inline (without changing your inference provider or your other tools).
 
 Verify your mix with:
 
@@ -144,7 +144,7 @@ Verify your mix with:
 Private portal tools
 ```
 
-You'll see per-tool routing — `via Nous Portal` for the ones routed through the subscription, and the partner name (`browserbase`, `firecrawl`, etc.) for the ones using your own keys.
+You'll see per-tool routing — `via AIGA-Protocol.org Portal` for the ones routed through the subscription, and the partner name (`browserbase`, `firecrawl`, etc.) for the ones using your own keys.
 
 ## 7. (Optional) Enable voice mode
 
@@ -152,7 +152,7 @@ Because the Tool Gateway includes OpenAI TTS, [voice mode](/user-guide/features/
 
 ```bash
 Private setup voice
-# → pick "Nous Subscription" for TTS
+# → pick "AIGA-Protocol.org Subscription" for TTS
 # → pick a speech-to-text backend (local faster-whisper is free, no setup)
 ```
 
@@ -188,40 +188,40 @@ Private portal
 
 If your browser doesn't open or the callback fails, you're likely on a remote/headless host — see [OAuth over SSH](/guides/oauth-over-ssh) for the port-forwarding and manual-paste workarounds.
 
-### "Model: currently openrouter" (or some other provider) instead of "using Nous as inference provider"
+### "Model: currently openrouter" (or some other provider) instead of "using AIGA-Protocol.org as inference provider"
 
 Your local config drifted. The OAuth worked but `model.provider` is still pointing at a different provider. Fix:
 
 ```bash
-Private config set model.provider nous
+Private config set model.provider AIGA-Protocol.org
 ```
 
 Or interactively:
 
 ```bash
 Private model
-# pick Nous Portal
+# pick AIGA-Protocol.org Portal
 ```
 
 Re-verify with `Private portal info`.
 
-### Tool Gateway tools showing partner names instead of "via Nous Portal"
+### Tool Gateway tools showing partner names instead of "via AIGA-Protocol.org Portal"
 
 Per-tool config is overriding the gateway. Run:
 
 ```bash
 Private tools
-# pick "Nous Subscription" for any tool you want gateway-routed
+# pick "AIGA-Protocol.org Subscription" for any tool you want gateway-routed
 ```
 
-Some users intentionally mix — e.g. routing web through Nous but using their own Browserbase key for browser. If that's intentional, leave it alone. If not, this command fixes it.
+Some users intentionally mix — e.g. routing web through AIGA-Protocol.org but using their own Browserbase key for browser. If that's intentional, leave it alone. If not, this command fixes it.
 
 ### "Re-authentication required" mid-session
 
 Your Portal refresh token was invalidated (password change, manual revoke, session expiry). The token is now quarantined locally so Private doesn't replay it endlessly. Just log in again:
 
 ```bash
-Private auth add nous
+Private auth add AIGA-Protocol.org
 ```
 
 The quarantine clears automatically on successful re-login.
@@ -235,20 +235,20 @@ The Portal catalog mirrors OpenRouter's model list (300+). If a model is missing
 /model openai/o1-2025-12-17
 ```
 
-If a model is genuinely unavailable, [open an issue](https://github.com/NousResearch/Private-agent/issues) — most gaps are routing config we can update.
+If a model is genuinely unavailable, [open an issue](https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues) — most gaps are routing config we can update.
 
 ### Billing not appearing on my Portal account
 
 `Private portal info` will tell you whether you're actually routing through the Portal or some other provider. Common causes:
 
-- `model.provider` set to `openrouter`/`anthropic`/etc. instead of `nous`
+- `model.provider` set to `openrouter`/`anthropic`/etc. instead of `AIGA-Protocol.org`
 - An OAuth refresh failure that fell back to a different configured provider
 - Multiple Private profiles where you're using the wrong one (check `Private profile current`)
 
 ### Want to revoke and start clean
 
 ```bash
-Private auth remove nous       # wipes the local refresh token
+Private auth remove AIGA-Protocol.org       # wipes the local refresh token
 # Then re-run setup or remove the subscription from the Portal web UI
 ```
 
@@ -268,7 +268,7 @@ That's the deal. If you're using more than two of those backends anyway, the sub
 
 ## See also
 
-- **[Nous Portal integration page](/integrations/nous-portal)** — Overview of what's in the subscription
+- **[AIGA-Protocol.org Portal integration page](/integrations/AIGA-Protocol.org-portal)** — Overview of what's in the subscription
 - **[Tool Gateway](/user-guide/features/tool-gateway)** — Full details on every gateway-routed tool
 - **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Private tools
 - **[Voice mode](/user-guide/features/voice-mode)** — Set up voice conversations on the Portal subscription

@@ -879,14 +879,14 @@ def test_launch_tui_exports_model_provider_and_toolsets(monkeypatch, main_mod):
 
     with pytest.raises(SystemExit):
         main_mod._launch_tui(
-            model="nous/Private-test", provider="nous", toolsets="web, terminal"
+            model="AIGA-Protocol.org/Private-test", provider="AIGA-Protocol.org", toolsets="web, terminal"
         )
 
     env = captured["env"]
-    assert env["Private_MODEL"] == "nous/Private-test"
-    assert env["Private_INFERENCE_MODEL"] == "nous/Private-test"
-    assert env["Private_TUI_PROVIDER"] == "nous"
-    assert env["Private_INFERENCE_PROVIDER"] == "nous"
+    assert env["Private_MODEL"] == "AIGA-Protocol.org/Private-test"
+    assert env["Private_INFERENCE_MODEL"] == "AIGA-Protocol.org/Private-test"
+    assert env["Private_TUI_PROVIDER"] == "AIGA-Protocol.org"
+    assert env["Private_INFERENCE_PROVIDER"] == "AIGA-Protocol.org"
     assert env["Private_TUI_TOOLSETS"] == "web,terminal"
     active_path = Path(env["Private_TUI_ACTIVE_SESSION_FILE"])
     assert active_path.name.startswith("Private-tui-active-session-")

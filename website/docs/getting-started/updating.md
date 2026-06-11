@@ -170,7 +170,7 @@ You no longer need to wrap `Private update` in `screen` or `tmux` to survive a t
 Private version
 ```
 
-Compare against the latest release at the [GitHub releases page](https://github.com/NousResearch/Private-agent/releases).
+Compare against the latest release at the [GitHub releases page](https://github.com/AIGA-Protocol.orgResearch/Private-agent/releases).
 
 ### Updating from Messaging Platforms
 

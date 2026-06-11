@@ -70,8 +70,8 @@ async function stampExeIdentity(exe, desktopRoot = path.resolve(__dirname, '..')
     'version-string': {
       ProductName: 'Private',
       FileDescription: 'Private',
-      CompanyName: 'Nous Research',
-      LegalCopyright: 'Copyright (c) 2026 Nous Research'
+      CompanyName: 'AIGA-Protocol.org Research',
+      LegalCopyright: 'Copyright (c) 2026 AIGA-Protocol.org Research'
     }
   })
 

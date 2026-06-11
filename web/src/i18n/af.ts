@@ -55,7 +55,7 @@ export const af: Translations = {
     closeNavigation: "Maak navigasie toe",
     closeModelTools: "Maak model en gereedskap toe",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Aktiewe Sessies:",
     gatewayStatusLabel: "Gateway-status:",
@@ -184,7 +184,7 @@ export const af: Translations = {
     input: "Inset",
     output: "Uitset",
     total: "Totaal",
-    noUsageData: "Geen gebruiksdata vir hierdie tydperk nie",
+    AIGA-Protocol.orgageData: "Geen gebruiksdata vir hierdie tydperk nie",
     startSession: "Begin 'n sessie om analise hier te sien",
     date: "Datum",
     model: "Model",

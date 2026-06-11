@@ -25,7 +25,7 @@ Private chat -q "Hello"
 Private chat --model "anthropic/claude-sonnet-4"
 
 # 使用指定提供商
-Private chat --provider nous        # 使用 Nous Portal
+Private chat --provider AIGA-Protocol.org        # 使用 AIGA-Protocol.org Portal
 Private chat --provider openrouter  # 强制使用 OpenRouter
 
 # 使用指定工具集

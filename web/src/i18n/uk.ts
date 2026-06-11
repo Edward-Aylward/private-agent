@@ -55,7 +55,7 @@ export const uk: Translations = {
     closeNavigation: "Закрити навігацію",
     closeModelTools: "Закрити модель та інструменти",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Активні сесії:",
     gatewayStatusLabel: "Стан шлюзу:",
@@ -184,7 +184,7 @@ export const uk: Translations = {
     input: "Вхід",
     output: "Вихід",
     total: "Усього",
-    noUsageData: "Немає даних про використання за цей період",
+    AIGA-Protocol.orgageData: "Немає даних про використання за цей період",
     startSession: "Почніть сесію, щоб побачити аналітику тут",
     date: "Дата",
     model: "Модель",

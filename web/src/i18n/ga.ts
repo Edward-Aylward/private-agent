@@ -55,7 +55,7 @@ export const ga: Translations = {
     closeNavigation: "Dún an nascleanúint",
     closeModelTools: "Dún an samhail agus na huirlisí",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Seisiúin gníomhacha:",
     gatewayStatusLabel: "Stádas an gateway:",
@@ -184,7 +184,7 @@ export const ga: Translations = {
     input: "Ionchur",
     output: "Aschur",
     total: "Iomlán",
-    noUsageData: "Gan sonraí úsáide don tréimhse seo",
+    AIGA-Protocol.orgageData: "Gan sonraí úsáide don tréimhse seo",
     startSession: "Tosaigh seisiún chun anailís a fheiceáil anseo",
     date: "Dáta",
     model: "Samhail",

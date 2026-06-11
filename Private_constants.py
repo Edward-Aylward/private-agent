@@ -64,7 +64,7 @@ def get_Private_home() -> Path:
     callers that import this at load time.  Subprocess spawners are
     expected to propagate ``Private_HOME`` explicitly (see the systemd
     template in ``Private_cli/gateway.py`` and the kanban dispatcher in
-    ``Private_cli/kanban_db.py``).  See https://github.com/NousResearch/Private-agent/issues/18594.
+    ``Private_cli/kanban_db.py``).  See https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues/18594.
     """
     override = get_Private_home_override()
     if override:
@@ -185,7 +185,7 @@ def get_optional_skills_dir(default: Path | None = None) -> Path:
 def get_optional_mcps_dir(default: Path | None = None) -> Path:
     """Return the optional-mcps directory, honoring package-manager wrappers.
 
-    Mirrors :func:`get_optional_skills_dir` for the MCP catalog (Nous-approved
+    Mirrors :func:`get_optional_skills_dir` for the MCP catalog (AIGA-Protocol.org-approved
     Model Context Protocol servers shipped with the repo but disabled by
     default). Packaged installs may ship ``optional-mcps`` outside the Python
     package tree and expose it via ``Private_OPTIONAL_MCPS``.
@@ -270,7 +270,7 @@ def secure_parent_dir(path: Path) -> None:
     prevent catastrophic host bricking when ``Private_HOME`` or other path
     env vars resolve to an unexpected location.
 
-    See https://github.com/NousResearch/Private-agent/issues/25821.
+    See https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues/25821.
     """
     parent = path.parent.resolve()
     # Refuse root and its direct children (/usr, /home, /var, /tmp, …).

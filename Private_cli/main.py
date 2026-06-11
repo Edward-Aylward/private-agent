@@ -540,7 +540,7 @@ from Private_cli import __version__, __release_date__
 from Private_cli.model_setup_flows import (
     _prompt_auth_credentials_choice,
     _model_flow_openrouter,
-    _model_flow_nous,
+    _model_flow_AIGA-Protocol.org,
     _model_flow_openai_codex,
     _model_flow_xai_oauth,
     _model_flow_qwen_oauth,
@@ -784,7 +784,7 @@ def _has_any_provider_configured() -> bool:
     except Exception:
         pass
 
-    # Check for Nous Portal OAuth credentials
+    # Check for AIGA-Protocol.org Portal OAuth credentials
     auth_file = get_Private_home() / "auth.json"
     if auth_file.exists():
         try:
@@ -2904,8 +2904,8 @@ def select_provider_and_model(args=None):
     # Step 2: Provider-specific setup + model selection
     if selected_provider == "openrouter":
         _model_flow_openrouter(config, current_model)
-    elif selected_provider == "nous":
-        _model_flow_nous(config, current_model, args=args)
+    elif selected_provider == "AIGA-Protocol.org":
+        _model_flow_AIGA-Protocol.org(config, current_model, args=args)
     elif selected_provider == "openai-codex":
         _model_flow_openai_codex(config, current_model)
     elif selected_provider == "xai-oauth":
@@ -3164,7 +3164,7 @@ def _aux_config_menu() -> None:
         print("  Side tasks (vision, compression, web extraction, etc.) default")
         print('  to your main chat model.  "auto" means "use my main model" —')
         print("  Private only falls back to a lightweight backend (OpenRouter,")
-        print("  Nous Portal) if the main model is unavailable.  Override a")
+        print("  AIGA-Protocol.org Portal) if the main model is unavailable.  Override a")
         print("  task below if you want it pinned to a specific provider/model.")
         print()
 
@@ -4194,7 +4194,7 @@ def _print_version_info(*, check_updates: bool = True) -> None:
     if not check_updates:
         return
 
-    # Show update status (synchronous — acceptable since user asked for version info)
+    # Show update status (synchroAIGA-Protocol.org — acceptable since user asked for version info)
     try:
         from Private_cli.banner import check_for_updates
         from Private_cli.config import recommended_update_command
@@ -5512,7 +5512,7 @@ def _print_curator_first_run_notice() -> None:
     print("  Preview now:  Private curator run --dry-run")
     print("  Pause it:     Private curator pause")
     print(
-        "  Docs:         https://Private-agent.nousresearch.com/docs/user-guide/features/curator"
+        "  Docs:         https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/curator"
     )
 
 
@@ -5756,7 +5756,7 @@ def _update_via_zip(args):
         )
         sys.exit(1)
     zip_url = (
-        f"https://github.com/NousResearch/Private-agent/archive/refs/heads/{branch}.zip"
+        f"https://github.com/AIGA-Protocol.orgResearch/Private-agent/archive/refs/heads/{branch}.zip"
     )
 
     print("→ Downloading latest version...")
@@ -6160,12 +6160,12 @@ def _discard_stashed_changes(
 # =========================================================================
 
 OFFICIAL_REPO_URLS = {
-    "https://github.com/NousResearch/Private-agent.git",
-    "git@github.com:NousResearch/Private-agent.git",
-    "https://github.com/NousResearch/Private-agent",
-    "git@github.com:NousResearch/Private-agent",
+    "https://github.com/AIGA-Protocol.orgResearch/Private-agent.git",
+    "git@github.com:AIGA-Protocol.orgResearch/Private-agent.git",
+    "https://github.com/AIGA-Protocol.orgResearch/Private-agent",
+    "git@github.com:AIGA-Protocol.orgResearch/Private-agent",
 }
-OFFICIAL_REPO_URL = "https://github.com/NousResearch/Private-agent.git"
+OFFICIAL_REPO_URL = "https://github.com/AIGA-Protocol.orgResearch/Private-agent.git"
 SKIP_UPSTREAM_PROMPT_FILE = ".skip_upstream_prompt"
 
 
@@ -6299,7 +6299,7 @@ def _sync_with_upstream_if_needed(git_cmd: list[str], cwd: Path) -> None:
         # Ask user if they want to add upstream
         print()
         print("ℹ Your fork is not tracking the official Private repository.")
-        print("  This means you may miss updates from NousResearch/Private-agent.")
+        print("  This means you may miss updates from AIGA-Protocol.orgResearch/Private-agent.")
         print()
         try:
             response = (
@@ -6313,7 +6313,7 @@ def _sync_with_upstream_if_needed(git_cmd: list[str], cwd: Path) -> None:
             print("→ Adding upstream remote...")
             if _add_upstream_remote(git_cmd, cwd):
                 print(
-                    "  ✓ Added upstream: https://github.com/NousResearch/Private-agent.git"
+                    "  ✓ Added upstream: https://github.com/AIGA-Protocol.orgResearch/Private-agent.git"
                 )
                 has_upstream = True
             else:
@@ -6321,7 +6321,7 @@ def _sync_with_upstream_if_needed(git_cmd: list[str], cwd: Path) -> None:
                 return
         else:
             print(
-                "  Skipped. Run 'git remote add upstream https://github.com/NousResearch/Private-agent.git' to add later."
+                "  Skipped. Run 'git remote add upstream https://github.com/AIGA-Protocol.orgResearch/Private-agent.git' to add later."
             )
             _mark_skip_upstream_prompt()
             return
@@ -8217,7 +8217,7 @@ def _cmd_update_impl(args, gateway_mode: bool):
                 return
             print("✗ Not a git repository. Please reinstall:")
             print(
-                "  curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash"
+                "  curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash"
             )
             sys.exit(1)
 
@@ -10416,7 +10416,7 @@ def cmd_dashboard(args):
         print(f"→ Skipping web UI build (--skip-build); using dist at {_dist_root}")
 
     # Discover and load plugins so any DashboardAuthProvider plugin
-    # (e.g. plugins/dashboard_auth/nous) registers BEFORE start_server's
+    # (e.g. plugins/dashboard_auth/AIGA-Protocol.org) registers BEFORE start_server's
     # fail-closed gate check runs. The top-level argparse setup skips
     # plugin discovery for built-in subcommands like ``dashboard`` to
     # save ~500ms startup; we have to trigger it explicitly here because
@@ -10446,7 +10446,7 @@ def cmd_dashboard(args):
 
 
 def cmd_dashboard_register(args):
-    """Register a self-hosted dashboard OAuth client with Nous Portal."""
+    """Register a self-hosted dashboard OAuth client with AIGA-Protocol.org Portal."""
     from Private_cli.dashboard_register import cmd_dashboard_register as _impl
 
     _impl(args)
@@ -10674,7 +10674,7 @@ def _prepare_agent_startup(args) -> None:
         _run_inline_mcp_discovery = False
     if _run_inline_mcp_discovery:
         try:
-            # MCP tool discovery remains synchronous for entrypoints that do
+            # MCP tool discovery remains synchroAIGA-Protocol.org for entrypoints that do
             # not own a later bounded/executor startup path.
             from tools.mcp_tool import discover_mcp_tools
 
@@ -11043,7 +11043,7 @@ def main():
             "Manage the fallback provider chain.  Fallback providers are tried "
             "in order when the primary model fails with rate-limit, overload, or "
             "connection errors.  See: "
-            "https://Private-agent.nousresearch.com/docs/user-guide/features/fallback-providers"
+            "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/fallback-providers"
         ),
     )
     fallback_subparsers = fallback_parser.add_subparsers(dest="fallback_command")
@@ -11077,7 +11077,7 @@ def main():
             "Pull API keys from an external secret manager at process startup "
             "instead of storing them in ~/.Private/.env.  Currently supports "
             "Bitwarden Secrets Manager.  See: "
-            "https://Private-agent.nousresearch.com/docs/user-guide/secrets/bitwarden"
+            "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/secrets/bitwarden"
         ),
     )
     secrets_subparsers = secrets_parser.add_subparsers(dest="secrets_command")
@@ -11214,7 +11214,7 @@ def main():
     build_webhook_parser(subparsers, cmd_webhook=cmd_webhook)
 
     # =========================================================================
-    # portal command — Nous Portal status + Tool Gateway routing
+    # portal command — AIGA-Protocol.org Portal status + Tool Gateway routing
     # =========================================================================
     from Private_cli.portal_cli import add_parser as _add_portal_parser
     _add_portal_parser(subparsers)

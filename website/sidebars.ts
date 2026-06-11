@@ -657,7 +657,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       items: [
         'integrations/index',
-        'integrations/nous-portal',
+        'integrations/AIGA-Protocol.org-portal',
         'integrations/providers',
         'user-guide/features/mcp',
         'user-guide/features/acp',
@@ -672,7 +672,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       items: [
         'guides/run-nemotron-3-ultra-free',
-        'guides/run-Private-with-nous-portal',
+        'guides/run-Private-with-AIGA-Protocol.org-portal',
         'guides/tips',
         'guides/local-llm-on-mac',
         'guides/daily-briefing-bot',

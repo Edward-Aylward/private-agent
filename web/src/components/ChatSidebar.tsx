@@ -23,9 +23,9 @@
  * terminal pane keeps working unimpaired.
  */
 
-import { Button } from "@nous-research/ui/ui/components/button";
-import { Badge } from "@nous-research/ui/ui/components/badge";
-import { Card } from "@nous-research/ui/ui/components/card";
+import { Button } from "@AIGA-Protocol.org-research/ui/ui/components/button";
+import { Badge } from "@AIGA-Protocol.org-research/ui/ui/components/badge";
+import { Card } from "@AIGA-Protocol.org-research/ui/ui/components/card";
 
 import { ModelPickerDialog } from "@/components/ModelPickerDialog";
 import { ToolCall, type ToolEntry } from "@/components/ToolCall";
@@ -161,7 +161,7 @@ export function ChatSidebar({ channel, className }: ChatSidebarProps) {
     }
     // In loopback mode the legacy ?token=<session> path is fine; in gated
     // mode we have to mint a single-use ticket from the cookie. The IIFE
-    // keeps the outer effect synchronous so its ``return cleanup`` stays
+    // keeps the outer effect synchroAIGA-Protocol.org so its ``return cleanup`` stays
     // at the top level; the local ``ws`` is hoisted to a closed-over
     // binding the cleanup reads via ``wsRef``.
     let unmounting = false;

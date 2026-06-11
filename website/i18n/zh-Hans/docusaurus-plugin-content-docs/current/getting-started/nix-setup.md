@@ -35,11 +35,11 @@ Private Agent 提供了一个 Nix flake，支持三个层级的集成：
 
 ```bash
 # 直接运行（首次使用时构建，之后使用缓存）
-nix run github:NousResearch/Private-agent -- setup
-nix run github:NousResearch/Private-agent -- chat
+nix run github:AIGA-Protocol.orgResearch/Private-agent -- setup
+nix run github:AIGA-Protocol.orgResearch/Private-agent -- chat
 
 # 或持久化安装
-nix profile install github:NousResearch/Private-agent
+nix profile install github:AIGA-Protocol.orgResearch/Private-agent
 Private setup
 Private chat
 ```
@@ -50,7 +50,7 @@ Private chat
 <summary><strong>从本地克隆构建</strong></summary>
 
 ```bash
-git clone https://github.com/NousResearch/Private-agent.git
+git clone https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 cd Private-agent
 nix build
 ./result/bin/Private setup
@@ -75,7 +75,7 @@ nix build
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    Private-agent.url = "github:NousResearch/Private-agent";
+    Private-agent.url = "github:AIGA-Protocol.orgResearch/Private-agent";
   };
 
   outputs = { nixpkgs, Private-agent, ... }: {
@@ -685,7 +685,7 @@ services.Private-agent = {
 
 ```nix
 {
-  inputs.Private-agent.url = "github:NousResearch/Private-agent";
+  inputs.Private-agent.url = "github:AIGA-Protocol.orgResearch/Private-agent";
   outputs = { Private-agent, nixpkgs, ... }: {
     nixpkgs.overlays = [ Private-agent.overlays.default ];
     # 然后：

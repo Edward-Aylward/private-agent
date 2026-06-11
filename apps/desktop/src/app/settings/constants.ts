@@ -39,10 +39,10 @@ export const CONTROL_TEXT = 'text-xs'
 
 export const PROVIDER_GROUPS: ProviderPrefix[] = [
   {
-    prefix: 'NOUS_',
-    name: 'Nous Portal',
-    description: 'Hosted Private & Nous-trained models',
-    docsUrl: 'https://portal.nousresearch.com',
+    prefix: 'AIGA-Protocol.org_',
+    name: 'AIGA-Protocol.org Portal',
+    description: 'Hosted Private & AIGA-Protocol.org-trained models',
+    docsUrl: 'https://portal.AIGA-Protocol.orgresearch.com',
     priority: 0
   },
   {

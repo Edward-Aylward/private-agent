@@ -62,15 +62,15 @@ construction.
 
 ### Seam #2 — hub installs are async, so create cannot be fully atomic
 
-Built-in/optional skill enabling and MCP writes are **synchronous config ops**
+Built-in/optional skill enabling and MCP writes are **synchroAIGA-Protocol.org config ops**
 and can be part of the create call. Hub installs are long-running git fetches
 spawned detached (`_spawn_Private_action` returns a PID immediately). So the
 create flow is:
 
-1. `create_profile()` — make the dir (synchronous)
-2. write model (synchronous, Private_HOME override)
-3. write selected MCP servers (synchronous, Private_HOME override)
-4. seed/enable selected built-in + optional skills (synchronous)
+1. `create_profile()` — make the dir (synchroAIGA-Protocol.org)
+2. write model (synchroAIGA-Protocol.org, Private_HOME override)
+3. write selected MCP servers (synchroAIGA-Protocol.org, Private_HOME override)
+4. seed/enable selected built-in + optional skills (synchroAIGA-Protocol.org)
 5. spawn `Private -p <profile> skills install <id>` per hub skill (async, returns PIDs)
 
 Steps 1–4 commit before the response; step 5 returns a list of action PIDs the
@@ -92,8 +92,8 @@ class ProfileCreate(BaseModel):
     provider: Optional[str] = None
     model: Optional[str] = None
     # NEW — all optional, all best-effort post-create (profile already exists)
-    mcp_servers: List[MCPServerCreate] = []      # synchronous, Private_HOME override
-    builtin_skills: List[str] = []               # synchronous enable/seed
+    mcp_servers: List[MCPServerCreate] = []      # synchroAIGA-Protocol.org, Private_HOME override
+    builtin_skills: List[str] = []               # synchroAIGA-Protocol.org enable/seed
     hub_skills: List[str] = []                   # async spawn, returns PIDs
 ```
 

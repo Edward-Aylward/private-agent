@@ -81,7 +81,7 @@ python $Private_HOME/skills/devops/watchers/scripts/watch_rss.py \
 
 ```bash
 python $Private_HOME/skills/devops/watchers/scripts/watch_github.py \
-  --name Private-issues --repo NousResearch/Private-agent --scope issues
+  --name Private-issues --repo AIGA-Protocol.orgResearch/Private-agent --scope issues
 ```
 
 轮询任意 JSON API：

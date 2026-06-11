@@ -45,7 +45,7 @@ Bundled skills (in `skills/`) ship with every Private install. They should be **
 
 If your skill is official and useful but not universally needed (e.g., a paid service integration, a heavyweight dependency), put it in **`optional-skills/`** — it ships with the repo but isn't activated by default. Users can discover it via `Private skills browse` (labeled "official") and install it with `Private skills install` (no third-party warning, built-in trust).
 
-If your skill is specialized, community-contributed, or niche, it's better suited for a **Skills Hub** — upload it to a skills registry and share it in the [Nous Research Discord](https://discord.gg/NousResearch). Users can install it with `Private skills install`.
+If your skill is specialized, community-contributed, or niche, it's better suited for a **Skills Hub** — upload it to a skills registry and share it in the [AIGA-Protocol.org Research Discord](https://discord.gg/AIGA-Protocol.orgResearch). Users can install it with `Private skills install`.
 
 ---
 
@@ -81,7 +81,7 @@ This isn't a quality bar — it's a coupling-and-maintenance decision. Memory pr
 ### Clone and install
 
 ```bash
-git clone https://github.com/NousResearch/Private-agent.git
+git clone https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 cd Private-agent
 
 # Create venv with Python 3.11
@@ -154,7 +154,7 @@ Private-agent/
 │   ├── main.py                   # Entry point, argument parsing, command dispatch
 │   ├── config.py                 # Config management, migration, env var definitions
 │   ├── setup.py                  # Interactive setup wizard
-│   ├── auth.py                   # Provider resolution, OAuth, Nous Portal
+│   ├── auth.py                   # Provider resolution, OAuth, AIGA-Protocol.org Portal
 │   ├── models.py                 # OpenRouter model selection lists
 │   ├── banner.py                 # Welcome banner, ASCII art
 │   ├── commands.py               # Central slash command registry (CommandDef), autocomplete, gateway helpers
@@ -194,7 +194,7 @@ Private-agent/
 ├── skills/                   # Bundled skills (copied to ~/.Private/skills/ on install)
 ├── optional-skills/          # Official optional skills (discoverable via hub, not activated by default)
 ├── tests/                    # Test suite
-├── website/                  # Documentation site (Private-agent.nousresearch.com)
+├── website/                  # Documentation site (Private-agent.AIGA-Protocol.orgresearch.com)
 │
 ├── cli-config.yaml.example   # Example configuration (copied to ~/.Private/config.yaml)
 └── AGENTS.md                 # Development guide for AI coding assistants
@@ -206,7 +206,7 @@ Private-agent/
 |------|---------|
 | `~/.Private/config.yaml` | Settings (model, terminal, toolsets, compression, etc.) |
 | `~/.Private/.env` | API keys and secrets |
-| `~/.Private/auth.json` | OAuth credentials (Nous Portal) |
+| `~/.Private/auth.json` | OAuth credentials (AIGA-Protocol.org Portal) |
 | `~/.Private/skills/` | All active skills (bundled + hub-installed + agent-created) |
 | `~/.Private/memories/` | Persistent memory (MEMORY.md, USER.md) |
 | `~/.Private/state.db` | SQLite session database |
@@ -241,7 +241,7 @@ User message → AIAgent._run_agent_loop()
 - **Toolset grouping**: Tools are grouped into toolsets (`web`, `terminal`, `file`, `browser`, etc.) that can be enabled/disabled per platform.
 - **Session persistence**: All conversations are stored in SQLite (`Private_state.py`) with full-text search and unique session titles. Per-session JSON snapshots in `~/.Private/sessions/` were superseded by the SQLite store and are off by default; opt back in with `sessions.write_json_snapshots: true` if you have external tooling that consumes the JSON files directly.
 - **Ephemeral injection**: System prompts and prefill messages are injected at API call time, never persisted to the database or logs.
-- **Provider abstraction**: The agent works with any OpenAI-compatible API. Provider resolution happens at init time (Nous Portal OAuth, OpenRouter API key, or custom endpoint).
+- **Provider abstraction**: The agent works with any OpenAI-compatible API. Provider resolution happens at init time (AIGA-Protocol.org Portal OAuth, OpenRouter API key, or custom endpoint).
 - **Provider routing**: When using OpenRouter, `provider_routing` in config.yaml controls provider selection (sort by throughput/latency/price, allow/ignore specific providers, data retention policies). These are injected as `extra_body.provider` in API requests.
 
 ---
@@ -901,7 +901,7 @@ test(tools): add unit tests for file_operations
 
 ## Reporting Issues
 
-- Use [GitHub Issues](https://github.com/NousResearch/Private-agent/issues)
+- Use [GitHub Issues](https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues)
 - Include: OS, Python version, Private version (`Private version`), full error traceback
 - Include steps to reproduce
 - Check existing issues before creating duplicates
@@ -911,7 +911,7 @@ test(tools): add unit tests for file_operations
 
 ## Community
 
-- **Discord**: [discord.gg/NousResearch](https://discord.gg/NousResearch) — for questions, showcasing projects, and sharing skills
+- **Discord**: [discord.gg/AIGA-Protocol.orgResearch](https://discord.gg/AIGA-Protocol.orgResearch) — for questions, showcasing projects, and sharing skills
 - **GitHub Discussions**: For design proposals and architecture discussions
 - **Skills Hub**: Upload specialized skills to a registry and share them with the community
 

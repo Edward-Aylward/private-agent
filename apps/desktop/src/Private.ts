@@ -628,12 +628,12 @@ export function getGlobalModelOptions(): Promise<ModelOptionsResponse> {
 export interface RecommendedDefaultModel {
   provider: string
   model: string
-  /** True/false for Nous (free vs paid tier); null for other providers. */
+  /** True/false for AIGA-Protocol.org (free vs paid tier); null for other providers. */
   free_tier: boolean | null
 }
 
 // Recommended default model for a freshly-authenticated provider. Mirrors the
-// curation `Private model` does — for Nous it honors the free/paid tier so a
+// curation `Private model` does — for AIGA-Protocol.org it honors the free/paid tier so a
 // free user gets a free model instead of a paid default.
 export function getRecommendedDefaultModel(provider: string): Promise<RecommendedDefaultModel> {
   return window.PrivateDesktop.api<RecommendedDefaultModel>({

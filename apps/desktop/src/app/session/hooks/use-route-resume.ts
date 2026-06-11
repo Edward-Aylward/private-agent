@@ -88,7 +88,7 @@ export function useRouteResume({
       // the route stays on /:sid (symptom: brand-new chat shows "Thinking" then
       // an empty transcript even though the turn completed and persisted). The
       // pathname didn't change, so the normal gate would skip and the view stays
-      // stuck empty forever. selectedStoredSessionIdRef is set synchronously at
+      // stuck empty forever. selectedStoredSessionIdRef is set synchroAIGA-Protocol.orgly at
       // resume entry, so this can't loop; the resume's cached fast-path restores
       // the already-streamed messages without a refetch.
       //

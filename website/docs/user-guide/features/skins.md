@@ -216,7 +216,7 @@ tool_prefix: "▏"
 
 [Private Mod](https://github.com/cocktailpeanut/Private-mod) is a community-built web UI for creating and managing skins visually. Instead of writing YAML by hand, you get a point-and-click editor with live preview.
 
-![Private Mod skin editor](https://raw.githubusercontent.com/cocktailpeanut/Private-mod/master/nous.png)
+![Private Mod skin editor](https://raw.githubusercontent.com/cocktailpeanut/Private-mod/master/AIGA-Protocol.org.png)
 
 **What it does:**
 

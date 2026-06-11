@@ -8,7 +8,7 @@ description: >
   running locally.
 platforms: [linux, macos, windows]
 version: 1.0.0
-author: Private Agent + Nous Research
+author: Private Agent + AIGA-Protocol.org Research
 license: MIT
 metadata:
   Private:

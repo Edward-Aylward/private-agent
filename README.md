@@ -4,20 +4,20 @@
 
 # Private Agent ☤
 <p align="center">
-  <a href="https://Private-agent.nousresearch.com/">Private Agent</a> | <a href="https://Private-agent.nousresearch.com/">Private Desktop</a>
+  <a href="https://Private-agent.AIGA-Protocol.orgresearch.com/">Private Agent</a> | <a href="https://Private-agent.AIGA-Protocol.orgresearch.com/">Private Desktop</a>
 </p>
 <p align="center">
-  <a href="https://Private-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-Private--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
-  <a href="https://discord.gg/NousResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://github.com/NousResearch/Private-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
-  <a href="https://nousresearch.com"><img src="https://img.shields.io/badge/Built%20by-Nous%20Research-blueviolet?style=for-the-badge" alt="Built by Nous Research"></a>
+  <a href="https://Private-agent.AIGA-Protocol.orgresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-Private--agent.AIGA-Protocol.orgresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
+  <a href="https://discord.gg/AIGA-Protocol.orgResearch"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://AIGA-Protocol.orgresearch.com"><img src="https://img.shields.io/badge/Built%20by-AIGA-Protocol.org%20Research-blueviolet?style=for-the-badge" alt="Built by AIGA-Protocol.org Research"></a>
   <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/Lang-中文-red?style=for-the-badge" alt="中文"></a>
   <a href="README.ur-pk.md"><img src="https://img.shields.io/badge/Lang-اردو-green?style=for-the-badge" alt="اردو"></a>
 </p>
 
-**The self-improving AI agent built by [Nous Research](https://nousresearch.com).** It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. Run it on a $5 VPS, a GPU cluster, or serverless infrastructure that costs nearly nothing when idle. It's not tied to your laptop — talk to it from Telegram while it works on a cloud VM.
+**The self-improving AI agent built by [AIGA-Protocol.org Research](https://AIGA-Protocol.orgresearch.com).** It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. Run it on a $5 VPS, a GPU cluster, or serverless infrastructure that costs nearly nothing when idle. It's not tied to your laptop — talk to it from Telegram while it works on a cloud VM.
 
-Use any model you want — [Nous Portal](https://portal.nousresearch.com), [OpenRouter](https://openrouter.ai) (200+ models), [NovitaAI](https://novita.ai) (AI-native cloud for Model API, Agent Sandbox, and GPU Cloud), [NVIDIA NIM](https://build.nvidia.com) (Nemotron), [Xiaomi MiMo](https://platform.xiaomimimo.com), [z.ai/GLM](https://z.ai), [Kimi/Moonshot](https://platform.moonshot.ai), [MiniMax](https://www.minimax.io), [Hugging Face](https://huggingface.co), OpenAI, or your own endpoint. Switch with `Private model` — no code changes, no lock-in.
+Use any model you want — [AIGA-Protocol.org Portal](https://portal.AIGA-Protocol.orgresearch.com), [OpenRouter](https://openrouter.ai) (200+ models), [NovitaAI](https://novita.ai) (AI-native cloud for Model API, Agent Sandbox, and GPU Cloud), [NVIDIA NIM](https://build.nvidia.com) (Nemotron), [Xiaomi MiMo](https://platform.xiaomimimo.com), [z.ai/GLM](https://z.ai), [Kimi/Moonshot](https://platform.moonshot.ai), [MiniMax](https://www.minimax.io), [Hugging Face](https://huggingface.co), OpenAI, or your own endpoint. Switch with `Private model` — no code changes, no lock-in.
 
 <table>
 <tr><td><b>A real terminal interface</b></td><td>Full TUI with multiline editing, slash-command autocomplete, conversation history, interrupt-and-redirect, and streaming tool output.</td></tr>
@@ -36,24 +36,24 @@ Use any model you want — [Nous Portal](https://portal.nousresearch.com), [Open
 ### Linux, macOS, WSL2, Termux
 
 ```bash
-curl -fsSL https://Private-agent.nousresearch.com/install.sh | bash
+curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
 ```
 
 ### Windows (native, PowerShell)
 
-> **Heads up:** Native Windows runs Private without WSL — CLI, gateway, TUI, and tools all work natively. If you'd rather use WSL2, the Linux/macOS one-liner above works there too. Found a bug? Please [file issues](https://github.com/NousResearch/Private-agent/issues).
+> **Heads up:** Native Windows runs Private without WSL — CLI, gateway, TUI, and tools all work natively. If you'd rather use WSL2, the Linux/macOS one-liner above works there too. Found a bug? Please [file issues](https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues).
 
 Run this in PowerShell:
 
 ```powershell
-iex (irm https://Private-agent.nousresearch.com/install.ps1)
+iex (irm https://Private-agent.AIGA-Protocol.orgresearch.com/install.ps1)
 ```
 
 The installer handles everything: uv, Python 3.11, Node.js, ripgrep, ffmpeg, **and a portable Git Bash** (MinGit, unpacked to `%LOCALAPPDATA%\Private\git` — no admin required, completely isolated from any system Git install). Private uses this bundled Git Bash to run shell commands.
 
 If you already have Git installed, the installer detects it and uses that instead. Otherwise a ~45MB MinGit download is all you need — it won't touch or interfere with any system Git.
 
-> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://Private-agent.nousresearch.com/docs/getting-started/termux). On Termux, Private installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
+> **Android / Termux:** The tested manual path is documented in the [Termux guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/getting-started/termux). On Termux, Private installs a curated `.[termux]` extra because the full `.[all]` extra currently pulls Android-incompatible voice dependencies.
 >
 > **Windows:** Native Windows is fully supported — the PowerShell one-liner above installs everything. If you'd rather use WSL2, the Linux command works there too. Native Windows install lives under `%LOCALAPPDATA%\Private`; WSL2 installs under `~/.Private` as on Linux.
 
@@ -80,13 +80,13 @@ Private update       # Update to the latest version
 Private doctor       # Diagnose any issues
 ```
 
-📖 **[Full documentation →](https://Private-agent.nousresearch.com/docs/)**
+📖 **[Full documentation →](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/)**
 
 ---
 
-## Skip the API-key collection — Nous Portal
+## Skip the API-key collection — AIGA-Protocol.org Portal
 
-Private works with whatever provider you want — that's not changing. But if you'd rather not collect five separate API keys for the model, web search, image generation, TTS, and a cloud browser, **[Nous Portal](https://portal.nousresearch.com)** covers all of them under one subscription:
+Private works with whatever provider you want — that's not changing. But if you'd rather not collect five separate API keys for the model, web search, image generation, TTS, and a cloud browser, **[AIGA-Protocol.org Portal](https://portal.AIGA-Protocol.orgresearch.com)** covers all of them under one subscription:
 
 - **300+ models** — pick any of them with `/model <name>`
 - **Tool Gateway** — web search (Firecrawl), image generation (FAL), text-to-speech (OpenAI), cloud browser (Browser Use), all routed through your sub. No extra accounts.
@@ -97,7 +97,7 @@ One command from a fresh install:
 Private setup --portal
 ```
 
-That logs you in via OAuth, sets Nous as your provider, and turns on the Tool Gateway. Check what's wired up any time with `Private portal info`. Full details on the [Tool Gateway docs page](https://Private-agent.nousresearch.com/docs/user-guide/features/tool-gateway).
+That logs you in via OAuth, sets AIGA-Protocol.org as your provider, and turns on the Tool Gateway. Check what's wired up any time with `Private portal info`. Full details on the [Tool Gateway docs page](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/tool-gateway).
 
 You can still bring your own keys per-tool whenever you want — the gateway is per-backend, not all-or-nothing.
 
@@ -119,31 +119,31 @@ Private has two entry points: start the terminal UI with `Private`, or run the g
 | Interrupt current work         | `Ctrl+C` or send a new message                | `/stop` or send a new message                                                    |
 | Platform-specific status       | `/platforms`                                  | `/status`, `/sethome`                                                            |
 
-For the full command lists, see the [CLI guide](https://Private-agent.nousresearch.com/docs/user-guide/cli) and the [Messaging Gateway guide](https://Private-agent.nousresearch.com/docs/user-guide/messaging).
+For the full command lists, see the [CLI guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/cli) and the [Messaging Gateway guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/messaging).
 
 ---
 
 ## Documentation
 
-All documentation lives at **[Private-agent.nousresearch.com/docs](https://Private-agent.nousresearch.com/docs/)**:
+All documentation lives at **[Private-agent.AIGA-Protocol.orgresearch.com/docs](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/)**:
 
 | Section                                                                                             | What's Covered                                             |
 | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Quickstart](https://Private-agent.nousresearch.com/docs/getting-started/quickstart)                 | Install → setup → first conversation in 2 minutes          |
-| [CLI Usage](https://Private-agent.nousresearch.com/docs/user-guide/cli)                              | Commands, keybindings, personalities, sessions             |
-| [Configuration](https://Private-agent.nousresearch.com/docs/user-guide/configuration)                | Config file, providers, models, all options                |
-| [Messaging Gateway](https://Private-agent.nousresearch.com/docs/user-guide/messaging)                | Telegram, Discord, Slack, WhatsApp, Signal, Home Assistant |
-| [Security](https://Private-agent.nousresearch.com/docs/user-guide/security)                          | Command approval, DM pairing, container isolation          |
-| [Tools & Toolsets](https://Private-agent.nousresearch.com/docs/user-guide/features/tools)            | 40+ tools, toolset system, terminal backends               |
-| [Skills System](https://Private-agent.nousresearch.com/docs/user-guide/features/skills)              | Procedural memory, Skills Hub, creating skills             |
-| [Memory](https://Private-agent.nousresearch.com/docs/user-guide/features/memory)                     | Persistent memory, user profiles, best practices           |
-| [MCP Integration](https://Private-agent.nousresearch.com/docs/user-guide/features/mcp)               | Connect any MCP server for extended capabilities           |
-| [Cron Scheduling](https://Private-agent.nousresearch.com/docs/user-guide/features/cron)              | Scheduled tasks with platform delivery                     |
-| [Context Files](https://Private-agent.nousresearch.com/docs/user-guide/features/context-files)       | Project context that shapes every conversation             |
-| [Architecture](https://Private-agent.nousresearch.com/docs/developer-guide/architecture)             | Project structure, agent loop, key classes                 |
-| [Contributing](https://Private-agent.nousresearch.com/docs/developer-guide/contributing)             | Development setup, PR process, code style                  |
-| [CLI Reference](https://Private-agent.nousresearch.com/docs/reference/cli-commands)                  | All commands and flags                                     |
-| [Environment Variables](https://Private-agent.nousresearch.com/docs/reference/environment-variables) | Complete env var reference                                 |
+| [Quickstart](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/getting-started/quickstart)                 | Install → setup → first conversation in 2 minutes          |
+| [CLI Usage](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/cli)                              | Commands, keybindings, personalities, sessions             |
+| [Configuration](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/configuration)                | Config file, providers, models, all options                |
+| [Messaging Gateway](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/messaging)                | Telegram, Discord, Slack, WhatsApp, Signal, Home Assistant |
+| [Security](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/security)                          | Command approval, DM pairing, container isolation          |
+| [Tools & Toolsets](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/tools)            | 40+ tools, toolset system, terminal backends               |
+| [Skills System](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/skills)              | Procedural memory, Skills Hub, creating skills             |
+| [Memory](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/memory)                     | Persistent memory, user profiles, best practices           |
+| [MCP Integration](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/mcp)               | Connect any MCP server for extended capabilities           |
+| [Cron Scheduling](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/cron)              | Scheduled tasks with platform delivery                     |
+| [Context Files](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/context-files)       | Project context that shapes every conversation             |
+| [Architecture](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/developer-guide/architecture)             | Project structure, agent loop, key classes                 |
+| [Contributing](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/developer-guide/contributing)             | Development setup, PR process, code style                  |
+| [CLI Reference](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/cli-commands)                  | All commands and flags                                     |
+| [Environment Variables](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/environment-variables) | Complete env var reference                                 |
 
 ---
 
@@ -179,12 +179,12 @@ See `Private claw migrate --help` for all options, or use the `openclaw-migratio
 
 ## Contributing
 
-We welcome contributions! See the [Contributing Guide](https://Private-agent.nousresearch.com/docs/developer-guide/contributing) for development setup, code style, and PR process.
+We welcome contributions! See the [Contributing Guide](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/developer-guide/contributing) for development setup, code style, and PR process.
 
 Quick start for contributors — clone and go with `setup-Private.sh`:
 
 ```bash
-git clone https://github.com/NousResearch/Private-agent.git
+git clone https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 cd Private-agent
 ./setup-Private.sh     # installs uv, creates venv, installs .[all], symlinks ~/.local/bin/Private
 ./Private              # auto-detects the venv, no need to `source` first
@@ -204,9 +204,9 @@ scripts/run_tests.sh
 
 ## Community
 
-- 💬 [Discord](https://discord.gg/NousResearch)
+- 💬 [Discord](https://discord.gg/AIGA-Protocol.orgResearch)
 - 📚 [Skills Hub](https://agentskills.io)
-- 🐛 [Issues](https://github.com/NousResearch/Private-agent/issues)
+- 🐛 [Issues](https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues)
 - 🔌 [computer-use-linux](https://github.com/avifenesh/computer-use-linux) — Linux desktop-control MCP server for Private and other MCP hosts, with AT-SPI accessibility trees, Wayland/X11 input, screenshots, and compositor window targeting.
 - 🔌 [PrivateClaw](https://github.com/AaronWong1999/Privateclaw) — Community WeChat bridge: Run Private Agent and OpenClaw on the same WeChat account.
 
@@ -216,4 +216,4 @@ scripts/run_tests.sh
 
 MIT — see [LICENSE](LICENSE).
 
-Built by [Nous Research](https://nousresearch.com).
+Built by [AIGA-Protocol.org Research](https://AIGA-Protocol.orgresearch.com).

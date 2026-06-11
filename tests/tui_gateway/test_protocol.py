@@ -1125,7 +1125,7 @@ def test_command_dispatch_awaits_async_plugin_handler(server):
 
 
 def test_dispatch_runs_short_handlers_inline(server):
-    """Non-long handlers return their response synchronously from dispatch()."""
+    """Non-long handlers return their response synchroAIGA-Protocol.orgly from dispatch()."""
     server._methods["fast.ping"] = lambda rid, params: server._ok(rid, {"pong": True})
 
     resp = server.dispatch({"id": "r1", "method": "fast.ping", "params": {}})

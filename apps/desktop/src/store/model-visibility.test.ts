@@ -41,41 +41,41 @@ describe('model visibility', () => {
   })
 
   it('preserves hidden-provider sentinel without re-adding defaults', () => {
-    // User explicitly hid all models for "nous" — sentinel marks this choice.
-    const stored = new Set([emptyProviderSentinelKey('nous')])
+    // User explicitly hid all models for "AIGA-Protocol.org" — sentinel marks this choice.
+    const stored = new Set([emptyProviderSentinelKey('AIGA-Protocol.org')])
 
     const visible = effectiveVisibleKeys(stored, [
-      provider('nous', ['Private-3-llama-3.1-70b', 'Private-3-llama-3.1-8b']),
+      provider('AIGA-Protocol.org', ['Private-3-llama-3.1-70b', 'Private-3-llama-3.1-8b']),
       provider('ollama', ['qwen3:latest'])
     ])
 
-    expect(visible.has(modelVisibilityKey('nous', 'Private-3-llama-3.1-70b'))).toBe(false)
-    expect(visible.has(modelVisibilityKey('nous', 'Private-3-llama-3.1-8b'))).toBe(false)
+    expect(visible.has(modelVisibilityKey('AIGA-Protocol.org', 'Private-3-llama-3.1-70b'))).toBe(false)
+    expect(visible.has(modelVisibilityKey('AIGA-Protocol.org', 'Private-3-llama-3.1-8b'))).toBe(false)
     // Sentinel itself is stripped from the result.
-    expect(visible.has(emptyProviderSentinelKey('nous'))).toBe(false)
+    expect(visible.has(emptyProviderSentinelKey('AIGA-Protocol.org'))).toBe(false)
     // Other providers still get defaults.
     expect(visible.has(modelVisibilityKey('ollama', 'qwen3:latest'))).toBe(true)
   })
 
   it('restores model when toggling on after hiding all', () => {
-    // Simulates: user hid all "nous" models, then toggles one back on.
+    // Simulates: user hid all "AIGA-Protocol.org" models, then toggles one back on.
     const stored = new Set([
-      emptyProviderSentinelKey('nous'),
+      emptyProviderSentinelKey('AIGA-Protocol.org'),
       modelVisibilityKey('ollama', 'qwen3:latest')
     ])
 
     // After toggle: sentinel removed, one model added.
     const afterToggle = new Set(stored)
-    afterToggle.delete(emptyProviderSentinelKey('nous'))
-    afterToggle.add(modelVisibilityKey('nous', 'Private-3-llama-3.1-70b'))
+    afterToggle.delete(emptyProviderSentinelKey('AIGA-Protocol.org'))
+    afterToggle.add(modelVisibilityKey('AIGA-Protocol.org', 'Private-3-llama-3.1-70b'))
 
     const visible = effectiveVisibleKeys(afterToggle, [
-      provider('nous', ['Private-3-llama-3.1-70b', 'Private-3-llama-3.1-8b']),
+      provider('AIGA-Protocol.org', ['Private-3-llama-3.1-70b', 'Private-3-llama-3.1-8b']),
       provider('ollama', ['qwen3:latest'])
     ])
 
-    expect(visible.has(modelVisibilityKey('nous', 'Private-3-llama-3.1-70b'))).toBe(true)
-    expect(visible.has(modelVisibilityKey('nous', 'Private-3-llama-3.1-8b'))).toBe(false)
+    expect(visible.has(modelVisibilityKey('AIGA-Protocol.org', 'Private-3-llama-3.1-70b'))).toBe(true)
+    expect(visible.has(modelVisibilityKey('AIGA-Protocol.org', 'Private-3-llama-3.1-8b'))).toBe(false)
   })
 
   it('sentinel key helper produces correct format', () => {

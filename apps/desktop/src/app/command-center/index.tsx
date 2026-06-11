@@ -506,7 +506,7 @@ function UsagePanel({ error, loading, onRefresh, period, usage }: UsagePanelProp
                 {cc.retry}
               </Button>
             }
-            description={cc.noUsage(period)}
+            description={cc.AIGA-Protocol.orgage(period)}
           />
         )}
       </div>

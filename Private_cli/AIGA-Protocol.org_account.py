@@ -1,4 +1,4 @@
-"""Normalized Nous Portal account entitlement helpers."""
+"""Normalized AIGA-Protocol.org Portal account entitlement helpers."""
 
 from __future__ import annotations
 
@@ -12,10 +12,10 @@ from datetime import datetime, timezone
 from typing import Any, Literal, Optional
 
 
-NousAccountInfoSource = Literal["jwt", "account_api", "inference_key", "none", "error"]
+AIGA-Protocol.orgAccountInfoSource = Literal["jwt", "account_api", "inference_key", "none", "error"]
 
 # Free tool-pool coverage categories. Kept byte-for-byte aligned with the
-# Portal's TOOL_COVERAGE_CATEGORIES (nous-account-service
+# Portal's TOOL_COVERAGE_CATEGORIES (AIGA-Protocol.org-account-service
 # src/server/tool-pool-eligibility.ts). The Portal mints these into the
 # `tool_access.coverage` map on the JWT and /api/oauth/account; FAL video gen
 # (`fal-video`) is intentionally excluded from the pool.
@@ -29,12 +29,12 @@ TOOL_COVERAGE_CATEGORIES = (
 )
 
 _ACCOUNT_INFO_CACHE_TTL = 60
-_account_info_cache: tuple[str, float, "NousPortalAccountInfo"] | None = None
+_account_info_cache: tuple[str, float, "AIGA-Protocol.orgPortalAccountInfo"] | None = None
 _ACCOUNT_INFO_CACHE_LOCK = threading.Lock()
 
 
 @dataclass(frozen=True)
-class NousPortalSubscriptionInfo:
+class AIGA-Protocol.orgPortalSubscriptionInfo:
     plan: Optional[str] = None
     tier: Optional[int] = None
     monthly_charge: Optional[float] = None
@@ -45,7 +45,7 @@ class NousPortalSubscriptionInfo:
 
 
 @dataclass(frozen=True)
-class NousPaidServiceAccessInfo:
+class AIGA-Protocol.orgPaidServiceAccessInfo:
     allowed: Optional[bool] = None
     paid_access: Optional[bool] = None
     reason: Optional[str] = None
@@ -61,7 +61,7 @@ class NousPaidServiceAccessInfo:
 
 
 @dataclass(frozen=True)
-class NousToolAccessInfo:
+class AIGA-Protocol.orgToolAccessInfo:
     """Free tool-pool entitlement, decoupled from paid/billing access.
 
     Mirrors the Portal's ``tool_access`` claim/field: ``enabled`` is true when a
@@ -74,15 +74,15 @@ class NousToolAccessInfo:
 
 
 @dataclass(frozen=True)
-class NousPortalAccountInfo:
+class AIGA-Protocol.orgPortalAccountInfo:
     logged_in: bool
-    source: NousAccountInfoSource
+    source: AIGA-Protocol.orgAccountInfoSource
     fresh: bool
     user_id: Optional[str] = None
     org_id: Optional[str] = None
     client_id: Optional[str] = None
     product_id: Optional[str] = None
-    nous_client: Optional[str] = None
+    AIGA-Protocol.org_client: Optional[str] = None
     portal_base_url: Optional[str] = None
     inference_base_url: Optional[str] = None
     inference_credential_present: bool = False
@@ -90,10 +90,10 @@ class NousPortalAccountInfo:
     expires_at: Optional[datetime] = None
     email: Optional[str] = None
     privy_did: Optional[str] = None
-    subscription: Optional[NousPortalSubscriptionInfo] = None
+    subscription: Optional[AIGA-Protocol.orgPortalSubscriptionInfo] = None
     paid_service_access: Optional[bool] = None
-    paid_service_access_info: Optional[NousPaidServiceAccessInfo] = None
-    tool_access: Optional[NousToolAccessInfo] = None
+    paid_service_access_info: Optional[AIGA-Protocol.orgPaidServiceAccessInfo] = None
+    tool_access: Optional[AIGA-Protocol.orgToolAccessInfo] = None
     raw_claims: Optional[dict[str, Any]] = None
     raw_account: Optional[dict[str, Any]] = None
     error: Optional[str] = None
@@ -125,29 +125,29 @@ class NousPortalAccountInfo:
         return bool(ta and ta.enabled and ta.coverage.get(category) is True)
 
 
-def nous_portal_billing_url(account_info: Optional[NousPortalAccountInfo] = None) -> str:
-    """Return the billing URL for a normalized Nous account snapshot."""
+def AIGA-Protocol.org_portal_billing_url(account_info: Optional[AIGA-Protocol.orgPortalAccountInfo] = None) -> str:
+    """Return the billing URL for a normalized AIGA-Protocol.org account snapshot."""
     try:
-        from Private_cli.auth import DEFAULT_NOUS_PORTAL_URL
+        from Private_cli.auth import DEFAULT_AIGA-Protocol.org_PORTAL_URL
     except Exception:
-        DEFAULT_NOUS_PORTAL_URL = "https://portal.nousresearch.com"
+        DEFAULT_AIGA-Protocol.org_PORTAL_URL = "https://portal.AIGA-Protocol.orgresearch.com"
 
     base = None
     if account_info is not None:
         base = account_info.portal_base_url
     if not isinstance(base, str) or not base.strip():
-        base = DEFAULT_NOUS_PORTAL_URL
+        base = DEFAULT_AIGA-Protocol.org_PORTAL_URL
     return f"{base.rstrip('/')}/billing"
 
 
-def format_nous_portal_entitlement_message(
-    account_info: Optional[NousPortalAccountInfo],
+def format_AIGA-Protocol.org_portal_entitlement_message(
+    account_info: Optional[AIGA-Protocol.orgPortalAccountInfo],
     *,
     capability: str = "this feature",
     include_refresh_hint: bool = True,
     coverage_category: Optional[str] = None,
 ) -> Optional[str]:
-    """Return user-facing guidance for a missing Nous tool-gateway entitlement.
+    """Return user-facing guidance for a missing AIGA-Protocol.org tool-gateway entitlement.
 
     ``None`` means the account is entitled to use the capability — via paid
     service access OR a live free tool pool that covers it. The message works
@@ -161,7 +161,7 @@ def format_nous_portal_entitlement_message(
     message implying their credits are exhausted. The pool-vs-paid distinction is
     never surfaced to the user.
     """
-    billing_url = nous_portal_billing_url(account_info)
+    billing_url = AIGA-Protocol.org_portal_billing_url(account_info)
 
     if account_info is not None:
         if coverage_category is not None:
@@ -172,7 +172,7 @@ def format_nous_portal_entitlement_message(
                 # specific capability isn't covered. Surface a neutral billing
                 # nudge without exposing pool-vs-paid internals to the user.
                 return (
-                    f"{capability} isn't included with your current Nous Portal "
+                    f"{capability} isn't included with your current AIGA-Protocol.org Portal "
                     f"access. Add credits or a subscription to enable it at {billing_url}."
                 )
         elif account_info.tool_gateway_entitled:
@@ -180,7 +180,7 @@ def format_nous_portal_entitlement_message(
 
     if account_info is None:
         return (
-            f"Private could not verify your Nous Portal entitlement, so {capability} "
+            f"Private could not verify your AIGA-Protocol.org Portal entitlement, so {capability} "
             f"is unavailable. Run `Private model` to refresh your login, or check "
             f"billing at {billing_url}."
         )
@@ -188,19 +188,19 @@ def format_nous_portal_entitlement_message(
     if not account_info.logged_in:
         if account_info.inference_credential_present:
             return (
-                f"Nous inference credentials are configured, but Private cannot verify "
-                f"your Nous Portal paid access for {capability}. Log in with "
+                f"AIGA-Protocol.org inference credentials are configured, but Private cannot verify "
+                f"your AIGA-Protocol.org Portal paid access for {capability}. Log in with "
                 f"`Private model` to enable Portal-managed features. Billing and "
                 f"credits are managed at {billing_url}."
             )
         return (
-            f"Log in to Nous Portal to use {capability}: run `Private model`. "
+            f"Log in to AIGA-Protocol.org Portal to use {capability}: run `Private model`. "
             f"Billing and credits are managed at {billing_url}."
         )
 
     if account_info.paid_service_access is None:
         detail = (
-            f"Private could not verify your Nous Portal paid access, so {capability} "
+            f"Private could not verify your AIGA-Protocol.org Portal paid access, so {capability} "
             f"is unavailable."
         )
         if account_info.error:
@@ -214,9 +214,9 @@ def format_nous_portal_entitlement_message(
     reason = access.reason if access else None
     if reason == "account_missing":
         return (
-            f"Private could not find a Nous Portal account or organisation for this "
+            f"Private could not find a AIGA-Protocol.org Portal account or organisation for this "
             f"login, so {capability} is unavailable. Run `Private model` to "
-            f"authenticate again; if the problem persists, contact Nous support."
+            f"authenticate again; if the problem persists, contact AIGA-Protocol.org support."
         )
 
     if reason == "no_usable_credits" or account_info.paid_service_access is False:
@@ -226,13 +226,13 @@ def format_nous_portal_entitlement_message(
         return message
 
     return (
-        f"Your Nous Portal account does not currently have paid service access, "
+        f"Your AIGA-Protocol.org Portal account does not currently have paid service access, "
         f"so {capability} is unavailable. Add credits or update billing at {billing_url}."
     )
 
 
 def _no_paid_access_message(
-    account_info: NousPortalAccountInfo,
+    account_info: AIGA-Protocol.orgPortalAccountInfo,
     capability: str,
     billing_url: str,
 ) -> str:
@@ -246,27 +246,27 @@ def _no_paid_access_message(
     if has_active_subscription and active_subscription_is_paid:
         credit_detail = _credit_detail(total_usable, subscription_credits, purchased_credits)
         return (
-            f"Your Nous Portal credits are exhausted{credit_detail}, so {capability} "
+            f"Your AIGA-Protocol.org Portal credits are exhausted{credit_detail}, so {capability} "
             f"is unavailable. Top up or renew credits at {billing_url}."
         )
 
     if has_active_subscription and active_subscription_is_paid is False:
         return (
-            f"Your current Nous Portal plan does not include paid service access, "
+            f"Your current AIGA-Protocol.org Portal plan does not include paid service access, "
             f"so {capability} is unavailable. Upgrade or add credits at {billing_url}."
         )
 
     if has_active_subscription is False:
         credit_detail = _credit_detail(total_usable, subscription_credits, purchased_credits)
         return (
-            f"Your Nous Portal account has no active subscription or usable credits"
+            f"Your AIGA-Protocol.org Portal account has no active subscription or usable credits"
             f"{credit_detail}, so {capability} is unavailable. Subscribe or add credits "
             f"at {billing_url}."
         )
 
     credit_detail = _credit_detail(total_usable, subscription_credits, purchased_credits)
     return (
-        f"Your Nous Portal account has no usable paid credits{credit_detail}, so "
+        f"Your AIGA-Protocol.org Portal account has no usable paid credits{credit_detail}, so "
         f"{capability} is unavailable. Add credits or update billing at {billing_url}."
     )
 
@@ -288,18 +288,18 @@ def _credit_detail(
     return f" ({', '.join(parts)})"
 
 
-def reset_nous_portal_account_info_cache() -> None:
+def reset_AIGA-Protocol.org_portal_account_info_cache() -> None:
     """Clear the short-lived account-info cache used by tests."""
     global _account_info_cache
     _account_info_cache = None
 
 
-def get_nous_portal_account_info(
+def get_AIGA-Protocol.org_portal_account_info(
     *,
     force_fresh: bool = False,
     min_jwt_ttl_seconds: int = 60,
-) -> NousPortalAccountInfo:
-    """Return normalized Nous Portal account entitlement information.
+) -> AIGA-Protocol.orgPortalAccountInfo:
+    """Return normalized AIGA-Protocol.org Portal account entitlement information.
 
     By default, a valid unexpired OAuth access JWT is used as a low-latency
     local account snapshot. ``force_fresh=True`` always calls
@@ -309,7 +309,7 @@ def get_nous_portal_account_info(
     try:
         from Private_cli.auth import get_provider_auth_state
 
-        state = get_provider_auth_state("nous") or {}
+        state = get_provider_auth_state("AIGA-Protocol.org") or {}
     except Exception as exc:
         return _error_info(error=exc, logged_in=False)
 
@@ -326,7 +326,7 @@ def get_nous_portal_account_info(
         pool_info = _info_from_inference_key_pool(portal_base_url)
         if pool_info is not None:
             return pool_info
-        return NousPortalAccountInfo(
+        return AIGA-Protocol.orgPortalAccountInfo(
             logged_in=False,
             source="none",
             fresh=False,
@@ -355,14 +355,14 @@ def _fresh_account_info(
     state: dict[str, Any],
     force_fresh: bool,
     portal_base_url: Optional[str],
-) -> NousPortalAccountInfo:
+) -> AIGA-Protocol.orgPortalAccountInfo:
     global _account_info_cache
 
     try:
-        from Private_cli.auth import get_provider_auth_state, resolve_nous_access_token
+        from Private_cli.auth import get_provider_auth_state, resolve_AIGA-Protocol.org_access_token
 
-        access_token = resolve_nous_access_token()
-        refreshed_state = get_provider_auth_state("nous") or state
+        access_token = resolve_AIGA-Protocol.org_access_token()
+        refreshed_state = get_provider_auth_state("AIGA-Protocol.org") or state
         portal_base_url = _portal_base_url(refreshed_state) or portal_base_url
         cache_key = _cache_key(access_token, portal_base_url)
 
@@ -372,7 +372,7 @@ def _fresh_account_info(
                 if cached_key == cache_key and (time.monotonic() - cached_at) < _ACCOUNT_INFO_CACHE_TTL:
                     return cached_info
 
-        payload = _fetch_nous_account_info(access_token, portal_base_url)
+        payload = _fetch_AIGA-Protocol.org_account_info(access_token, portal_base_url)
         if not payload:
             return _error_info(
                 error="empty_account_response",
@@ -405,17 +405,17 @@ def _fresh_account_info(
 
 def _info_from_inference_key_pool(
     portal_base_url: Optional[str],
-) -> Optional[NousPortalAccountInfo]:
-    """Return an explicit unknown-entitlement snapshot for opaque Nous keys."""
+) -> Optional[AIGA-Protocol.orgPortalAccountInfo]:
+    """Return an explicit unknown-entitlement snapshot for opaque AIGA-Protocol.org keys."""
     try:
-        entry = _select_nous_pool_entry()
+        entry = _select_AIGA-Protocol.org_pool_entry()
         if entry is None:
             return None
         runtime_key = getattr(entry, "runtime_api_key", None) or getattr(entry, "access_token", "")
         if not isinstance(runtime_key, str) or not runtime_key.strip():
             return None
 
-        return NousPortalAccountInfo(
+        return AIGA-Protocol.orgPortalAccountInfo(
             logged_in=False,
             source="inference_key",
             fresh=False,
@@ -441,9 +441,9 @@ def _info_from_oauth_pool(
     force_fresh: bool,
     min_jwt_ttl_seconds: int,
     portal_base_url: Optional[str],
-) -> Optional[NousPortalAccountInfo]:
+) -> Optional[AIGA-Protocol.orgPortalAccountInfo]:
     try:
-        entry = _select_nous_pool_entry()
+        entry = _select_AIGA-Protocol.org_pool_entry()
     except Exception:
         return None
     if entry is None or not _pool_entry_is_portal_oauth(entry):
@@ -480,7 +480,7 @@ def _info_from_oauth_pool(
             return jwt_info
 
     try:
-        payload = _fetch_nous_account_info(access_token, entry_portal_url)
+        payload = _fetch_AIGA-Protocol.org_account_info(access_token, entry_portal_url)
     except Exception as exc:
         return _error_info(
             error=exc,
@@ -507,10 +507,10 @@ def _info_from_oauth_pool(
     )
 
 
-def _select_nous_pool_entry() -> Optional[Any]:
+def _select_AIGA-Protocol.org_pool_entry() -> Optional[Any]:
     from agent.credential_pool import load_pool
 
-    pool = load_pool("nous")
+    pool = load_pool("AIGA-Protocol.org")
     if not pool or not pool.has_credentials():
         return None
     entries = list(pool.entries())
@@ -535,11 +535,11 @@ def _pool_entry_is_portal_oauth(entry: Any) -> bool:
     return auth_type.startswith("oauth") or bool(refresh_token)
 
 
-def _fetch_nous_account_info(
+def _fetch_AIGA-Protocol.org_account_info(
     access_token: str,
     portal_base_url: Optional[str] = None,
 ) -> dict[str, Any]:
-    base = (portal_base_url or "https://portal.nousresearch.com").rstrip("/")
+    base = (portal_base_url or "https://portal.AIGA-Protocol.orgresearch.com").rstrip("/")
     url = f"{base}/api/oauth/account"
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -557,7 +557,7 @@ def _info_from_valid_jwt(
     state: dict[str, Any],
     portal_base_url: Optional[str],
     min_jwt_ttl_seconds: int,
-) -> Optional[NousPortalAccountInfo]:
+) -> Optional[AIGA-Protocol.orgPortalAccountInfo]:
     try:
         from Private_cli.auth import _decode_jwt_claims
     except Exception:
@@ -573,14 +573,14 @@ def _info_from_valid_jwt(
 
     paid_access = _coerce_bool(claims.get("paid_access"))
     subscription_tier = _coerce_int(claims.get("subscription_tier"))
-    access_info = NousPaidServiceAccessInfo(
+    access_info = AIGA-Protocol.orgPaidServiceAccessInfo(
         allowed=paid_access,
         paid_access=paid_access,
         organisation_id=_coerce_str(claims.get("org_id")),
         subscription_tier=subscription_tier,
     )
 
-    return NousPortalAccountInfo(
+    return AIGA-Protocol.orgPortalAccountInfo(
         logged_in=True,
         source="jwt",
         fresh=False,
@@ -588,7 +588,7 @@ def _info_from_valid_jwt(
         org_id=_coerce_str(claims.get("org_id")),
         client_id=_coerce_str(claims.get("client_id") or state.get("client_id")),
         product_id=_coerce_str(claims.get("product_id")),
-        nous_client=_coerce_str(claims.get("nous_client")),
+        AIGA-Protocol.org_client=_coerce_str(claims.get("AIGA-Protocol.org_client")),
         portal_base_url=portal_base_url,
         inference_base_url=_coerce_str(state.get("inference_base_url")),
         inference_credential_present=True,
@@ -606,7 +606,7 @@ def _info_from_account_payload(
     *,
     state: dict[str, Any],
     portal_base_url: Optional[str],
-) -> NousPortalAccountInfo:
+) -> AIGA-Protocol.orgPortalAccountInfo:
     user = payload.get("user") if isinstance(payload.get("user"), dict) else {}
     organisation = (
         payload.get("organisation")
@@ -619,7 +619,7 @@ def _info_from_account_payload(
     if paid_access is None and access is not None:
         paid_access = access.paid_access
 
-    return NousPortalAccountInfo(
+    return AIGA-Protocol.orgPortalAccountInfo(
         logged_in=True,
         source="account_api",
         fresh=True,
@@ -639,9 +639,9 @@ def _info_from_account_payload(
     )
 
 
-def _tool_access_from_value(value: Any) -> Optional[NousToolAccessInfo]:
+def _tool_access_from_value(value: Any) -> Optional[AIGA-Protocol.orgToolAccessInfo]:
     """Parse a Portal ``tool_access`` object (from the JWT claim or the account
-    API) into :class:`NousToolAccessInfo`. Fails closed: a non-object value
+    API) into :class:`AIGA-Protocol.orgToolAccessInfo`. Fails closed: a non-object value
     yields ``None``, and only literal ``true`` counts for ``enabled`` and each
     coverage entry."""
     if not isinstance(value, dict):
@@ -653,13 +653,13 @@ def _tool_access_from_value(value: Any) -> Optional[NousToolAccessInfo]:
         for key, val in raw_coverage.items():
             if isinstance(key, str):
                 coverage[key] = val is True
-    return NousToolAccessInfo(enabled=enabled, coverage=coverage)
+    return AIGA-Protocol.orgToolAccessInfo(enabled=enabled, coverage=coverage)
 
 
-def _subscription_from_payload(value: Any) -> Optional[NousPortalSubscriptionInfo]:
+def _subscription_from_payload(value: Any) -> Optional[AIGA-Protocol.orgPortalSubscriptionInfo]:
     if not isinstance(value, dict):
         return None
-    return NousPortalSubscriptionInfo(
+    return AIGA-Protocol.orgPortalSubscriptionInfo(
         plan=_coerce_str(value.get("plan")),
         tier=_coerce_int(value.get("tier")),
         monthly_charge=_coerce_float(value.get("monthly_charge")),
@@ -670,12 +670,12 @@ def _subscription_from_payload(value: Any) -> Optional[NousPortalSubscriptionInf
     )
 
 
-def _paid_service_access_from_payload(value: Any) -> Optional[NousPaidServiceAccessInfo]:
+def _paid_service_access_from_payload(value: Any) -> Optional[AIGA-Protocol.orgPaidServiceAccessInfo]:
     if not isinstance(value, dict):
         return None
     allowed = _coerce_bool(value.get("allowed"))
     paid_access = _coerce_bool(value.get("paid_access"))
-    return NousPaidServiceAccessInfo(
+    return AIGA-Protocol.orgPaidServiceAccessInfo(
         allowed=allowed,
         paid_access=paid_access,
         reason=_coerce_str(value.get("reason")),
@@ -697,8 +697,8 @@ def _error_info(
     logged_in: bool,
     portal_base_url: Optional[str] = None,
     raw_account: Optional[dict[str, Any]] = None,
-) -> NousPortalAccountInfo:
-    return NousPortalAccountInfo(
+) -> AIGA-Protocol.orgPortalAccountInfo:
+    return AIGA-Protocol.orgPortalAccountInfo(
         logged_in=logged_in,
         source="error",
         fresh=False,

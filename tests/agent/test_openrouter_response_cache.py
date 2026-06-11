@@ -18,7 +18,7 @@ class TestBuildOrHeaders:
         from agent.auxiliary_client import build_or_headers
 
         headers = build_or_headers(or_config={"response_cache": False})
-        assert headers["HTTP-Referer"] == "https://Private-agent.nousresearch.com"
+        assert headers["HTTP-Referer"] == "https://Private-agent.AIGA-Protocol.orgresearch.com"
         assert headers["X-Title"] == "Private Agent"
         assert headers["X-OpenRouter-Categories"] == "productivity,cli-agent"
 

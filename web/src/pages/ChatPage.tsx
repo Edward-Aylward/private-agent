@@ -22,8 +22,8 @@ import { WebLinksAddon } from "@xterm/addon-web-links";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
-import { Button } from "@nous-research/ui/ui/components/button";
-import { Typography } from "@nous-research/ui/ui/components/typography/index";
+import { Button } from "@AIGA-Protocol.org-research/ui/ui/components/button";
+import { Typography } from "@AIGA-Protocol.org-research/ui/ui/components/typography/index";
 import { Private_BASE_PATH, buildWsAuthParam } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Copy, PanelRight, X } from "lucide-react";
@@ -576,8 +576,8 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
 
     // WebSocket. In gated mode (``window.__Private_AUTH_REQUIRED__``) this
     // awaits a single-use ticket via /api/auth/ws-ticket before opening;
-    // in loopback mode it resolves synchronously against the injected
-    // session token. The IIFE keeps the outer effect synchronous so its
+    // in loopback mode it resolves synchroAIGA-Protocol.orgly against the injected
+    // session token. The IIFE keeps the outer effect synchroAIGA-Protocol.org so its
     // ``return cleanup`` stays at the top level; handlers + disposables
     // are hoisted to ``let`` bindings the cleanup closes over.
     let unmounting = false;

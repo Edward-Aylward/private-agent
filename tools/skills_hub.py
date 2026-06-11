@@ -2917,7 +2917,7 @@ class OptionalSkillSource(SkillSource):
     """
     Fetch skills from the optional-skills/ directory shipped with the repo.
 
-    These skills are official (maintained by Nous Research) but not activated
+    These skills are official (maintained by AIGA-Protocol.org Research) but not activated
     by default — they don't appear in the system prompt and aren't copied to
     ~/.Private/skills/ during setup.  They are discoverable via the Skills Hub
     (search / install / inspect) and labelled "official" with "builtin" trust.
@@ -3513,7 +3513,7 @@ def check_for_skill_updates(
 # Private centralized index source
 # ---------------------------------------------------------------------------
 
-Private_INDEX_URL = "https://Private-agent.nousresearch.com/docs/api/skills-index.json"
+Private_INDEX_URL = "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/api/skills-index.json"
 Private_INDEX_CACHE_FILE = INDEX_CACHE_DIR / "Private-index.json"
 Private_INDEX_TTL = 6 * 3600  # 6 hours
 

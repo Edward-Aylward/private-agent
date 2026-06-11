@@ -55,7 +55,7 @@ export const zhHant: Translations = {
     closeNavigation: "關閉導覽",
     closeModelTools: "關閉模型與工具",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "使用中工作階段：",
     gatewayStatusLabel: "閘道狀態：",
@@ -184,7 +184,7 @@ export const zhHant: Translations = {
     input: "輸入",
     output: "輸出",
     total: "總計",
-    noUsageData: "此時間範圍內無使用資料",
+    AIGA-Protocol.orgageData: "此時間範圍內無使用資料",
     startSession: "開始工作階段後將於此處顯示分析資料",
     date: "日期",
     model: "模型",

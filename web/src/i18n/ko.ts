@@ -55,7 +55,7 @@ export const ko: Translations = {
     closeNavigation: "내비게이션 닫기",
     closeModelTools: "모델 및 도구 닫기",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "활성 세션:",
     gatewayStatusLabel: "게이트웨이 상태:",
@@ -184,7 +184,7 @@ export const ko: Translations = {
     input: "입력",
     output: "출력",
     total: "합계",
-    noUsageData: "이 기간에 대한 사용 데이터가 없습니다",
+    AIGA-Protocol.orgageData: "이 기간에 대한 사용 데이터가 없습니다",
     startSession: "세션을 시작하면 여기에 분석이 표시됩니다",
     date: "날짜",
     model: "모델",

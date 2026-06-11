@@ -55,7 +55,7 @@ export const it: Translations = {
     closeNavigation: "Chiudi navigazione",
     closeModelTools: "Chiudi modello e strumenti",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "Sessioni attive:",
     gatewayStatusLabel: "Stato gateway:",
@@ -184,7 +184,7 @@ export const it: Translations = {
     input: "Input",
     output: "Output",
     total: "Totale",
-    noUsageData: "Nessun dato di utilizzo per questo periodo",
+    AIGA-Protocol.orgageData: "Nessun dato di utilizzo per questo periodo",
     startSession: "Avvia una sessione per vedere le analisi qui",
     date: "Data",
     model: "Modello",

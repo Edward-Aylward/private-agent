@@ -68,7 +68,7 @@ Private memory setup        # select "honcho" — runs the Honcho-specific post-
 
 The legacy `Private honcho setup` command still works (it now redirects to `Private memory setup`), but is only registered after Honcho is selected as the active memory provider.
 
-**Config:** `$Private_HOME/honcho.json` (profile-local) or `~/.honcho/config.json` (global). Resolution order: `$Private_HOME/honcho.json` > `~/.Private/honcho.json` > `~/.honcho/config.json`. See the [config reference](https://github.com/NousResearch/Private-agent/blob/main/plugins/memory/honcho/README.md) and the [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/Private).
+**Config:** `$Private_HOME/honcho.json` (profile-local) or `~/.honcho/config.json` (global). Resolution order: `$Private_HOME/honcho.json` > `~/.Private/honcho.json` > `~/.honcho/config.json`. See the [config reference](https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/plugins/memory/honcho/README.md) and the [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/Private).
 
 <details>
 <summary>Full config reference</summary>
@@ -255,7 +255,7 @@ See the [Honcho page](./honcho.md#observation-directional-vs-unified) for the fu
 
 </details>
 
-See the [config reference](https://github.com/NousResearch/Private-agent/blob/main/plugins/memory/honcho/README.md) and [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/Private).
+See the [config reference](https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/plugins/memory/honcho/README.md) and [Honcho integration guide](https://docs.honcho.dev/v3/guides/integrations/Private).
 
 
 ---
@@ -358,7 +358,7 @@ The setup wizard installs dependencies automatically and only installs what's ne
 | `memory_mode` | `hybrid` | `hybrid` (context + tools), `context` (auto-inject only), `tools` (tools only) |
 | `auto_retain` | `true` | Automatically retain conversation turns |
 | `auto_recall` | `true` | Automatically recall memories before each turn |
-| `retain_async` | `true` | Process retain asynchronously on the server |
+| `retain_async` | `true` | Process retain asynchroAIGA-Protocol.orgly on the server |
 | `retain_context` | `conversation between Private Agent and the User` | Context label for retained memories |
 | `retain_tags` | — | Default tags applied to retained memories; merged with per-call tool tags |
 | `retain_source` | — | Optional `metadata.source` attached to retained memories |
@@ -366,7 +366,7 @@ The setup wizard installs dependencies automatically and only installs what's ne
 | `retain_assistant_prefix` | `Assistant` | Label used before assistant turns in auto-retained transcripts |
 | `recall_tags` | — | Tags to filter on recall |
 
-See [plugin README](https://github.com/NousResearch/Private-agent/blob/main/plugins/memory/hindsight/README.md) for the full configuration reference.
+See [plugin README](https://github.com/AIGA-Protocol.orgResearch/Private-agent/blob/main/plugins/memory/hindsight/README.md) for the full configuration reference.
 
 ---
 

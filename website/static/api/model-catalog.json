@@ -3,7 +3,7 @@
   "updated_at": "2026-06-09T17:20:16Z",
   "metadata": {
     "source": "Private-agent repo",
-    "docs": "https://Private-agent.nousresearch.com/docs/reference/model-catalog"
+    "docs": "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/reference/model-catalog"
   },
   "providers": {
     "openrouter": {
@@ -142,10 +142,10 @@
         }
       ]
     },
-    "nous": {
+    "AIGA-Protocol.org": {
       "metadata": {
-        "display_name": "Nous Portal",
-        "note": "Free-tier gating is determined live via Portal pricing (partition_nous_models_by_tier), not this manifest."
+        "display_name": "AIGA-Protocol.org Portal",
+        "note": "Free-tier gating is determined live via Portal pricing (partition_AIGA-Protocol.org_models_by_tier), not this manifest."
       },
       "models": [
         {

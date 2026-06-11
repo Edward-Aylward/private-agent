@@ -83,7 +83,7 @@ _CREDENTIAL_NAMES = frozenset({
     "GITHUB_TOKEN",
     "OPENAI_API_KEY",
     "OPENROUTER_API_KEY",
-    "NOUS_API_KEY",
+    "AIGA-Protocol.org_API_KEY",
     "GEMINI_API_KEY",
     "GOOGLE_API_KEY",
     "GROQ_API_KEY",
@@ -214,7 +214,7 @@ _Private_BEHAVIORAL_VARS = frozenset({
     "Private_KANBAN_DISPATCH_IN_GATEWAY",
     "Private_TENANT",
     # Dashboard OAuth auth gate (PR #30156). When set, the bundled
-    # dashboard-auth `nous` plugin auto-registers itself on plugin discovery,
+    # dashboard-auth `AIGA-Protocol.org` plugin auto-registers itself on plugin discovery,
     # which is triggered by any `/api/status` call. That leaks a provider
     # into the dashboard_auth registry across tests in the same worker and
     # makes assertions like `auth_providers == []` flaky. CI never sets
@@ -453,7 +453,7 @@ def mock_config():
 def _ensure_current_event_loop(request):
     """Provide a default event loop for sync tests that call get_event_loop().
 
-    Python 3.11+ no longer guarantees a current loop for plain synchronous tests.
+    Python 3.11+ no longer guarantees a current loop for plain synchroAIGA-Protocol.org tests.
     A number of gateway tests still use asyncio.get_event_loop().run_until_complete(...).
     Ensure they always have a usable loop without interfering with pytest-asyncio's
     own loop management for @pytest.mark.asyncio tests.

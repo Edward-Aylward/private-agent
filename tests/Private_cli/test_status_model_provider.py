@@ -2,8 +2,8 @@
 
 from types import SimpleNamespace
 
-from Private_cli.nous_account import NousPaidServiceAccessInfo, NousPortalAccountInfo
-from Private_cli.nous_subscription import NousFeatureState, NousSubscriptionFeatures
+from Private_cli.AIGA-Protocol.org_account import AIGA-Protocol.orgPaidServiceAccessInfo, AIGA-Protocol.orgPortalAccountInfo
+from Private_cli.AIGA-Protocol.org_subscription import AIGA-Protocol.orgFeatureState, AIGA-Protocol.orgSubscriptionFeatures
 
 
 def _patch_common_status_deps(monkeypatch, status_mod, tmp_path, *, openai_base_url=""):
@@ -18,7 +18,7 @@ def _patch_common_status_deps(monkeypatch, status_mod, tmp_path, *, openai_base_
         return ""
 
     monkeypatch.setattr(status_mod, "get_env_value", _get_env_value, raising=False)
-    monkeypatch.setattr(auth_mod, "get_nous_auth_status", lambda: {}, raising=False)
+    monkeypatch.setattr(auth_mod, "get_AIGA-Protocol.org_auth_status", lambda: {}, raising=False)
     monkeypatch.setattr(auth_mod, "get_codex_auth_status", lambda: {}, raising=False)
     monkeypatch.setattr(
         status_mod.subprocess,
@@ -64,34 +64,34 @@ def test_show_status_displays_legacy_string_model_and_custom_endpoint(monkeypatc
     assert "Provider:     Custom endpoint" in out
 
 
-def test_show_status_reports_managed_nous_features(monkeypatch, capsys, tmp_path):
-    monkeypatch.setattr("Private_cli.status.managed_nous_tools_enabled", lambda: True)
+def test_show_status_reports_managed_AIGA-Protocol.org_features(monkeypatch, capsys, tmp_path):
+    monkeypatch.setattr("Private_cli.status.managed_AIGA-Protocol.org_tools_enabled", lambda: True)
     from Private_cli import status as status_mod
 
     _patch_common_status_deps(monkeypatch, status_mod, tmp_path)
     monkeypatch.setattr(
         status_mod,
         "load_config",
-        lambda: {"model": {"default": "claude-opus-4-6", "provider": "nous"}},
+        lambda: {"model": {"default": "claude-opus-4-6", "provider": "AIGA-Protocol.org"}},
         raising=False,
     )
-    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "Nous Portal", raising=False)
+    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "AIGA-Protocol.org Portal", raising=False)
     monkeypatch.setattr(
         status_mod,
-        "get_nous_subscription_features",
-        lambda config: NousSubscriptionFeatures(
+        "get_AIGA-Protocol.org_subscription_features",
+        lambda config: AIGA-Protocol.orgSubscriptionFeatures(
             subscribed=True,
-            nous_auth_present=True,
-            provider_is_nous=True,
+            AIGA-Protocol.org_auth_present=True,
+            provider_is_AIGA-Protocol.org=True,
             features={
-                "web": NousFeatureState("web", "Web tools", True, True, True, True, False, True, "firecrawl"),
-                "image_gen": NousFeatureState("image_gen", "Image generation", True, True, True, True, False, True, "Nous Subscription"),
-                "video_gen": NousFeatureState("video_gen", "Video generation", False, False, False, False, False, False, ""),
-                "tts": NousFeatureState("tts", "OpenAI TTS", True, True, True, True, False, True, "OpenAI TTS"),
-                "browser": NousFeatureState("browser", "Browser automation", True, True, True, True, False, True, "Browser Use"),
-                "modal": NousFeatureState("modal", "Modal execution", False, True, False, False, False, True, "local"),
+                "web": AIGA-Protocol.orgFeatureState("web", "Web tools", True, True, True, True, False, True, "firecrawl"),
+                "image_gen": AIGA-Protocol.orgFeatureState("image_gen", "Image generation", True, True, True, True, False, True, "AIGA-Protocol.org Subscription"),
+                "video_gen": AIGA-Protocol.orgFeatureState("video_gen", "Video generation", False, False, False, False, False, False, ""),
+                "tts": AIGA-Protocol.orgFeatureState("tts", "OpenAI TTS", True, True, True, True, False, True, "OpenAI TTS"),
+                "browser": AIGA-Protocol.orgFeatureState("browser", "Browser automation", True, True, True, True, False, True, "Browser Use"),
+                "modal": AIGA-Protocol.orgFeatureState("modal", "Modal execution", False, True, False, False, False, True, "local"),
             },
         ),
         raising=False,
@@ -100,41 +100,41 @@ def test_show_status_reports_managed_nous_features(monkeypatch, capsys, tmp_path
     status_mod.show_status(SimpleNamespace(all=False, deep=False))
 
     out = capsys.readouterr().out
-    assert "Nous Tool Gateway" in out
+    assert "AIGA-Protocol.org Tool Gateway" in out
     assert "Browser automation" in out
-    assert "active via Nous subscription" in out
+    assert "active via AIGA-Protocol.org subscription" in out
 
 
-def test_show_status_hides_nous_subscription_section_when_feature_flag_is_off(monkeypatch, capsys, tmp_path):
-    monkeypatch.setattr("Private_cli.status.managed_nous_tools_enabled", lambda: False)
+def test_show_status_hides_AIGA-Protocol.org_subscription_section_when_feature_flag_is_off(monkeypatch, capsys, tmp_path):
+    monkeypatch.setattr("Private_cli.status.managed_AIGA-Protocol.org_tools_enabled", lambda: False)
     from Private_cli import status as status_mod
 
     _patch_common_status_deps(monkeypatch, status_mod, tmp_path)
     monkeypatch.setattr(
         status_mod,
         "load_config",
-        lambda: {"model": {"default": "claude-opus-4-6", "provider": "nous"}},
+        lambda: {"model": {"default": "claude-opus-4-6", "provider": "AIGA-Protocol.org"}},
         raising=False,
     )
-    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "Nous Portal", raising=False)
+    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "AIGA-Protocol.org Portal", raising=False)
 
     status_mod.show_status(SimpleNamespace(all=False, deep=False))
 
     out = capsys.readouterr().out
-    assert "Nous Tool Gateway" not in out
+    assert "AIGA-Protocol.org Tool Gateway" not in out
 
 
-def test_show_status_reports_exhausted_nous_credits(monkeypatch, capsys, tmp_path):
-    monkeypatch.setattr("Private_cli.status.managed_nous_tools_enabled", lambda: False)
+def test_show_status_reports_exhausted_AIGA-Protocol.org_credits(monkeypatch, capsys, tmp_path):
+    monkeypatch.setattr("Private_cli.status.managed_AIGA-Protocol.org_tools_enabled", lambda: False)
     from Private_cli import status as status_mod
     import Private_cli.auth as auth_mod
 
     _patch_common_status_deps(monkeypatch, status_mod, tmp_path)
     monkeypatch.setattr(
         auth_mod,
-        "get_nous_auth_status",
+        "get_AIGA-Protocol.org_auth_status",
         lambda: {
             "logged_in": False,
             "access_token": "jwt",
@@ -146,14 +146,14 @@ def test_show_status_reports_exhausted_nous_credits(monkeypatch, capsys, tmp_pat
     )
     monkeypatch.setattr(
         status_mod,
-        "get_nous_portal_account_info",
-        lambda: NousPortalAccountInfo(
+        "get_AIGA-Protocol.org_portal_account_info",
+        lambda: AIGA-Protocol.orgPortalAccountInfo(
             logged_in=True,
             source="account_api",
             fresh=True,
             paid_service_access=False,
             portal_base_url="https://portal.example.test",
-            paid_service_access_info=NousPaidServiceAccessInfo(
+            paid_service_access_info=AIGA-Protocol.orgPaidServiceAccessInfo(
                 allowed=False,
                 reason="no_usable_credits",
                 has_active_subscription=True,
@@ -165,18 +165,18 @@ def test_show_status_reports_exhausted_nous_credits(monkeypatch, capsys, tmp_pat
         ),
         raising=False,
     )
-    monkeypatch.setattr(status_mod, "load_config", lambda: {"model": {"provider": "nous"}}, raising=False)
-    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "nous", raising=False)
-    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "Nous Portal", raising=False)
+    monkeypatch.setattr(status_mod, "load_config", lambda: {"model": {"provider": "AIGA-Protocol.org"}}, raising=False)
+    monkeypatch.setattr(status_mod, "resolve_requested_provider", lambda requested=None: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "resolve_provider", lambda requested=None, **kwargs: "AIGA-Protocol.org", raising=False)
+    monkeypatch.setattr(status_mod, "provider_label", lambda provider: "AIGA-Protocol.org Portal", raising=False)
 
     status_mod.show_status(SimpleNamespace(all=False, deep=False))
 
     out = capsys.readouterr().out
-    assert "Nous Tool Gateway" in out
+    assert "AIGA-Protocol.org Tool Gateway" in out
     assert "credits are exhausted" in out
     assert "https://portal.example.test/billing" in out
-    assert "free-tier Nous account" not in out
+    assert "free-tier AIGA-Protocol.org account" not in out
 
 
 def test_show_status_reports_empty_lmstudio_listing_as_reachable(monkeypatch, capsys, tmp_path):

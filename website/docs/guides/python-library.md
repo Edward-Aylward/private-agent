@@ -15,19 +15,19 @@ Private isn't just a CLI tool. You can import `AIAgent` directly and use it prog
 Install Private directly from the repository:
 
 ```bash
-pip install git+https://github.com/NousResearch/Private-agent.git
+pip install git+https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv pip install git+https://github.com/NousResearch/Private-agent.git
+uv pip install git+https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 ```
 
 You can also pin it in your `requirements.txt`:
 
 ```text
-Private-agent @ git+https://github.com/NousResearch/Private-agent.git
+Private-agent @ git+https://github.com/AIGA-Protocol.orgResearch/Private-agent.git
 ```
 
 :::tip

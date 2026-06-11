@@ -188,13 +188,13 @@ python train.py \
 
 ---
 
-## Workflow 2: Asynchronous Training
+## Workflow 2: AsynchroAIGA-Protocol.org Training
 
 Use async mode for higher throughput by overlapping rollout and training.
 
 ### When to Use Async
 - Large models with long generation times
-- High GPU idle time in synchronous mode
+- High GPU idle time in synchroAIGA-Protocol.org mode
 - Sufficient memory for buffering
 
 ### Launch Async Training

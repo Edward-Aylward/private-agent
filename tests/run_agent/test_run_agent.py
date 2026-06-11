@@ -1110,10 +1110,10 @@ class TestBuildSystemPrompt:
         else:
             assert False, "Expected a 'Conversation started:' line in the system prompt"
 
-    def test_includes_nous_subscription_prompt(self, agent, monkeypatch):
-        monkeypatch.setattr(run_agent, "build_nous_subscription_prompt", lambda tool_names: "NOUS SUBSCRIPTION BLOCK")
+    def test_includes_AIGA-Protocol.org_subscription_prompt(self, agent, monkeypatch):
+        monkeypatch.setattr(run_agent, "build_AIGA-Protocol.org_subscription_prompt", lambda tool_names: "AIGA-Protocol.org SUBSCRIPTION BLOCK")
         prompt = agent._build_system_prompt()
-        assert "NOUS SUBSCRIPTION BLOCK" in prompt
+        assert "AIGA-Protocol.org SUBSCRIPTION BLOCK" in prompt
 
     def test_skills_prompt_derives_available_toolsets_from_loaded_tools(self):
         tools = _make_tool_defs("web_search", "skills_list", "skill_view", "skill_manage")
@@ -1683,9 +1683,9 @@ class TestBuildApiKwargs:
         kwargs = agent._build_api_kwargs(messages)
         assert kwargs["extra_body"]["reasoning"]["effort"] == "medium"
 
-    def test_reasoning_sent_for_nous_route(self, agent):
-        agent.provider = "nous"
-        agent.base_url = "https://inference-api.nousresearch.com/v1"
+    def test_reasoning_sent_for_AIGA-Protocol.org_route(self, agent):
+        agent.provider = "AIGA-Protocol.org"
+        agent.base_url = "https://inference-api.AIGA-Protocol.orgresearch.com/v1"
         agent.model = "minimax/minimax-m2.5"
         messages = [{"role": "user", "content": "hi"}]
         kwargs = agent._build_api_kwargs(messages)
@@ -3923,9 +3923,9 @@ class TestRunConversation:
         assert result["final_response"] == "Fresh partial content from this turn"
         assert result["api_calls"] == 1
 
-    def test_nous_401_refreshes_after_remint_and_retries(self, agent):
+    def test_AIGA-Protocol.org_401_refreshes_after_remint_and_retries(self, agent):
         self._setup_agent(agent)
-        agent.provider = "nous"
+        agent.provider = "AIGA-Protocol.org"
         agent.api_mode = "chat_completions"
 
         calls = {"api": 0, "refresh": 0}
@@ -3954,7 +3954,7 @@ class TestRunConversation:
             patch.object(agent, "_cleanup_task_resources"),
             patch.object(agent, "_interruptible_api_call", side_effect=_fake_api_call),
             patch.object(
-                agent, "_try_refresh_nous_client_credentials", side_effect=_fake_refresh
+                agent, "_try_refresh_AIGA-Protocol.org_client_credentials", side_effect=_fake_refresh
             ),
         ):
             result = agent.run_conversation("hello")
@@ -4743,13 +4743,13 @@ class TestConversationHistoryNotMutated:
 # ---------------------------------------------------------------------------
 
 
-class TestNousCredentialRefresh:
-    """Verify Nous credential refresh rebuilds the runtime client."""
+class TestAIGA-Protocol.orgCredentialRefresh:
+    """Verify AIGA-Protocol.org credential refresh rebuilds the runtime client."""
 
-    def test_try_refresh_nous_client_credentials_rebuilds_client(
+    def test_try_refresh_AIGA-Protocol.org_client_credentials_rebuilds_client(
         self, agent, monkeypatch
     ):
-        agent.provider = "nous"
+        agent.provider = "AIGA-Protocol.org"
         agent.api_mode = "chat_completions"
 
         closed = {"value": False}
@@ -4766,8 +4766,8 @@ class TestNousCredentialRefresh:
         def _fake_resolve(**kwargs):
             captured.update(kwargs)
             return {
-                "api_key": "new-nous-key",
-                "base_url": "https://inference-api.nousresearch.com/v1",
+                "api_key": "new-AIGA-Protocol.org-key",
+                "base_url": "https://inference-api.AIGA-Protocol.orgresearch.com/v1",
             }
 
         def _fake_openai(**kwargs):
@@ -4775,19 +4775,19 @@ class TestNousCredentialRefresh:
             return _RebuiltClient()
 
         monkeypatch.setattr(
-            "Private_cli.auth.resolve_nous_runtime_credentials", _fake_resolve
+            "Private_cli.auth.resolve_AIGA-Protocol.org_runtime_credentials", _fake_resolve
         )
 
         agent.client = _ExistingClient()
         with patch("run_agent.OpenAI", side_effect=_fake_openai):
-            ok = agent._try_refresh_nous_client_credentials(force=True)
+            ok = agent._try_refresh_AIGA-Protocol.org_client_credentials(force=True)
 
         assert ok is True
         assert closed["value"] is True
         assert captured["force_refresh"] is True
-        assert rebuilt["kwargs"]["api_key"] == "new-nous-key"
+        assert rebuilt["kwargs"]["api_key"] == "new-AIGA-Protocol.org-key"
         assert (
-            rebuilt["kwargs"]["base_url"] == "https://inference-api.nousresearch.com/v1"
+            rebuilt["kwargs"]["base_url"] == "https://inference-api.AIGA-Protocol.orgresearch.com/v1"
         )
         assert "default_headers" not in rebuilt["kwargs"]
         assert isinstance(agent.client, _RebuiltClient)
@@ -5139,10 +5139,10 @@ class TestGpt5ApiModeRouting:
             agent.api_mode = "codex_responses"
         assert agent.api_mode == "codex_responses"
 
-    def test_nous_gpt5_stays_on_chat_completions(self, agent):
-        """Nous serves gpt-5.x on /chat/completions — must not upgrade to codex_responses."""
-        agent.provider = "nous"
-        agent.base_url = "https://inference-api.nousresearch.com/v1"
+    def test_AIGA-Protocol.org_gpt5_stays_on_chat_completions(self, agent):
+        """AIGA-Protocol.org serves gpt-5.x on /chat/completions — must not upgrade to codex_responses."""
+        agent.provider = "AIGA-Protocol.org"
+        agent.base_url = "https://inference-api.AIGA-Protocol.orgresearch.com/v1"
         agent.api_mode = "chat_completions"
         agent.model = "openai/gpt-5.5"
         if (

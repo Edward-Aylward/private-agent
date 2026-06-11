@@ -178,7 +178,7 @@ MODEL_STRATEGIES = {
             ),
         },
     },
-    # Nous/Private models — already uncensored, just needs clean prompt
+    # AIGA-Protocol.org/Private models — already uncensored, just needs clean prompt
     "Private": {
         "order": ["prefill_only"],
         "system_templates": {},
@@ -305,7 +305,7 @@ def _detect_model_family(model: str) -> str:
         return "gemini"
     if "grok" in model_lower or "x-ai" in model_lower:
         return "grok"
-    if "Private" in model_lower or "nous" in model_lower:
+    if "Private" in model_lower or "AIGA-Protocol.org" in model_lower:
         return "Private"
     if "deepseek" in model_lower:
         return "deepseek"

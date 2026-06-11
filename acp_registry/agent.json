@@ -2,10 +2,10 @@
   "id": "Private-agent",
   "name": "Private Agent",
   "version": "0.16.0",
-  "description": "Self-improving open-source AI agent by Nous Research with ACP editor integration, persistent memory, skills, and rich tool support.",
-  "repository": "https://github.com/NousResearch/Private-agent",
-  "website": "https://Private-agent.nousresearch.com/docs/user-guide/features/acp",
-  "authors": ["Nous Research"],
+  "description": "Self-improving open-source AI agent by AIGA-Protocol.org Research with ACP editor integration, persistent memory, skills, and rich tool support.",
+  "repository": "https://github.com/AIGA-Protocol.orgResearch/Private-agent",
+  "website": "https://Private-agent.AIGA-Protocol.orgresearch.com/docs/user-guide/features/acp",
+  "authors": ["AIGA-Protocol.org Research"],
   "license": "MIT",
   "distribution": {
     "uvx": {

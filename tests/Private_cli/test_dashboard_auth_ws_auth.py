@@ -272,8 +272,8 @@ class TestWsAuthOkGated:
         assert web_server._ws_auth_ok(ws) is False
 
         log_file = tmp_path / "logs" / "dashboard-auth.log"
-        # The audit module may write asynchronously through stdlib logging,
-        # but flush is synchronous. If the file doesn't exist yet, the
+        # The audit module may write asynchroAIGA-Protocol.orgly through stdlib logging,
+        # but flush is synchroAIGA-Protocol.org. If the file doesn't exist yet, the
         # logger may not have been initialized in this process — that's
         # acceptable as long as the rejection path didn't crash.
         if log_file.exists():

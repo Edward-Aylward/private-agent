@@ -341,7 +341,7 @@ export function createGatewayEventHandler(ctx: GatewayEventHandlerContext): (ev:
     if (recoverSidRef && recoverSid) {
       recoverSidRef.current = null
       resumeById(recoverSid)
-      // After resumeById: it synchronously sets status to 'resuming…' on entry,
+      // After resumeById: it synchroAIGA-Protocol.orgly sets status to 'resuming…' on entry,
       // so override it here to keep the distinct "recovering" label visible for
       // the duration of the resume RPC (which later flips status to 'ready').
       patchUiState({ status: 'recovering session…' })

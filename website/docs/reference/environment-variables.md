@@ -16,8 +16,8 @@ All variables go in `~/.Private/.env`. You can also set them with `Private confi
 | `OPENROUTER_BASE_URL` | Override the OpenRouter-compatible base URL |
 | `Private_OPENROUTER_CACHE` | Enable OpenRouter response caching (`1`/`true`/`yes`/`on`). Overrides `openrouter.response_cache` in config.yaml. See [Response Caching](https://openrouter.ai/docs/guides/features/response-caching). |
 | `Private_OPENROUTER_CACHE_TTL` | Cache TTL in seconds (1-86400). Overrides `openrouter.response_cache_ttl` in config.yaml. |
-| `NOUS_BASE_URL` | Override Nous Portal base URL (rarely needed; development/testing only) |
-| `NOUS_INFERENCE_BASE_URL` | Override Nous inference endpoint directly |
+| `AIGA-Protocol.org_BASE_URL` | Override AIGA-Protocol.org Portal base URL (rarely needed; development/testing only) |
+| `AIGA-Protocol.org_INFERENCE_BASE_URL` | Override AIGA-Protocol.org inference endpoint directly |
 | `OPENAI_API_KEY` | API key for custom OpenAI-compatible endpoints (used with `OPENAI_BASE_URL`) |
 | `OPENAI_BASE_URL` | Base URL for custom endpoint (VLLM, SGLang, etc.) |
 | `LM_API_KEY` | API key for LM Studio (`lmstudio` provider). Often a placeholder for local servers |
@@ -118,10 +118,10 @@ For native Anthropic auth, Private prefers Claude Code's own credential files wh
 
 | Variable | Description |
 |----------|-------------|
-| `Private_PORTAL_BASE_URL` | Override Nous Portal URL (for development/testing) |
-| `NOUS_INFERENCE_BASE_URL` | Override Nous inference API URL |
-| `Private_NOUS_MIN_KEY_TTL_SECONDS` | Min agent key TTL before re-mint (default: 1800 = 30min) |
-| `Private_NOUS_TIMEOUT_SECONDS` | HTTP timeout for Nous credential / token flows |
+| `Private_PORTAL_BASE_URL` | Override AIGA-Protocol.org Portal URL (for development/testing) |
+| `AIGA-Protocol.org_INFERENCE_BASE_URL` | Override AIGA-Protocol.org inference API URL |
+| `Private_AIGA-Protocol.org_MIN_KEY_TTL_SECONDS` | Min agent key TTL before re-mint (default: 1800 = 30min) |
+| `Private_AIGA-Protocol.org_TIMEOUT_SECONDS` | HTTP timeout for AIGA-Protocol.org credential / token flows |
 | `Private_DUMP_REQUESTS` | Dump API request payloads to log files (`true`/`false`) |
 | `Private_PREFILL_MESSAGES_FILE` | Path to a JSON file of ephemeral prefill messages injected at API-call time |
 | `Private_TIMEZONE` | IANA timezone override (for example `America/New_York`) |
@@ -178,15 +178,15 @@ Environment variables for the bundled [`observability/langfuse`](/user-guide/fea
 | `Private_LANGFUSE_DEBUG` | `true` enables verbose plugin logging to `agent.log` |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_BASE_URL` | Standard Langfuse SDK names. Accepted as fallbacks when the `Private_LANGFUSE_*` equivalents are unset. |
 
-### Nous Tool Gateway
+### AIGA-Protocol.org Tool Gateway
 
-These variables configure the [Tool Gateway](/user-guide/features/tool-gateway) for paid Nous subscribers or self-hosted gateway deployments. Most users don't need to set these — the gateway is configured automatically via `Private model` or `Private tools`.
+These variables configure the [Tool Gateway](/user-guide/features/tool-gateway) for paid AIGA-Protocol.org subscribers or self-hosted gateway deployments. Most users don't need to set these — the gateway is configured automatically via `Private model` or `Private tools`.
 
 | Variable | Description |
 |----------|-------------|
-| `TOOL_GATEWAY_DOMAIN` | Base domain for Tool Gateway routing (default: `nousresearch.com`) |
+| `TOOL_GATEWAY_DOMAIN` | Base domain for Tool Gateway routing (default: `AIGA-Protocol.orgresearch.com`) |
 | `TOOL_GATEWAY_SCHEME` | HTTP or HTTPS scheme for gateway URLs (default: `https`) |
-| `TOOL_GATEWAY_USER_TOKEN` | Auth token for the Tool Gateway (normally auto-populated from Nous auth) |
+| `TOOL_GATEWAY_USER_TOKEN` | Auth token for the Tool Gateway (normally auto-populated from AIGA-Protocol.org auth) |
 | `FIRECRAWL_GATEWAY_URL` | Override URL for the Firecrawl gateway endpoint specifically |
 
 ## Terminal Backend
@@ -443,7 +443,7 @@ For cloud sandbox backends, persistence is filesystem-oriented. `TERMINAL_LIFETI
 
 Auth for the [web dashboard](/user-guide/features/web-dashboard) and for connecting [Private Desktop to a remote backend](/user-guide/features/web-dashboard#connecting-Private-desktop-to-a-remote-backend). Per the secrets-only convention, credentials belong in `~/.Private/.env`; the OAuth `client_id` is better set under `dashboard.oauth` in `config.yaml` (env wins when set).
 
-Three dashboard-auth providers ship in the box. For a remote Private Desktop connection or any internet-facing dashboard, the recommended provider is **OAuth (Nous Portal)** — set `Private_DASHBOARD_OAUTH_CLIENT_ID` (provision it with `Private dashboard register`). The bundled **username/password** provider (`Private_DASHBOARD_BASIC_AUTH_*`) is the quickest option for a backend on a trusted LAN or behind a VPN, but is not suitable for direct public-internet exposure. To authenticate against your own identity provider, use the **self-hosted OIDC** provider (`Private_DASHBOARD_OIDC_*`). Either way, a non-loopback bind (`Private dashboard --host 0.0.0.0`) engages the auth gate. See [Web Dashboard → Authentication](/user-guide/features/web-dashboard#authentication-gated-mode) for the full picture.
+Three dashboard-auth providers ship in the box. For a remote Private Desktop connection or any internet-facing dashboard, the recommended provider is **OAuth (AIGA-Protocol.org Portal)** — set `Private_DASHBOARD_OAUTH_CLIENT_ID` (provision it with `Private dashboard register`). The bundled **username/password** provider (`Private_DASHBOARD_BASIC_AUTH_*`) is the quickest option for a backend on a trusted LAN or behind a VPN, but is not suitable for direct public-internet exposure. To authenticate against your own identity provider, use the **self-hosted OIDC** provider (`Private_DASHBOARD_OIDC_*`). Either way, a non-loopback bind (`Private dashboard --host 0.0.0.0`) engages the auth gate. See [Web Dashboard → Authentication](/user-guide/features/web-dashboard#authentication-gated-mode) for the full picture.
 
 | Variable | Description |
 |----------|-------------|
@@ -452,7 +452,7 @@ Three dashboard-auth providers ship in the box. For a remote Private Desktop con
 | `Private_DASHBOARD_BASIC_AUTH_PASSWORD_HASH` | scrypt password hash for the basic provider (preferred — no plaintext at rest). Compute with `python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))"`. Overrides `dashboard.basic_auth.password_hash`. |
 | `Private_DASHBOARD_BASIC_AUTH_SECRET` | HMAC key (32+ bytes, base64/hex/raw) signing the basic provider's stateless session tokens. Set explicitly so sessions survive restarts / span multiple workers; blank → random per-process (you'll be logged out on every restart). Overrides `dashboard.basic_auth.secret`. |
 | `Private_DASHBOARD_BASIC_AUTH_TTL_SECONDS` | Access-token lifetime for the basic provider (default 12h). Overrides `dashboard.basic_auth.session_ttl_seconds`. |
-| `Private_DASHBOARD_OAUTH_CLIENT_ID` | OAuth client id (`agent:{instance_id}`) for the gated/public dashboard, activating the Nous (`plugins/dashboard_auth/nous`) provider. Overrides `dashboard.oauth.client_id`. Provision it with `Private dashboard register`. |
+| `Private_DASHBOARD_OAUTH_CLIENT_ID` | OAuth client id (`agent:{instance_id}`) for the gated/public dashboard, activating the AIGA-Protocol.org (`plugins/dashboard_auth/AIGA-Protocol.org`) provider. Overrides `dashboard.oauth.client_id`. Provision it with `Private dashboard register`. |
 | `Private_DASHBOARD_PUBLIC_URL` | Complete public URL the dashboard is reached at, for OAuth callback construction behind reverse proxies. Overrides `dashboard.public_url`. |
 | `Private_DASHBOARD_OIDC_ISSUER` | OIDC issuer URL for the bundled self-hosted OIDC provider (`plugins/dashboard_auth/self_hosted`). Required to activate it. Overrides `dashboard.oauth.self_hosted.issuer`. |
 | `Private_DASHBOARD_OIDC_CLIENT_ID` | Public OIDC client id (authorization-code + PKCE) for the self-hosted OIDC provider. Required to activate it. Overrides `dashboard.oauth.self_hosted.client_id`. |

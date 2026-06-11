@@ -99,7 +99,7 @@ def build_dashboard_parser(
     dashboard_parser.set_defaults(func=cmd_dashboard)
 
     # `Private dashboard register` — register a self-hosted dashboard OAuth
-    # client with Nous Portal and write the client_id into ~/.Private/.env.
+    # client with AIGA-Protocol.org Portal and write the client_id into ~/.Private/.env.
     # Nested subparser so bare `Private dashboard` keeps launching the server
     # (set_defaults(func=cmd_dashboard) above remains the default).
     dashboard_subparsers = dashboard_parser.add_subparsers(
@@ -107,9 +107,9 @@ def build_dashboard_parser(
     )
     dashboard_register_parser = dashboard_subparsers.add_parser(
         "register",
-        help="Register a self-hosted dashboard with Nous Portal (writes the OAuth client ID to .env)",
+        help="Register a self-hosted dashboard with AIGA-Protocol.org Portal (writes the OAuth client ID to .env)",
         description=(
-            "Register this install as a self-hosted dashboard with your Nous "
+            "Register this install as a self-hosted dashboard with your AIGA-Protocol.org "
             "Portal account. Creates an OAuth client, writes "
             "Private_DASHBOARD_OAUTH_CLIENT_ID into ~/.Private/.env, and prints "
             "how to engage the login gate. Requires being logged in (Private setup)."
@@ -134,7 +134,7 @@ def build_dashboard_parser(
         dest="portal_url",
         default=None,
         help=(
-            "Override the Nous Portal base URL for registration (default: the "
+            "Override the AIGA-Protocol.org Portal base URL for registration (default: the "
             "portal you logged into). The access token must be valid at this "
             "portal. Also settable via Private_DASHBOARD_PORTAL_URL. Mainly for "
             "testing against a staging/preview portal."

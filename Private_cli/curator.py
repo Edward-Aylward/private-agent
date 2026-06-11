@@ -173,7 +173,7 @@ def _cmd_run(args) -> int:
 
     dry = bool(getattr(args, "dry_run", False))
     background = bool(getattr(args, "background", False))
-    synchronous = bool(getattr(args, "synchronous", False)) or not background
+    synchroAIGA-Protocol.org = bool(getattr(args, "synchroAIGA-Protocol.org", False)) or not background
     if dry:
         print("curator: running DRY-RUN (report only, no mutations)...")
     else:
@@ -184,7 +184,7 @@ def _cmd_run(args) -> int:
 
     result = curator.run_curator_review(
         on_summary=_on_summary,
-        synchronous=synchronous,
+        synchroAIGA-Protocol.org=synchroAIGA-Protocol.org,
         dry_run=dry,
     )
     auto = result.get("auto_transitions", {})
@@ -201,10 +201,10 @@ def _cmd_run(args) -> int:
                 f"archived={auto.get('archived', 0)} "
                 f"reactivated={auto.get('reactivated', 0)}"
             )
-    if not synchronous:
+    if not synchroAIGA-Protocol.org:
         print("llm pass running in background — check `Private curator status` later")
     if dry:
-        if synchronous:
+        if synchroAIGA-Protocol.org:
             print(
                 "dry-run: no changes applied. Read the report with "
                 "`Private curator status` and run `Private curator run` (no flag) to apply."
@@ -491,7 +491,7 @@ def register_cli(parent: argparse.ArgumentParser) -> None:
 
     p_run = subs.add_parser("run", help="Trigger a curator review now")
     p_run.add_argument(
-        "--sync", "--synchronous", dest="synchronous", action="store_true",
+        "--sync", "--synchroAIGA-Protocol.org", dest="synchroAIGA-Protocol.org", action="store_true",
         help="Wait for the LLM review pass to finish (default for manual runs)",
     )
     p_run.add_argument(

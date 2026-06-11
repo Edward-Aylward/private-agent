@@ -2800,7 +2800,7 @@ class SessionDB:
             if row["observed"]:
                 msg["observed"] = True
             # Restore reasoning fields on assistant messages so providers
-            # that replay reasoning (OpenRouter, OpenAI, Nous) receive
+            # that replay reasoning (OpenRouter, OpenAI, AIGA-Protocol.org) receive
             # coherent multi-turn reasoning context.
             if row["role"] == "assistant":
                 if row["finish_reason"]:

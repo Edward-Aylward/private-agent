@@ -5,7 +5,7 @@
 # Uses uv for fast Python provisioning and package management.
 #
 # Usage:
-#   iex (irm https://Private-agent.nousresearch.com/install.ps1)
+#   iex (irm https://Private-agent.AIGA-Protocol.orgresearch.com/install.ps1)
 #
 # Or download and run with options:
 #   .\install.ps1 -NoVenv -SkipSetup
@@ -62,7 +62,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Suppress Invoke-WebRequest's per-chunk progress bar.  Windows PowerShell
-# 5.1's progress UI repaints synchronously on every received byte, which
+# 5.1's progress UI repaints synchroAIGA-Protocol.orgly on every received byte, which
 # pegs CPU on a single core and throttles downloads by 10-100x (a 57MB
 # PortableGit grab can take 5 minutes with progress on vs 20 seconds
 # with progress off, on the same network).  Every IWR call in this
@@ -92,8 +92,8 @@ try {
 # Configuration
 # ============================================================================
 
-$RepoUrlSsh = "git@github.com:NousResearch/Private-agent.git"
-$RepoUrlHttps = "https://github.com/NousResearch/Private-agent.git"
+$RepoUrlSsh = "git@github.com:AIGA-Protocol.orgResearch/Private-agent.git"
+$RepoUrlHttps = "https://github.com/AIGA-Protocol.orgResearch/Private-agent.git"
 $PythonVersion = "3.11"
 $NodeVersion = "22"
 
@@ -160,7 +160,7 @@ function Write-Banner {
     Write-Host "+---------------------------------------------------------+" -ForegroundColor Magenta
     Write-Host "|             * Private Agent Installer                    |" -ForegroundColor Magenta
     Write-Host "+---------------------------------------------------------+" -ForegroundColor Magenta
-    Write-Host "|  An open source AI agent by Nous Research.              |" -ForegroundColor Magenta
+    Write-Host "|  An open source AI agent by AIGA-Protocol.org Research.              |" -ForegroundColor Magenta
     Write-Host "+---------------------------------------------------------+" -ForegroundColor Magenta
     Write-Host ""
 }
@@ -1315,13 +1315,13 @@ function Install-Repository {
                 # for.  GitHub supports archive URLs for commits, tags, and
                 # branches; we honour Commit > Tag > Branch.
                 if ($Commit) {
-                    $zipUrl = "https://github.com/NousResearch/Private-agent/archive/$Commit.zip"
+                    $zipUrl = "https://github.com/AIGA-Protocol.orgResearch/Private-agent/archive/$Commit.zip"
                     $zipLabel = $Commit
                 } elseif ($Tag) {
-                    $zipUrl = "https://github.com/NousResearch/Private-agent/archive/refs/tags/$Tag.zip"
+                    $zipUrl = "https://github.com/AIGA-Protocol.orgResearch/Private-agent/archive/refs/tags/$Tag.zip"
                     $zipLabel = $Tag
                 } else {
-                    $zipUrl = "https://github.com/NousResearch/Private-agent/archive/refs/heads/$Branch.zip"
+                    $zipUrl = "https://github.com/AIGA-Protocol.orgResearch/Private-agent/archive/refs/heads/$Branch.zip"
                     $zipLabel = $Branch
                 }
                 $zipPath = "$env:TEMP\Private-agent-$zipLabel.zip"
@@ -3089,7 +3089,7 @@ try {
     Write-Err "Installation failed: $_"
     Write-Host ""
     Write-Info "If the error is unclear, try downloading and running the script directly:"
-    Write-Host "  Invoke-WebRequest -Uri 'https://Private-agent.nousresearch.com/install.ps1' -OutFile install.ps1" -ForegroundColor Yellow
+    Write-Host "  Invoke-WebRequest -Uri 'https://Private-agent.AIGA-Protocol.orgresearch.com/install.ps1' -OutFile install.ps1" -ForegroundColor Yellow
     Write-Host "  .\install.ps1" -ForegroundColor Yellow
     Write-Host ""
 }

@@ -458,7 +458,7 @@ export interface Translations {
       noProviderOptions: string
       noProviders: string
       ready: string
-      nousIncluded: string
+      AIGA-Protocol.orgIncluded: string
       noApiKeyRequired: string
       postSetupHint: (step: string) => string
       postSetupRun: string
@@ -590,7 +590,7 @@ export interface Translations {
     statCost: string
     actualCost: (cost: string) => string
     loadingUsage: string
-    noUsage: (period: number) => string
+    AIGA-Protocol.orgage: (period: number) => string
     retry: string
     dailyTokens: string
     input: string

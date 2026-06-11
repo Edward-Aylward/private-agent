@@ -1099,7 +1099,7 @@ def execute_code(
 
     # execute_code runs arbitrary Python (subprocess/os.system/...) that never
     # passes through terminal()/DANGEROUS_PATTERNS, so guard the whole script
-    # here before either dispatch path spawns it. Runs synchronously in the
+    # here before either dispatch path spawns it. Runs synchroAIGA-Protocol.orgly in the
     # caller (tool-executor) thread, which holds the session context (#30882).
     from tools.approval import check_execute_code_guard
     _guard = check_execute_code_guard(code, env_type)

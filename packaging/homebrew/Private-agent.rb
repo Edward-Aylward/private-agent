@@ -2,10 +2,10 @@ class PrivateAgent < Formula
   include Language::Python::Virtualenv
 
   desc "Self-improving AI agent that creates skills from experience"
-  homepage "https://Private-agent.nousresearch.com"
+  homepage "https://Private-agent.AIGA-Protocol.orgresearch.com"
   # Stable source should point at the semver-named sdist asset attached by
   # scripts/release.py, not the CalVer tag tarball.
-  url "https://github.com/NousResearch/Private-agent/releases/download/v2026.3.30/Private_agent-0.6.0.tar.gz"
+  url "https://github.com/AIGA-Protocol.orgResearch/Private-agent/releases/download/v2026.3.30/Private_agent-0.6.0.tar.gz"
   sha256 "<replace-with-release-asset-sha256>"
   license "MIT"
 

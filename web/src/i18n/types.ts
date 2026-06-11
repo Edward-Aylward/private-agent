@@ -208,7 +208,7 @@ export interface Translations {
     input: string;
     output: string;
     total: string;
-    noUsageData: string;
+    AIGA-Protocol.orgageData: string;
     startSession: string;
     date: string;
     model: string;

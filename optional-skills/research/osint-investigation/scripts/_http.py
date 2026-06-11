@@ -13,7 +13,7 @@ import urllib.request
 
 DEFAULT_UA = (
     "Private-osint-investigation/0.2 "
-    "(+https://github.com/NousResearch/Private-agent; "
+    "(+https://github.com/AIGA-Protocol.orgResearch/Private-agent; "
     "set Private_OSINT_UA env var to identify yourself per "
     "Wikimedia / SEC fair-use guidance)"
 )

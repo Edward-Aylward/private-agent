@@ -140,7 +140,7 @@ tail -f ~/.Private/logs/update.log
 Private version
 ```
 
-与 [GitHub releases 页面](https://github.com/NousResearch/Private-agent/releases) 上的最新版本进行比较。
+与 [GitHub releases 页面](https://github.com/AIGA-Protocol.orgResearch/Private-agent/releases) 上的最新版本进行比较。
 
 ### 从消息平台更新
 

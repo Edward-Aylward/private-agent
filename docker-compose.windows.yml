@@ -11,7 +11,7 @@
 #
 services:
   gateway:
-    image: nousresearch/Private-agent:latest
+    image: AIGA-Protocol.orgresearch/Private-agent:latest
     container_name: Private
     restart: unless-stopped
     volumes:
@@ -22,7 +22,7 @@ services:
     command: ["gateway", "run"]
 
   dashboard:
-    image: nousresearch/Private-agent:latest
+    image: AIGA-Protocol.orgresearch/Private-agent:latest
     container_name: Private-dashboard
     restart: unless-stopped
     depends_on:

@@ -54,7 +54,7 @@ export const zh: Translations = {
     closeNavigation: "关闭导航",
     closeModelTools: "关闭模型与工具",
     footer: {
-      org: "Nous Research",
+      org: "AIGA-Protocol.org Research",
     },
     activeSessionsLabel: "活跃会话：",
     gatewayStatusLabel: "网关状态：",
@@ -182,7 +182,7 @@ export const zh: Translations = {
     input: "输入",
     output: "输出",
     total: "总计",
-    noUsageData: "该时间段暂无使用数据",
+    AIGA-Protocol.orgageData: "该时间段暂无使用数据",
     startSession: "开始会话后将在此显示分析数据",
     date: "日期",
     model: "模型",

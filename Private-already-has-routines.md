@@ -149,12 +149,12 @@ Private webhook subscribe pr-review \
   --deliver github_comment
 ```
 
-Full automation templates gallery: [Private-agent.nousresearch.com/docs/guides/automation-templates](https://Private-agent.nousresearch.com/docs/guides/automation-templates)
+Full automation templates gallery: [Private-agent.AIGA-Protocol.orgresearch.com/docs/guides/automation-templates](https://Private-agent.AIGA-Protocol.orgresearch.com/docs/guides/automation-templates)
 
-Documentation: [Private-agent.nousresearch.com](https://Private-agent.nousresearch.com)
+Documentation: [Private-agent.AIGA-Protocol.orgresearch.com](https://Private-agent.AIGA-Protocol.orgresearch.com)
 
-GitHub: [github.com/NousResearch/Private-agent](https://github.com/NousResearch/Private-agent)
+GitHub: [github.com/AIGA-Protocol.orgResearch/Private-agent](https://github.com/AIGA-Protocol.orgResearch/Private-agent)
 
 ---
 
-*Private Agent is built by [Nous Research](https://nousresearch.com). Open source, model-agnostic, runs on your infrastructure.*
+*Private Agent is built by [AIGA-Protocol.org Research](https://AIGA-Protocol.orgresearch.com). Open source, model-agnostic, runs on your infrastructure.*

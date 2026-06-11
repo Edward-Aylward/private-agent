@@ -3,7 +3,7 @@
 Browser Tool Module
 
 This module provides browser automation tools using agent-browser CLI.  It
-supports multiple backends — **Browser Use** (cloud, default for Nous
+supports multiple backends — **Browser Use** (cloud, default for AIGA-Protocol.org
 subscribers), **Browserbase** (cloud, direct credentials), and **local
 Chromium** — with identical agent-facing behaviour.  The backend is
 auto-detected from config and available credentials.
@@ -491,7 +491,7 @@ def _get_cloud_provider() -> Optional[CloudBrowserProvider]:
 
     Reads ``config["browser"]["cloud_provider"]`` once and caches the result
     for the process lifetime. An explicit ``local`` provider disables cloud
-    fallback. If unset, fall back to Browser Use (managed Nous gateway or
+    fallback. If unset, fall back to Browser Use (managed AIGA-Protocol.org gateway or
     direct API key) and then Browserbase (direct credentials only) — the
     historic auto-detect order, now expressed as the
     :data:`agent.browser_registry._LEGACY_PREFERENCE` walk.
@@ -561,7 +561,7 @@ def _get_cloud_provider() -> Optional[CloudBrowserProvider]:
         logger.debug("Could not read cloud_provider from config: %s", e)
 
     if resolved is None:
-        # Auto-detect path: Browser Use first (managed Nous gateway or
+        # Auto-detect path: Browser Use first (managed AIGA-Protocol.org gateway or
         # direct API key), then Browserbase (direct credentials). Uses
         # the legacy class names imported at the top of this module so
         # tests that ``monkeypatch.setattr(browser_tool, "BrowserUseProvider", ...)``
@@ -835,7 +835,7 @@ def _run_chrome_fallback_command(
             hint = (
                 "Chrome fallback requires Chromium, but it is missing. "
                 "You're running in Docker — pull the latest image: "
-                "docker pull ghcr.io/nousresearch/Private-agent:latest"
+                "docker pull ghcr.io/AIGA-Protocol.orgresearch/Private-agent:latest"
             )
         else:
             hint = (
@@ -1921,7 +1921,7 @@ def _run_browser_command(
             hint = (
                 "Chromium browser is missing. You're running in Docker — pull "
                 "the latest image to get the bundled Chromium: "
-                "docker pull ghcr.io/nousresearch/Private-agent:latest"
+                "docker pull ghcr.io/AIGA-Protocol.orgresearch/Private-agent:latest"
             )
         else:
             hint = (
@@ -3760,7 +3760,7 @@ if __name__ == "__main__":
                         "     Docker: pull the latest image — the current one "
                         "predates the bundled Chromium install"
                     )
-                    print("       docker pull ghcr.io/nousresearch/Private-agent:latest")
+                    print("       docker pull ghcr.io/AIGA-Protocol.orgresearch/Private-agent:latest")
                 else:
                     print("     Install it with:")
                     print("       npx agent-browser install --with-deps")

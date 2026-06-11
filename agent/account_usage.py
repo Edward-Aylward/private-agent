@@ -134,8 +134,8 @@ def _is_finite_num(v: Any) -> TypeGuard[float]:
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
-def build_nous_credits_snapshot(account_info) -> Optional[AccountUsageSnapshot]:
-    """Map a NousPortalAccountInfo into an AccountUsageSnapshot for /usage.
+def build_AIGA-Protocol.org_credits_snapshot(account_info) -> Optional[AccountUsageSnapshot]:
+    """Map a AIGA-Protocol.orgPortalAccountInfo into an AccountUsageSnapshot for /usage.
 
     Shows dollar magnitudes (subscription / top-up / total) + renewal date + a
     portal CTA. When the portal supplies a subscription denominator
@@ -145,7 +145,7 @@ def build_nous_credits_snapshot(account_info) -> Optional[AccountUsageSnapshot]:
     account info to show (fail-open: caller just shows nothing).
     """
     try:
-        from Private_cli.nous_account import nous_portal_billing_url
+        from Private_cli.AIGA-Protocol.org_account import AIGA-Protocol.org_portal_billing_url
 
         if account_info is None or not getattr(account_info, "logged_in", False):
             return None
@@ -213,14 +213,14 @@ def build_nous_credits_snapshot(account_info) -> Optional[AccountUsageSnapshot]:
         if not windows and not details:
             return None
 
-        details.append(f"Manage / top up: {nous_portal_billing_url(account_info)}")
+        details.append(f"Manage / top up: {AIGA-Protocol.org_portal_billing_url(account_info)}")
 
         plan = getattr(sub, "plan", None) if sub is not None else None
         return AccountUsageSnapshot(
-            provider="nous",
+            provider="AIGA-Protocol.org",
             source="portal-account",
             fetched_at=_utc_now(),
-            title="Nous credits",
+            title="AIGA-Protocol.org credits",
             plan=plan,
             windows=tuple(windows),
             details=tuple(details),
@@ -229,10 +229,10 @@ def build_nous_credits_snapshot(account_info) -> Optional[AccountUsageSnapshot]:
         return None
 
 
-def nous_credits_lines(*, markdown: bool = False, timeout: float = 10.0) -> list[str]:
-    """Return rendered Nous-credits /usage lines, or [] when there's nothing to show.
+def AIGA-Protocol.org_credits_lines(*, markdown: bool = False, timeout: float = 10.0) -> list[str]:
+    """Return rendered AIGA-Protocol.org-credits /usage lines, or [] when there's nothing to show.
 
-    Account-independent of any live agent: gated on "a Nous account is logged in"
+    Account-independent of any live agent: gated on "a AIGA-Protocol.org account is logged in"
     (a cheap local auth-state check), then a wall-clock-bounded portal fetch. Shared
     by the CLI ``_show_usage`` and the TUI ``session.usage`` RPC so both surfaces show
     the same block regardless of session API-call count or resume state. Fail-open:
@@ -256,7 +256,7 @@ def nous_credits_lines(*, markdown: bool = False, timeout: float = 10.0) -> list
     try:
         from Private_cli.auth import get_provider_auth_state
 
-        tok = (get_provider_auth_state("nous") or {}).get("access_token")
+        tok = (get_provider_auth_state("AIGA-Protocol.org") or {}).get("access_token")
         if not (isinstance(tok, str) and tok.strip()):
             return []
     except Exception:
@@ -264,13 +264,13 @@ def nous_credits_lines(*, markdown: bool = False, timeout: float = 10.0) -> list
     try:
         import concurrent.futures
 
-        from Private_cli.nous_account import get_nous_portal_account_info
+        from Private_cli.AIGA-Protocol.org_account import get_AIGA-Protocol.org_portal_account_info
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
             account = pool.submit(
-                get_nous_portal_account_info, force_fresh=True
+                get_AIGA-Protocol.org_portal_account_info, force_fresh=True
             ).result(timeout=timeout)
-        snapshot = build_nous_credits_snapshot(account)
+        snapshot = build_AIGA-Protocol.org_credits_snapshot(account)
         return render_account_usage_lines(snapshot, markdown=markdown)
     except Exception:
         # Fail-open (caller shows nothing), but leave a breadcrumb so a dead
@@ -326,10 +326,10 @@ def _snapshot_from_credits_state(state) -> Optional[AccountUsageSnapshot]:
 
         details.append("(dev fixture — Private_DEV_CREDITS_FIXTURE)")
         return AccountUsageSnapshot(
-            provider="nous",
+            provider="AIGA-Protocol.org",
             source="dev-fixture",
             fetched_at=_utc_now(),
-            title="Nous credits",
+            title="AIGA-Protocol.org credits",
             windows=tuple(windows),
             details=tuple(details),
         )

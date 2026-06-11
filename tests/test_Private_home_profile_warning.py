@@ -1,6 +1,6 @@
 """Tests for get_Private_home() profile-mode fallback warning.
 
-Regression test for https://github.com/NousResearch/Private-agent/issues/18594.
+Regression test for https://github.com/AIGA-Protocol.orgResearch/Private-agent/issues/18594.
 
 When Private_HOME is unset but an active_profile file indicates a non-default
 profile is active, get_Private_home() should:

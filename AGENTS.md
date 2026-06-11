@@ -338,7 +338,7 @@ class AIAgent:
 
 ### Agent Loop
 
-The core loop is inside `run_conversation()` — entirely synchronous, with
+The core loop is inside `run_conversation()` — entirely synchroAIGA-Protocol.org, with
 interrupt checks, budget tracking, and a one-turn grace call:
 
 ```python
@@ -816,7 +816,7 @@ plug into `agent/context_engine.py`; image-gen providers into
 `agent/image_gen_provider.py`. Reference / docs-companion plugins
 (`example-dashboard`, `strike-freedom-cockpit`, `plugin-llm-example`,
 `plugin-llm-async-example`) live in the
-[`Private-example-plugins`](https://github.com/NousResearch/Private-example-plugins)
+[`Private-example-plugins`](https://github.com/AIGA-Protocol.orgResearch/Private-example-plugins)
 companion repo, not in this tree.
 
 ---
@@ -954,7 +954,7 @@ Enable/disable per platform via `Private tools` (the curses UI) or the
 ## Delegation (`delegate_task`)
 
 `tools/delegate_tool.py` spawns a subagent with an isolated
-context + terminal session. Synchronous: the parent waits for the
+context + terminal session. SynchroAIGA-Protocol.org: the parent waits for the
 child's summary before continuing its own loop — if the parent is
 interrupted, the child is cancelled.
 

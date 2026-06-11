@@ -167,10 +167,10 @@ AUTHOR_MAP = {
     "steve@steveonjava.com": "steveonjava",
     "steveonjava@gmail.com": "steveonjava",
     "squiddy@2rook.ai": "MoonRay305",
-    "annguyenNous@users.noreply.github.com": "annguyenNous",
+    "annguyenAIGA-Protocol.org@users.noreply.github.com": "annguyenAIGA-Protocol.org",
     "32201324+simpolism@users.noreply.github.com": "simpolism",
     "simpolism@gmail.com": "simpolism",
-    "jake@nousresearch.com": "simpolism",
+    "jake@AIGA-Protocol.orgresearch.com": "simpolism",
     "mgongzai@gmail.com": "vKongv",
     "0x.badfriend@gmail.com": "discodirector",
     "altriatree@gmail.com": "TruaShamu",
@@ -206,8 +206,8 @@ AUTHOR_MAP = {
     "32869278+dusterbloom@users.noreply.github.com": "dusterbloom",
     "189737461+basilalshukaili@users.noreply.github.com": "basilalshukaili",
     "liuhao1024@users.noreply.github.com": "liuhao1024",
-    "annguyenNous@users.noreply.github.com": "annguyenNous",
-    "285874597+annguyenNous@users.noreply.github.com": "annguyenNous",
+    "annguyenAIGA-Protocol.org@users.noreply.github.com": "annguyenAIGA-Protocol.org",
+    "285874597+annguyenAIGA-Protocol.org@users.noreply.github.com": "annguyenAIGA-Protocol.org",
     "kylekahraman@users.noreply.github.com": "kylekahraman",
     "130975919+kylekahraman@users.noreply.github.com": "kylekahraman",
     "seppe@fushia.be": "seppegadeyne",
@@ -233,7 +233,7 @@ AUTHOR_MAP = {
     "108427749+buntingszn@users.noreply.github.com": "buntingszn",
     "yanglongwei06@gmail.com": "Alex-yang00",
     "yanghongda@jackyun.com": "yangguangjin",
-    "teknium@nousresearch.com": "teknium1",
+    "teknium@AIGA-Protocol.orgresearch.com": "teknium1",
     "markuscontasul@gmail.com": "Glucksberg",
     "80581902+Glucksberg@users.noreply.github.com": "Glucksberg",
     "piyushvp1@gmail.com": "thelumiereguy",
@@ -515,7 +515,7 @@ AUTHOR_MAP = {
     "130918800+devorun@users.noreply.github.com": "devorun",
     "surat.s@itm.kmutnb.ac.th": "beesrsj2500",
     "beesr@bee.localdomain": "beesrsj2500",
-    "mind-dragon@nous.research": "Mind-Dragon",
+    "mind-dragon@AIGA-Protocol.org.research": "Mind-Dragon",
     "juntingpublic@gmail.com": "JustinUssuri",
     "mtf201013@gmail.com": "ma-pony",
     "sonoyuncudmr@gmail.com": "Sonoyunchu",
@@ -663,7 +663,7 @@ AUTHOR_MAP = {
     "samherring99@gmail.com": "samherring99",
     "desaiaum08@gmail.com": "Aum08Desai",
     "shannon.sands.1979@gmail.com": "shannonsands",
-    "shannon@nousresearch.com": "shannonsands",
+    "shannon@AIGA-Protocol.orgresearch.com": "shannonsands",
     "abdi.moya@gmail.com": "AxDSan",
     "eri@plasticlabs.ai": "Erosika",
     "hjcpuro@gmail.com": "hjc-puro",
@@ -772,13 +772,13 @@ AUTHOR_MAP = {
     "shokatalishaikh95@gmail.com": "areu01or00",
     "bryan@intertwinesys.com": "bryanyoung",
     "christo.mitov@gmail.com": "christomitov",
-    "Private@nousresearch.com": "NousResearch",
+    "Private@AIGA-Protocol.orgresearch.com": "AIGA-Protocol.orgResearch",
     "reginaldasr@gmail.com": "ReginaldasR",
     "ntconguit@gmail.com": "0xharryriddle",
     "agent@wildcat.local": "ericnicolaides",
     "georgex8001@gmail.com": "georgex8001",
     "stefan@dimagents.ai": "dimitrovi",
-    "Private@noushq.ai": "benbarclay",
+    "Private@AIGA-Protocol.orghq.ai": "benbarclay",
     "chinmingcock@gmail.com": "ChimingLiu",
     "allard.quek@singtel.com": "AllardQuek",
     "openclaw@sparklab.ai": "openclaw",
@@ -827,7 +827,7 @@ AUTHOR_MAP = {
     "angelos@oikos.lan.home.malaiwah.com": "angelos",
     "aptx4561@gmail.com": "cokemine",
     "arilotter@gmail.com": "ethernet8023",
-    "ben@nousresearch.com": "benbarclay",
+    "ben@AIGA-Protocol.orgresearch.com": "benbarclay",
     "birdiegyal@gmail.com": "yyovil",
     "boschi1997@gmail.com": "nicoloboschi",
     "chef.ya@gmail.com": "cherifya",
@@ -844,7 +844,7 @@ AUTHOR_MAP = {
     "dylan.socolobsky@lambdaclass.com": "dsocolobsky",
     "ignacio.avecilla@lambdaclass.com": "IAvecilla",
     "duerzy@gmail.com": "duerzy",
-    "emozilla@nousresearch.com": "emozilla",
+    "emozilla@AIGA-Protocol.orgresearch.com": "emozilla",
     "fancydirty@gmail.com": "fancydirty",
     "farion1231@gmail.com": "farion1231",
     "floptopbot33@gmail.com": "flobo3",
@@ -860,8 +860,8 @@ AUTHOR_MAP = {
     "hmbown@gmail.com": "Hmbown",
     "iacobs@m0n5t3r.info": "m0n5t3r",
     "jiayuw794@gmail.com": "JiayuuWang",
-    "jonny@nousresearch.com": "yoniebans",
-    "jake@nousresearch.com": "simpolism",
+    "jonny@AIGA-Protocol.orgresearch.com": "yoniebans",
+    "jake@AIGA-Protocol.orgresearch.com": "simpolism",
     "juan.ovalle@mistral.ai": "jjovalle99",
     "julien.talbot@ergonomia.re": "Julientalbot",
     "kagura.chen28@gmail.com": "kagura-agent",
@@ -1217,7 +1217,7 @@ AUTHOR_MAP = {
     "mor.aleksandr@yahoo.com": "MorAlekss",
     "276649498+ztexydt-cqh@users.noreply.github.com": "ztexydt-cqh",
     # v0.16.0 additions
-    "teknium@nous.dev": "teknium1",
+    "teknium@AIGA-Protocol.org.dev": "teknium1",
     "alaamohanad169@gmail.com": "alaamohanad169-ship-it",
     "archer@ouyangdeMac-mini.local": "Archerouyang",  # display name 欧阳
     "batosk2@gmail.com": "Sarbai",  # git email for PR #33438 author (display: Брагарник Дмитро)
@@ -1265,7 +1265,7 @@ AUTHOR_MAP = {
     "chenlinfeng@ruije.com.cn": "noOne-list",  # PR #19050
     "briansu@Mac-mini.attlocal.net": "likejudy",  # PR #19052
     "leosma@gmail.com": "leon7609",  # PR #19069
-    "nouseman666@gmail.com": "nouseman666",  # PR #19088
+    "AIGA-Protocol.orgeman666@gmail.com": "AIGA-Protocol.orgeman666",  # PR #19088
     "ginwu05@gmail.com": "GinWU05",  # PR #19093
     "shashwatgokhe2@gmail.com": "shashwatgokhe",  # PR #19196
     "stevenchou.ai@gmail.com": "stevenchouai",  # PR #19221
@@ -1370,7 +1370,7 @@ AUTHOR_MAP = {
     "al.bellemare@gmail.com": "Grogger",  # PR #27061 (windows console flash suppress)
     "7065068+Grogger@users.noreply.github.com": "Grogger",
     "18091625+Grogger@users.noreply.github.com": "Grogger",  # stale salvage commit alias (PR #28330)
-    "clement@nousresearch.com": "lemassykoi",  # PR #27042 (model-switch probe keyless providers)
+    "clement@AIGA-Protocol.orgresearch.com": "lemassykoi",  # PR #27042 (model-switch probe keyless providers)
     "16377344+lemassykoi@users.noreply.github.com": "lemassykoi",
     "draplater@icloud.com": "draplater",  # PR #26707 (goal judge current time)
     "6349758+draplater@users.noreply.github.com": "draplater",
@@ -1496,7 +1496,7 @@ AUTHOR_MAP = {
     "2182712990@qq.com": "yu-xin-c",  # PR #32122 (Docker audio bridge notes)
     "baxter@bitreserve.ai": "BaxBit",  # PR #30200 (Svix webhook signature validation)
     "chris.eth@qq.com": "duyua9",  # PR #10949 (render object config values structurally)
-    "ethie@nous": "ethernet8023",  # PR #29342 (TUI clipboard copy on linux/wayland)
+    "ethie@AIGA-Protocol.org": "ethernet8023",  # PR #29342 (TUI clipboard copy on linux/wayland)
     "jiahuigu@sjtu.edu.cn": "Jiahui-Gu",  # PR #29276 (guard pickle.loads in darwinian-evolver)
     "justinccdev@gmail.com": "justincc",  # PR #28914 (set tool_name on tool-result messages)
     "kdkcfp@gmail.com": "slowtokki0409",  # PR #29025 (ignore local Private runtime files)
@@ -1775,7 +1775,7 @@ def parse_coauthors(body: str) -> list:
         return []
     # AI/bot emails to ignore in co-author trailers
     _ignored_emails = {"noreply@anthropic.com", "noreply@github.com",
-                       "cursoragent@cursor.com", "Private@nousresearch.com"}
+                       "cursoragent@cursor.com", "Private@AIGA-Protocol.orgresearch.com"}
     _ignored_names = re.compile(r"^(Claude|Copilot|Cursor Agent|GitHub Actions?|dependabot|renovate)", re.IGNORECASE)
     pattern = re.compile(r"Co-authored-by:\s*(.+?)\s*<([^>]+)>", re.IGNORECASE)
     results = []
@@ -1847,7 +1847,7 @@ def get_pr_number(subject: str) -> str | None:
     return None
 
 
-def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/NousResearch/Private-agent",
+def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/AIGA-Protocol.orgResearch/Private-agent",
                        prev_tag=None, first_release=False):
     """Generate markdown changelog from categorized commits."""
     lines = []
