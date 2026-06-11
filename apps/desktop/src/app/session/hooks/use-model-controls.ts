@@ -1,7 +1,7 @@
 import { type QueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
-import { getGlobalModelInfo, setGlobalModel } from '@/hermes'
+import { getGlobalModelInfo, setGlobalModel } from '@/Private'
 import { useI18n } from '@/i18n'
 import { notifyError } from '@/store/notifications'
 import {
@@ -11,7 +11,7 @@ import {
   setCurrentModel,
   setCurrentProvider
 } from '@/store/session'
-import type { ModelOptionsResponse } from '@/types/hermes'
+import type { ModelOptionsResponse } from '@/types/Private'
 
 interface ModelSelection {
   model: string

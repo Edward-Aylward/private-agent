@@ -1,21 +1,21 @@
-# nix/desktop.nix — Hermes Desktop (Electron) app build + wrapper
+# nix/desktop.nix — Private Desktop (Electron) app build + wrapper
 #
-# `hermesAgent` is the fully-built `.#default` package — it ships the
-# `hermes` binary with the venv, runtime PATH, bundled skills/plugins, etc.
+# `PrivateAgent` is the fully-built `.#default` package — it ships the
+# `Private` binary with the venv, runtime PATH, bundled skills/plugins, etc.
 # already wired up.  We point the desktop at it via the existing
-# `HERMES_DESKTOP_HERMES` override env var, so the desktop's resolver
-# uses our fully wrapped binary at step 4 ("existing Hermes CLI").
+# `Private_DESKTOP_Private` override env var, so the desktop's resolver
+# uses our fully wrapped binary at step 4 ("existing Private CLI").
 # No reimplementation of the agent resolution in this wrapper.
-{ pkgs, lib, stdenv, makeWrapper, hermesNpmLib, electron, hermesAgent, ... }:
+{ pkgs, lib, stdenv, makeWrapper, PrivateNpmLib, electron, PrivateAgent, ... }:
 let
-  npm = hermesNpmLib.mkNpmPassthru { folder = "apps/desktop"; attr = "desktop"; pname = "hermes-desktop"; };
+  npm = PrivateNpmLib.mkNpmPassthru { folder = "apps/desktop"; attr = "desktop"; pname = "Private-desktop"; };
 
   packageJson = builtins.fromJSON (builtins.readFile (npm.src + "/apps/desktop/package.json"));
   version = packageJson.version;
 
   # Build the renderer (dist/ + electron/ + package.json).
   renderer = pkgs.buildNpmPackage (npm // {
-    pname = "hermes-desktop-renderer";
+    pname = "Private-desktop-renderer";
     inherit version;
 
     doCheck = false;
@@ -67,7 +67,7 @@ in
 
 # Electron wrapper: nixpkgs' electron binary pointed at the renderer dir.
 stdenv.mkDerivation {
-  pname = "hermes-desktop";
+  pname = "Private-desktop";
   inherit version;
 
   dontUnpack = true;
@@ -78,18 +78,18 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/share/hermes-desktop $out/bin
-    cp -r ${renderer}/* $out/share/hermes-desktop/
+    mkdir -p $out/share/Private-desktop $out/bin
+    cp -r ${renderer}/* $out/share/Private-desktop/
 
     # Wrap the nixpkgs electron binary to launch our app.  Set
-    # HERMES_DESKTOP_HERMES to the absolute path of the nix-built `hermes`
-    # binary so the desktop's resolver step 4 ("existing Hermes CLI on
+    # Private_DESKTOP_Private to the absolute path of the nix-built `Private`
+    # binary so the desktop's resolver step 4 ("existing Private CLI on
     # PATH") uses our fully wrapped binary — venv with all deps,
     # bundled skills/plugins, runtime PATH (ripgrep/git/ffmpeg/etc).
     # No reimplementation of the agent resolver in the wrapper.
-    makeWrapper ${lib.getExe electron} $out/bin/hermes-desktop \
-      --add-flags "$out/share/hermes-desktop" \
-      --set HERMES_DESKTOP_HERMES "${lib.getExe hermesAgent}" \
+    makeWrapper ${lib.getExe electron} $out/bin/Private-desktop \
+      --add-flags "$out/share/Private-desktop" \
+      --set Private_DESKTOP_Private "${lib.getExe PrivateAgent}" \
       --set ELECTRON_IS_DEV 0
 
     runHook postInstall
@@ -100,10 +100,10 @@ stdenv.mkDerivation {
   };
 
   meta = with lib; {
-    description = "Native Electron desktop shell for Hermes Agent";
-    homepage = "https://github.com/NousResearch/hermes-agent";
+    description = "Native Electron desktop shell for Private Agent";
+    homepage = "https://github.com/NousResearch/Private-agent";
     license = licenses.mit;
     platforms = platforms.unix;
-    mainProgram = "hermes-desktop";
+    mainProgram = "Private-desktop";
   };
 }

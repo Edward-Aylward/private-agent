@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  replace-hermes-with-private:
+  replace-Private-with-private:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Replace Hermes/hermes references with Private
+      - name: Replace Private/Private references with Private
         shell: bash
         run: |
           set -euo pipefail
@@ -40,7 +40,7 @@ jobs:
               "__pycache__",
           }
 
-          pattern = re.compile("hermes", re.IGNORECASE)
+          pattern = re.compile("Private", re.IGNORECASE)
 
           def should_skip(path: Path) -> bool:
               return any(part in SKIP_DIRS for part in path.parts)
@@ -92,10 +92,10 @@ jobs:
           git status --short
 
           if git diff --quiet && git diff --cached --quiet; then
-            echo "No Hermes/hermes references found to replace."
+            echo "No Private/Private references found to replace."
             exit 0
           fi
 
           git add -A
-          git commit -m "Replace Hermes references with Private"
+          git commit -m "Replace Private references with Private"
           git push

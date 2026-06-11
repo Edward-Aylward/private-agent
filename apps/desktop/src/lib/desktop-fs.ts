@@ -1,9 +1,9 @@
 import { $connection } from '@/store/session'
 
-import type { HermesConnection, HermesReadDirResult, HermesReadFileTextResult, HermesSelectPathsOptions } from '@/global'
+import type { PrivateConnection, PrivateReadDirResult, PrivateReadFileTextResult, PrivateSelectPathsOptions } from '@/global'
 
 export interface DesktopFsRemotePicker {
-  selectPaths: (options?: HermesSelectPathsOptions) => Promise<string[]>
+  selectPaths: (options?: PrivateSelectPathsOptions) => Promise<string[]>
 }
 
 let remotePicker: DesktopFsRemotePicker | null = null
@@ -12,7 +12,7 @@ export function setDesktopFsRemotePicker(next: DesktopFsRemotePicker | null) {
   remotePicker = next
 }
 
-function connectionCacheKey(connection: HermesConnection | null) {
+function connectionCacheKey(connection: PrivateConnection | null) {
   if (!connection) {
     return 'local:'
   }
@@ -32,27 +32,27 @@ function fsPath(endpoint: string, filePath: string) {
 }
 
 function bridge() {
-  const desktop = window.hermesDesktop
+  const desktop = window.PrivateDesktop
   if (!desktop) {
-    throw new Error('Hermes Desktop bridge is unavailable')
+    throw new Error('Private Desktop bridge is unavailable')
   }
   return desktop
 }
 
-export async function readDesktopDir(path: string): Promise<HermesReadDirResult> {
+export async function readDesktopDir(path: string): Promise<PrivateReadDirResult> {
   const desktop = bridge()
   if (!isDesktopFsRemoteMode()) {
     return desktop.readDir(path)
   }
-  return desktop.api<HermesReadDirResult>({ path: fsPath('list', path) })
+  return desktop.api<PrivateReadDirResult>({ path: fsPath('list', path) })
 }
 
-export async function readDesktopFileText(path: string): Promise<HermesReadFileTextResult> {
+export async function readDesktopFileText(path: string): Promise<PrivateReadFileTextResult> {
   const desktop = bridge()
   if (!isDesktopFsRemoteMode()) {
     return desktop.readFileText(path)
   }
-  return desktop.api<HermesReadFileTextResult>({ path: fsPath('read-text', path) })
+  return desktop.api<PrivateReadFileTextResult>({ path: fsPath('read-text', path) })
 }
 
 export async function readDesktopFileDataUrl(path: string): Promise<string> {
@@ -83,7 +83,7 @@ export async function desktopDefaultCwd(): Promise<{ branch: string; cwd: string
   return bridge().api<{ branch: string; cwd: string }>({ path: '/api/fs/default-cwd' })
 }
 
-export async function selectDesktopPaths(options?: HermesSelectPathsOptions): Promise<string[]> {
+export async function selectDesktopPaths(options?: PrivateSelectPathsOptions): Promise<string[]> {
   const desktop = bridge()
   if (!isDesktopFsRemoteMode()) {
     return desktop.selectPaths(options)
