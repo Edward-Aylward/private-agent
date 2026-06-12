@@ -1,7 +1,7 @@
 <div dir="rtl">
 
 <p align="center">
-  <img src="assets/banner.png" alt="Private Agent" width="220">
+  <img src="assets/banner.png" alt="Private Agent" width="100%">
 </p>
 
 # ہرمیس ایجنٹ ☤ (Private Agent)
