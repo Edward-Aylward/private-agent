@@ -1248,4 +1248,617 @@ install_deps() {
     # python-deps invocation. Re-deriving it here covers that path. Without it,
     # an inherited UV_PYTHON=3.14 makes the uv sync/pip tiers below recreate the
     # venv at 3.14 and fail the maturin source build (no cp314 wheels yet).
-    if [ "$DISTRO" != "termux" ] &&
+    if [ "$DISTRO" != "termux" ] && [ -x "$INSTALL_DIR/venv/bin/python" ]; then
+        export UV_PYTHON="$INSTALL_DIR/venv/bin/python"
+    fi
+
+    if [ "$DISTRO" = "termux" ]; then
+        if [ "$USE_VENV" = true ]; then
+            export VIRTUAL_ENV="$INSTALL_DIR/venv"
+            PIP_PYTHON="$INSTALL_DIR/venv/bin/python"
+        else
+            PIP_PYTHON="$PYTHON_PATH"
+        fi
+
+        if [ -z "${ANDROID_API_LEVEL:-}" ]; then
+            ANDROID_API_LEVEL="$(getprop ro.build.version.sdk 2>/dev/null || true)"
+            if [ -z "$ANDROID_API_LEVEL" ]; then
+                ANDROID_API_LEVEL=24
+            fi
+            export ANDROID_API_LEVEL
+            log_info "Using ANDROID_API_LEVEL=$ANDROID_API_LEVEL for Android wheel builds"
+        fi
+
+        "$PIP_PYTHON" -m pip install --upgrade pip setuptools wheel >/dev/null
+
+        # On Android, psutil's setup.py rejects sys.platform == 'android' before
+        # it ever invokes the C build, so the next pip install would fail at
+        # "platform android is not supported".  Prebuild psutil from the official
+        # sdist with a one-line marker patch (Linux source path is fine on
+        # Android).  Stopgap until psutil#2762 ships upstream.
+        if "$PIP_PYTHON" -c 'import sys; raise SystemExit(0 if sys.platform == "android" else 1)' 2>/dev/null; then
+            log_info "Android Python detected: prebuilding psutil compatibility shim..."
+            if ! "$PIP_PYTHON" "$INSTALL_DIR/scripts/install_psutil_android.py" --pip "$PIP_PYTHON -m pip"; then
+                log_warn "psutil Android prebuild failed — package install will likely fail next."
+                log_info "Workaround: manually rerun 'python scripts/install_psutil_android.py' once your toolchain is set up."
+            fi
+        fi
+
+        # Try the broad Termux profile first (best-effort "install all" for Android),
+        # then fall back to the conservative Termux baseline, then base package.
+        if ! "$PIP_PYTHON" -m pip install -e '.[termux-all]' -c constraints-termux.txt; then
+            log_warn "Termux broad profile (.[termux-all]) failed, trying baseline Termux profile..."
+            if ! "$PIP_PYTHON" -m pip install -e '.[termux]' -c constraints-termux.txt; then
+                log_warn "Termux baseline profile (.[termux]) failed, trying base install..."
+                if ! "$PIP_PYTHON" -m pip install -e '.' -c constraints-termux.txt; then
+                    log_error "Package installation failed on Termux."
+                    log_info "Ensure these packages are installed: pkg install clang rust make pkg-config libffi openssl ca-certificates curl"
+                    log_info "Then re-run: cd $INSTALL_DIR && python -m pip install -e '.[termux-all]' -c constraints-termux.txt"
+                    exit 1
+                fi
+            fi
+        fi
+
+        log_success "Main package installed"
+        log_info "Termux note: matrix e2ee and local faster-whisper extras are excluded from .[termux-all] due to upstream Android wheel/toolchain blockers."
+        log_info "Termux note: browser/WhatsApp tooling is not installed by default; see the Termux guide for optional follow-up steps."
+
+        log_success "All dependencies installed"
+        return 0
+    fi
+
+    if [ "$USE_VENV" = true ]; then
+        # Tell uv to install into our venv (no need to activate)
+        export VIRTUAL_ENV="$INSTALL_DIR/venv"
+    fi
+
+    # On Debian/Ubuntu (including WSL), some Python packages need build tools.
+    # Check and offer to install them if missing.
+    if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
+        local need_build_tools=false
+        for pkg in gcc python3-dev libffi-dev; do
+            if ! dpkg -s "$pkg" &>/dev/null; then
+                need_build_tools=true
+                break
+            fi
+        done
+        if [ "$need_build_tools" = true ]; then
+            log_info "Some build tools may be needed for Python packages..."
+            if command -v sudo &> /dev/null; then
+                if sudo -n true 2>/dev/null; then
+                    sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get install -y -qq build-essential python3-dev libffi-dev >/dev/null 2>&1 || true
+                    log_success "Build tools installed"
+                else
+                    log_info "sudo is needed ONLY to install build tools (build-essential, python3-dev, libffi-dev) via apt."
+                    log_info "Private Agent itself does not require or retain root access."
+                    if prompt_yes_no "Install build tools?" "yes"; then
+                        sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get install -y -qq build-essential python3-dev libffi-dev >/dev/null 2>&1 || true
+                        log_success "Build tools installed"
+                    fi
+                fi
+            fi
+        fi
+    fi
+
+    # Install the main package in editable mode with all extras.
+    #
+    # Hash-verified install (Tier 0) — when uv.lock is present, prefer
+    # `uv sync --locked`. The lockfile records SHA256 hashes for every
+    # transitive, so a compromised transitive (different hash than what
+    # we shipped) is REJECTED by the resolver. This is the *only* path
+    # that protects against the "direct dep is fine, but the dep's dep
+    # got worm-poisoned overnight" failure mode. All `uv pip install`
+    # tiers below re-resolve transitives fresh from PyPI without any
+    # hash verification — they exist to keep installs working when the
+    # lockfile is stale, missing, or out-of-sync with the current
+    # extras spec, NOT because they're equivalent in posture.
+    if [ -f "uv.lock" ]; then
+        log_info "Trying tier: hash-verified (uv.lock) ..."
+        log_info "(this resolves + downloads the curated [all] set — first run on a"
+        log_info " fresh venv can take 1-5 minutes; uv prints progress below)"
+        # Stream uv's progress directly to the user instead of swallowing
+        # it with `2>"$(mktemp)"`.  Two reasons:
+        #   1. `--extra all --locked` against a fresh venv has to pull
+        #      every transitive — silencing stderr makes the install
+        #      look frozen for minutes on slow networks. Users see
+        #      "Trying tier: hash-verified ..." and assume it's hung.
+        #   2. The previous `2>"$(mktemp)"` substituted the path at
+        #      command-build time but never saved it, so on failure the
+        #      uv error message was unreachable — the user just got the
+        #      generic "lockfile may be stale" warning.
+        #
+        # Critical flag choice: `--extra all`, NOT `--all-extras`.
+        #   --all-extras = every [project.optional-dependencies] key.
+        #                  This bypasses the curated `[all]` extra
+        #                  entirely and pulls e.g. [matrix] (which
+        #                  needs python-olm + make on Windows) and
+        #                  [rl] (git+https deps that fail offline).
+        #   --extra all  = install just the `[all]` extra's contents.
+        #                  This respects the curation in pyproject.toml.
+        # uv's own progress UI handles TTY detection and downgrades
+        # gracefully when stdout/stderr aren't terminals.
+        if UV_PROJECT_ENVIRONMENT="$INSTALL_DIR/venv" $UV_CMD sync --extra all --locked; then
+            log_success "Main package installed (hash-verified via uv.lock)"
+            log_success "All dependencies installed"
+            return 0
+        fi
+        log_warn "uv.lock sync failed (see uv output above), falling back to PyPI resolve..."
+    else
+        log_info "uv.lock not found — falling back to PyPI resolve (no hash verification)"
+    fi
+
+    # Multi-tier fallback. The point of the tiers is that ONE compromised
+    # PyPI package (a worm-poisoned release that gets quarantined, like
+    # mistralai 2.4.6 in May 2026) shouldn't be able to silently demote a
+    # fresh install all the way down to "core only" — the user should keep
+    # everything else they signed up for.
+    #
+    # Tier 1: [all] — the curated extra in pyproject.toml.
+    # Tier 2: [all] minus the currently-broken extras list (_BROKEN_EXTRAS).
+    #         Edit _BROKEN_EXTRAS below when something on PyPI breaks; this
+    #         lets users keep the rest of [all] when one transitive is
+    #         unavailable. The list of [all]'s contents is parsed from
+    #         pyproject.toml at runtime — there is NO hand-mirrored copy
+    #         to drift out of sync. If you want to change what [all]
+    #         contains, edit pyproject.toml only.
+    # Tier 3: bare `.` — last-resort so at least the core CLI launches.
+    #         Skipped tiers like "PyPI-only extras (no git deps)" used to
+    #         exist to dodge [rl] / [matrix] git+sdist deps; those are no
+    #         longer in [all] post-2026-05-12 lazy-install migration, so
+    #         a separate PyPI-only tier had no remaining content.
+    local _BROKEN_EXTRAS=()  # populate when an extra becomes unresolvable
+
+    # Parse [project.optional-dependencies].all from pyproject.toml.
+    # tomllib is stdlib on Python 3.11+ which uv's bootstrap guarantees.
+    # Falls back to a hand list if parse fails — defensive only.
+    local _ALL_EXTRAS_CSV
+    _ALL_EXTRAS_CSV="$(
+        "$PYTHON_PATH" - <<'PY' 2>/dev/null
+import re, sys, tomllib
+try:
+    with open("pyproject.toml", "rb") as fh:
+        data = tomllib.load(fh)
+    specs = data["project"]["optional-dependencies"]["all"]
+    extras = []
+    for s in specs:
+        m = re.search(r"Private-agent\[([\w-]+)\]", s)
+        if m:
+            extras.append(m.group(1))
+    print(",".join(extras))
+except Exception as e:
+    print("", file=sys.stderr)
+    sys.exit(1)
+PY
+    )"
+    if [ -z "$_ALL_EXTRAS_CSV" ]; then
+        log_warn "Could not parse [all] from pyproject.toml; falling back to .[all] only."
+        _ALL_EXTRAS_CSV=""
+    fi
+
+    # Build "[all] minus broken" spec by filtering the parsed list.
+    local _SAFE_SPEC=".[all]"
+    if [ -n "$_ALL_EXTRAS_CSV" ] && [ "${#_BROKEN_EXTRAS[@]}" -gt 0 ]; then
+        local _SAFE_EXTRAS=()
+        local _e _b _skip
+        IFS=',' read -ra _ALL_EXTRAS_ARR <<< "$_ALL_EXTRAS_CSV"
+        for _e in "${_ALL_EXTRAS_ARR[@]}"; do
+            _skip=false
+            for _b in "${_BROKEN_EXTRAS[@]}"; do
+                if [ "$_e" = "$_b" ]; then _skip=true; break; fi
+            done
+            if [ "$_skip" = false ]; then _SAFE_EXTRAS+=("$_e"); fi
+        done
+        _SAFE_SPEC=".[$(IFS=,; echo "${_SAFE_EXTRAS[*]}")]"
+    fi
+
+    ALL_INSTALL_LOG=$(mktemp)
+    local _installed=false
+    local _tier_name=""
+
+    install_tier() {
+        local name="$1"; local spec="$2"
+        log_info "Trying tier: $name ..."
+        if $UV_CMD pip install -e "$spec" 2>"$ALL_INSTALL_LOG"; then
+            log_success "Main package installed ($name)"
+            _installed=true
+            _tier_name="$name"
+            return 0
+        fi
+        log_warn "Tier '$name' failed. Top of pip output:"
+        head -5 "$ALL_INSTALL_LOG" | sed 's/^/    /' >&2
+        return 1
+    }
+
+    install_tier "all" ".[all]" \
+        || install_tier "all minus known-broken (${_BROKEN_EXTRAS[*]:-none})" "$_SAFE_SPEC" \
+        || install_tier "core only (no extras)" "."
+
+    rm -f "$ALL_INSTALL_LOG"
+
+    if [ "$_installed" = false ]; then
+        log_error "Package installation failed even with no extras."
+        log_info "Check that build tools are installed: sudo apt install build-essential python3-dev"
+        log_info "Then re-run: cd $INSTALL_DIR && uv pip install -e '.[all]'"
+        exit 1
+    fi
+
+    if [ "$_tier_name" != "all (with RL/matrix extras)" ]; then
+        log_warn "Note: installed via fallback tier ($_tier_name)."
+        log_info "Some optional features may be missing. After resolving any"
+        log_info "PyPI/network issue, re-run: $UV_CMD pip install -e '.[all]'"
+    fi
+
+    log_success "Main package installed"
+
+    log_success "All dependencies installed"
+}
+
+setup_path() {
+    log_info "Setting up Private command..."
+
+    if [ "$USE_VENV" = true ]; then
+        Private_BIN="$INSTALL_DIR/venv/bin/Private"
+    else
+        Private_BIN="$(which Private 2>/dev/null || echo "")"
+        if [ -z "$Private_BIN" ]; then
+            log_warn "Private not found on PATH after install"
+            return 0
+        fi
+    fi
+
+    # Verify the entry point script was actually generated
+    if [ ! -x "$Private_BIN" ]; then
+        log_warn "Private entry point not found at $Private_BIN"
+        log_info "This usually means the pip install didn't complete successfully."
+        if [ "$DISTRO" = "termux" ]; then
+            log_info "Try: cd $INSTALL_DIR && python -m pip install -e '.[termux-all]' -c constraints-termux.txt"
+        else
+            log_info "Try: cd $INSTALL_DIR && uv pip install -e '.[all]'"
+        fi
+        return 0
+    fi
+
+    local command_link_dir
+    local command_link_display_dir
+    command_link_dir="$(get_command_link_dir)"
+    command_link_display_dir="$(get_command_link_display_dir)"
+
+    # Create a user-facing shim for the Private command.
+    # We intentionally clear PYTHONPATH/PYTHONHOME here so inherited env vars
+    # can't make this launcher import modules from another checkout.
+    mkdir -p "$command_link_dir"
+    # Older installs created this path as a symlink to $Private_BIN. Without
+    # the rm, `cat >` follows the symlink and overwrites the venv pip entry
+    # point with this shim — making `exec "$Private_BIN"` self-recurse. (#21454)
+    rm -f "$command_link_dir/Private"
+    cat > "$command_link_dir/Private" <<EOF
+#!/usr/bin/env bash
+unset PYTHONPATH
+unset PYTHONHOME
+exec "$Private_BIN" "\$@"
+EOF
+    chmod +x "$command_link_dir/Private"
+    log_success "Installed Private launcher → $command_link_display_dir/Private"
+
+    if [ "$DISTRO" = "termux" ]; then
+        export PATH="$command_link_dir:$PATH"
+        log_info "$command_link_display_dir is the native Termux command path"
+        log_success "Private command ready"
+        return 0
+    fi
+
+    # FHS layout: /usr/local/bin is normally on PATH for login shells (via
+    # /etc/profile pathmunge), but on RHEL/CentOS/Rocky/Alma 8+ non-login
+    # interactive root shells (su, sudo -s, tmux panes, some web terminals)
+    # only source /etc/bashrc, which does NOT add /usr/local/bin — and
+    # /root/.bash_profile doesn't either.  So verify with `command -v` and
+    # fall back to writing a PATH guard into /root/.bashrc when needed.
+    if [ "$ROOT_FHS_LAYOUT" = true ]; then
+        export PATH="$command_link_dir:$PATH"
+        # Probe a fresh non-login interactive bash the way the user will use it.
+        # `bash -i -c` sources ~/.bashrc but NOT ~/.bash_profile or /etc/profile,
+        # which is the exact scenario where RHEL root loses /usr/local/bin.
+        if env -i HOME="$HOME" TERM="${TERM:-dumb}" bash -i -c 'command -v Private' \
+                >/dev/null 2>&1; then
+            log_info "/usr/local/bin is already on PATH for all shells"
+            log_success "Private command ready"
+            return 0
+        fi
+
+        log_info "Private not on PATH in non-login shells (common on RHEL-family)"
+        PATH_LINE='export PATH="/usr/local/bin:$PATH"'
+        PATH_COMMENT='# Private Agent — ensure /usr/local/bin is on PATH (RHEL non-login shells)'
+        for SHELL_CONFIG in "$HOME/.bashrc" "$HOME/.bash_profile"; do
+            [ -f "$SHELL_CONFIG" ] || continue
+            if ! grep -v '^[[:space:]]*#' "$SHELL_CONFIG" 2>/dev/null \
+                    | grep -qE 'PATH=.*(/usr/local/bin|\$command_link_dir)'; then
+                echo "" >> "$SHELL_CONFIG"
+                echo "$PATH_COMMENT" >> "$SHELL_CONFIG"
+                echo "$PATH_LINE" >> "$SHELL_CONFIG"
+                log_success "Added /usr/local/bin to PATH in $SHELL_CONFIG"
+            fi
+        done
+        log_success "Private command ready"
+        return 0
+    fi
+
+    # Check if ~/.local/bin is on PATH; if not, add it to shell config.
+    # Detect the user's actual login shell (not the shell running this script,
+    # which is always bash when piped from curl).
+    if ! echo "$PATH" | tr ':' '\n' | grep -q "^$command_link_dir$"; then
+        SHELL_CONFIGS=()
+        IS_FISH=false
+        LOGIN_SHELL="$(basename "${SHELL:-/bin/bash}")"
+        case "$LOGIN_SHELL" in
+            zsh)
+                [ -f "$HOME/.zshrc" ] && SHELL_CONFIGS+=("$HOME/.zshrc")
+                [ -f "$HOME/.zprofile" ] && SHELL_CONFIGS+=("$HOME/.zprofile")
+                # If neither exists, create ~/.zshrc (common on fresh macOS installs)
+                if [ ${#SHELL_CONFIGS[@]} -eq 0 ]; then
+                    touch "$HOME/.zshrc"
+                    SHELL_CONFIGS+=("$HOME/.zshrc")
+                fi
+                ;;
+            bash)
+                [ -f "$HOME/.bashrc" ] && SHELL_CONFIGS+=("$HOME/.bashrc")
+                [ -f "$HOME/.bash_profile" ] && SHELL_CONFIGS+=("$HOME/.bash_profile")
+                ;;
+            fish)
+                # fish uses ~/.config/fish/config.fish and fish_add_path — not export PATH=
+                IS_FISH=true
+                FISH_CONFIG="$HOME/.config/fish/config.fish"
+                mkdir -p "$(dirname "$FISH_CONFIG")"
+                touch "$FISH_CONFIG"
+                ;;
+            *)
+                [ -f "$HOME/.bashrc" ] && SHELL_CONFIGS+=("$HOME/.bashrc")
+                [ -f "$HOME/.zshrc" ] && SHELL_CONFIGS+=("$HOME/.zshrc")
+                ;;
+        esac
+        # Also ensure ~/.profile has it (sourced by login shells on
+        # Ubuntu/Debian/WSL even when ~/.bashrc is skipped)
+        [ "$IS_FISH" = "false" ] && [ -f "$HOME/.profile" ] && SHELL_CONFIGS+=("$HOME/.profile")
+
+        PATH_LINE='export PATH="$HOME/.local/bin:$PATH"'
+
+        for SHELL_CONFIG in "${SHELL_CONFIGS[@]}"; do
+            if ! grep -v '^[[:space:]]*#' "$SHELL_CONFIG" 2>/dev/null | grep -qE 'PATH=.*\.local/bin'; then
+                echo "" >> "$SHELL_CONFIG"
+                echo "# Private Agent — ensure ~/.local/bin is on PATH" >> "$SHELL_CONFIG"
+                echo "$PATH_LINE" >> "$SHELL_CONFIG"
+                log_success "Added ~/.local/bin to PATH in $SHELL_CONFIG"
+            fi
+        done
+
+        # fish uses fish_add_path instead of export PATH=...
+        if [ "$IS_FISH" = "true" ]; then
+            if ! grep -q 'fish_add_path.*\.local/bin' "$FISH_CONFIG" 2>/dev/null; then
+                echo "" >> "$FISH_CONFIG"
+                echo "# Private Agent — ensure ~/.local/bin is on PATH" >> "$FISH_CONFIG"
+                echo 'fish_add_path "$HOME/.local/bin"' >> "$FISH_CONFIG"
+                log_success "Added ~/.local/bin to PATH in $FISH_CONFIG"
+            fi
+        fi
+
+        if [ "$IS_FISH" = "false" ] && [ ${#SHELL_CONFIGS[@]} -eq 0 ]; then
+            log_warn "Could not detect shell config file to add ~/.local/bin to PATH"
+            log_info "Add manually: $PATH_LINE"
+        fi
+    else
+        log_info "~/.local/bin already on PATH"
+    fi
+
+    # Export for current session so Private works immediately
+    export PATH="$command_link_dir:$PATH"
+
+    log_success "Private command ready"
+}
+
+copy_config_templates() {
+    log_info "Setting up configuration files..."
+
+    # Create ~/.Private directory structure (config at top level, code in subdir)
+    mkdir -p "$Private_HOME"/{cron,sessions,logs,pairing,hooks,image_cache,audio_cache,memories,skills}
+
+    # Create .env at ~/.Private/.env (top level, easy to find)
+    if [ ! -f "$Private_HOME/.env" ]; then
+        if [ -f "$INSTALL_DIR/.env.example" ]; then
+            cp "$INSTALL_DIR/.env.example" "$Private_HOME/.env"
+            log_success "Created ~/.Private/.env from template"
+        else
+            touch "$Private_HOME/.env"
+            log_success "Created ~/.Private/.env"
+        fi
+    else
+        log_info "~/.Private/.env already exists, keeping it"
+    fi
+    # Restrict .env permissions — this file holds API keys and tokens.
+    # 0600 ensures only the file owner can read/write, matching standard
+    # practice for credential files (.netrc, .aws/credentials, .ssh/config).
+    chmod 600 "$Private_HOME/.env"
+    configure_browser_env_from_system_browser
+
+    # Create config.yaml at ~/.Private/config.yaml (top level, easy to find)
+    if [ ! -f "$Private_HOME/config.yaml" ]; then
+        if [ -f "$INSTALL_DIR/cli-config.yaml.example" ]; then
+            cp "$INSTALL_DIR/cli-config.yaml.example" "$Private_HOME/config.yaml"
+            log_success "Created ~/.Private/config.yaml from template"
+        fi
+    else
+        log_info "~/.Private/config.yaml already exists, keeping it"
+    fi
+
+    # Create SOUL.md if it doesn't exist (global persona file)
+    if [ ! -f "$Private_HOME/SOUL.md" ]; then
+        cat > "$Private_HOME/SOUL.md" << 'SOUL_EOF'
+# Private Agent Persona
+
+SOUL_EOF
+        log_success "Created ~/.Private/SOUL.md (edit to customize personality)"
+    fi
+
+    log_success "Configuration directory ready: ~/.Private/"
+
+    # Seed bundled skills into ~/.Private/skills/ (manifest-based, one-time per skill)
+    if [ "$NO_SKILLS" = true ]; then
+        # Blank-slate install: write the opt-out marker and skip seeding.
+        # skills_sync.py and `Private update` both honor this marker, so the
+        # default profile stays empty across future updates too.
+        printf '%s\n' \
+            "This profile opted out of bundled-skill seeding (installed with --no-skills)." \
+            "Delete this file to re-enable sync on the next 'Private update'." \
+            > "$Private_HOME/.no-bundled-skills" 2>/dev/null || true
+        log_info "Skipping bundled skills (--no-skills). Wrote $Private_HOME/.no-bundled-skills"
+        log_info "  Future 'Private update' runs will not inject bundled skills. Delete the marker to opt back in."
+    else
+        log_info "Syncing bundled skills to ~/.Private/skills/ ..."
+        if "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tools/skills_sync.py" 2>/dev/null; then
+            log_success "Skills synced to ~/.Private/skills/"
+        else
+            # Fallback: simple directory copy if Python sync fails
+            if [ -d "$INSTALL_DIR/skills" ] && [ ! "$(ls -A "$Private_HOME/skills/" 2>/dev/null | grep -v '.bundled_manifest')" ]; then
+                cp -r "$INSTALL_DIR/skills/"* "$Private_HOME/skills/" 2>/dev/null || true
+                log_success "Skills copied to ~/.Private/skills/"
+            fi
+        fi
+    fi
+}
+
+find_system_browser() {
+    # Prefer a user-specified browser path, then common Linux/macOS Chrome and
+    # Chromium command names.  Arch-family distributions commonly ship plain
+    # `chromium`, while Debian-family systems often use `chromium-browser`.
+    if [ -n "${AGENT_BROWSER_EXECUTABLE_PATH:-}" ]; then
+        if [ -x "$AGENT_BROWSER_EXECUTABLE_PATH" ]; then
+            echo "$AGENT_BROWSER_EXECUTABLE_PATH"
+            return 0
+        fi
+        if command -v "$AGENT_BROWSER_EXECUTABLE_PATH" >/dev/null 2>&1; then
+            command -v "$AGENT_BROWSER_EXECUTABLE_PATH"
+            return 0
+        fi
+    fi
+
+    local candidate
+    for candidate in google-chrome google-chrome-stable chromium chromium-browser chrome; do
+        if command -v "$candidate" >/dev/null 2>&1; then
+            command -v "$candidate"
+            return 0
+        fi
+    done
+
+    if [ "$(uname)" = "Darwin" ]; then
+        for app in \
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+            "/Applications/Chromium.app/Contents/MacOS/Chromium"; do
+            if [ -x "$app" ]; then
+                echo "$app"
+                return 0
+            fi
+        done
+    fi
+
+    return 1
+}
+
+run_browser_install_with_timeout() {
+    local timeout_seconds="$1"
+    shift
+
+    if command -v timeout >/dev/null 2>&1; then
+        timeout "$timeout_seconds" "$@"
+    else
+        "$@"
+    fi
+}
+
+configure_browser_env_from_system_browser() {
+    local env_file="$Private_HOME/.env"
+    local browser_path="${DETECTED_BROWSER_EXECUTABLE:-}"
+
+    if [ -z "$browser_path" ]; then
+        browser_path="$(find_system_browser 2>/dev/null || true)"
+    fi
+
+    if [ -z "$browser_path" ]; then
+        return 0
+    fi
+
+    mkdir -p "$Private_HOME"
+    if [ ! -f "$env_file" ]; then
+        touch "$env_file"
+    fi
+
+    if grep -q '^AGENT_BROWSER_EXECUTABLE_PATH=' "$env_file" 2>/dev/null; then
+        log_info "AGENT_BROWSER_EXECUTABLE_PATH already configured"
+        return 0
+    fi
+
+    {
+        echo ""
+        echo "# Private Agent browser tools — use the system Chrome/Chromium binary."
+        echo "AGENT_BROWSER_EXECUTABLE_PATH=$browser_path"
+    } >> "$env_file"
+    log_success "Configured browser tools to use $browser_path"
+}
+
+install_node_deps() {
+    if [ "$HAS_NODE" = false ]; then
+        log_info "Skipping Node.js dependencies (Node not installed)"
+        return 0
+    fi
+
+    if [ "$DISTRO" = "termux" ]; then
+        log_info "Skipping automatic Node/browser dependency setup on Termux"
+        log_info "Browser automation is not part of the tested Termux install path yet."
+        log_info "If you want to experiment manually later, run: cd $INSTALL_DIR && npm install"
+        return 0
+    fi
+
+    if [ -f "$INSTALL_DIR/package.json" ]; then
+        log_info "Installing Node.js dependencies (browser tools)..."
+        cd "$INSTALL_DIR"
+        npm install --silent 2>/dev/null || {
+            log_warn "npm install failed (browser tools may not work)"
+        }
+        log_success "Node.js dependencies installed"
+
+        # Install Playwright browser + system dependencies.
+        # Playwright's --with-deps only supports apt-based systems natively.
+        # For Arch/Manjaro we install the system libs via pacman first.
+        # Other systems must install Chromium dependencies manually.
+        if [ "$SKIP_BROWSER" = true ]; then
+            log_info "Skipping Playwright/Chromium install (--skip-browser)"
+            log_info "Browser tools will be unavailable until you run manually:"
+            log_info "  cd $INSTALL_DIR && npx playwright install chromium"
+            log_info "On apt-based systems, an admin also needs to run:"
+            log_info "  sudo npx playwright install-deps chromium"
+        else
+        log_info "Installing browser engine (Playwright Chromium)..."
+        DETECTED_BROWSER_EXECUTABLE="$(find_system_browser 2>/dev/null || true)"
+        if [ -n "$DETECTED_BROWSER_EXECUTABLE" ]; then
+            log_success "Found system Chrome/Chromium at $DETECTED_BROWSER_EXECUTABLE"
+            log_info "Skipping Playwright browser download; Private will use the system browser."
+        else
+            case "$DISTRO" in
+                ubuntu|debian|raspbian|pop|linuxmint|elementary|zorin|kali|parrot)
+                    # Use --with-deps only when sudo is available non-interactively
+                    # (root, or a user with passwordless sudo). Non-sudo users
+                    # — typical for systemd service accounts and unprivileged
+                    # operator users — would otherwise get blocked on an
+                    # interactive sudo prompt that they can't satisfy. Fall back
+                    # to the browser-only install in that case, and print the
+                    # exact command the admin needs to run separately.
+                    if [ "$(id -u)" -eq 0 ] || (command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null); then
+                        log_info "Installing Playwright Chromium with system dependencies..."
+                        cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install --with-deps chromium 2>/dev/null || {
+                            log_warn "Playwright browser installation failed — browser tools will not work."
+                            log_warn "Try running manually: cd $INSTALL_DIR && npx playwright install --with-deps chromium"
+                        }
+                    else
+                        log_warn "No sudo available — skipping system-library install (--with-deps)."
+                        log_info "Ask an administrator to run, one time, as root:"
+                        log_info "  sudo npx playwright install-deps chromium"
+                        log_info "  (from $INSTALL_DIR, after Node.js deps are installed)"
+                        log_info "Installing Chromium binary into this user's Playwright cache..."
+                        cd "$INSTALL_DIR" && run
