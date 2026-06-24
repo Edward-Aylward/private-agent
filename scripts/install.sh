@@ -6,7 +6,7 @@
 # Uses uv for desktop/server installs and Python's stdlib venv + pip on Termux.
 #
 # Usage:
-#   curl -fsSL https://Private-agent.AIGA-Protocol.orgresearch.com/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Edward-Aylward/private-agent/main/scripts/install.sh | bash
 #
 # Or with options:
 #   curl -fsSL ... | bash -s -- --no-venv --skip-setup
@@ -44,7 +44,7 @@ BOLD='\033[1m'
 
 # Configuration
 REPO_URL_SSH="git@github.com:AIGA-Protocol.orgResearch/Private-agent.git"
-REPO_URL_HTTPS="https://github.com/AIGA-Protocol.orgResearch/Private-agent.git"
+REPO_URL_HTTPS="curl -fsSL https://raw.githubusercontent.com/Edward-Aylward/private-agent/main/scripts/install.sh | bash"
 Private_HOME="${Private_HOME:-$HOME/.Private}"
 # INSTALL_DIR is resolved AFTER arg parsing and OS detection so we can pick an
 # FHS-style layout for root installs.  Track whether the user gave us an
