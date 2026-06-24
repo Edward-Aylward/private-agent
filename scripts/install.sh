@@ -745,7 +745,6 @@ check_node() {
     fi
     install_node
 }
-
 install_node() {
     if [ "$DISTRO" = "termux" ]; then
         log_info "Installing Node.js via pkg..."
@@ -1861,4 +1860,856 @@ install_node_deps() {
                         log_info "  sudo npx playwright install-deps chromium"
                         log_info "  (from $INSTALL_DIR, after Node.js deps are installed)"
                         log_info "Installing Chromium binary into this user's Playwright cache..."
-                        cd "$INSTALL_DIR" && run
+                        cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install chromium 2>/dev/null || {
+                            log_warn "Playwright browser installation failed — browser tools will not work."
+                            log_warn "Try running manually: cd $INSTALL_DIR && npx playwright install chromium"
+                        }
+                    fi
+                    ;;
+                arch|manjaro|cachyos|endeavouros|garuda)
+                    if command -v pacman &> /dev/null; then
+                        log_info "Arch-family distro detected — installing Chromium system dependencies via pacman..."
+                        if command -v sudo &> /dev/null && sudo -n true 2>/dev/null; then
+                            sudo NEEDRESTART_MODE=a pacman -S --noconfirm --needed \
+                                nss atk at-spi2-core cups libdrm libxkbcommon mesa pango cairo alsa-lib >/dev/null 2>&1 || true
+                        elif [ "$(id -u)" -eq 0 ]; then
+                            pacman -S --noconfirm --needed \
+                                nss atk at-spi2-core cups libdrm libxkbcommon mesa pango cairo alsa-lib >/dev/null 2>&1 || true
+                        else
+                            log_warn "Cannot install browser deps without sudo. Run manually:"
+                            log_warn "  sudo pacman -S nss atk at-spi2-core cups libdrm libxkbcommon mesa pango cairo alsa-lib"
+                        fi
+                    fi
+                    cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install chromium 2>/dev/null || {
+                        log_warn "Playwright browser installation failed — browser tools will not work."
+                    }
+                    ;;
+                fedora|rhel|centos|rocky|alma)
+                    log_warn "Playwright does not support automatic dependency installation on RPM-based systems."
+                    log_info "Install Chromium system dependencies manually before using browser tools:"
+                    log_info "  sudo dnf install nss atk at-spi2-core cups-libs libdrm libxkbcommon mesa-libgbm pango cairo alsa-lib"
+                    cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install chromium 2>/dev/null || {
+                        log_warn "Playwright browser installation failed — install dependencies above and retry."
+                    }
+                    ;;
+                opensuse*|sles)
+                    log_warn "Playwright does not support automatic dependency installation on zypper-based systems."
+                    log_info "Install Chromium system dependencies manually before using browser tools:"
+                    log_info "  sudo zypper install mozilla-nss libatk-1_0-0 at-spi2-core cups-libs libdrm2 libxkbcommon0 Mesa-libgbm1 pango cairo libasound2"
+                    cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install chromium 2>/dev/null || {
+                        log_warn "Playwright browser installation failed — install dependencies above and retry."
+                    }
+                    ;;
+                *)
+                    log_warn "Playwright does not support automatic dependency installation on $DISTRO."
+                    log_info "Install Chromium/browser system dependencies for your distribution, then run:"
+                    log_info "  cd $INSTALL_DIR && npx playwright install chromium"
+                    log_info "Browser tools will not work until dependencies are installed."
+                    cd "$INSTALL_DIR" && run_browser_install_with_timeout 600 npx playwright install chromium 2>/dev/null || true
+                    ;;
+            esac
+        fi
+        fi
+        log_success "Browser engine setup complete"
+    fi
+
+    # Install TUI dependencies
+    if [ -f "$INSTALL_DIR/ui-tui/package.json" ]; then
+        log_info "Installing TUI dependencies..."
+        cd "$INSTALL_DIR/ui-tui"
+        npm install --silent 2>/dev/null || {
+            log_warn "TUI npm install failed (Private --tui may not work)"
+        }
+        log_success "TUI dependencies installed"
+    fi
+
+    # Keep the checkout clean so `Private update` doesn't autostash every run.
+    restore_dirty_lockfiles "$INSTALL_DIR"
+}
+
+run_setup_wizard() {
+    if [ "$RUN_SETUP" = false ]; then
+        log_info "Skipping setup wizard (--skip-setup)"
+        return 0
+    fi
+
+    # The setup wizard reads from /dev/tty, so it works even when the
+    # install script itself is piped (curl | bash). Only skip if no
+    # terminal is available at all (e.g. Docker build, CI).
+    #
+    # Probe by actually opening /dev/tty: a bare existence test passes
+    # in Docker builds where the device node is in the mount namespace
+    # but opening fails with ENXIO, so the wizard would proceed and
+    # then crash on `< /dev/tty` below.
+    if ! (: </dev/tty) 2>/dev/null; then
+        log_info "Setup wizard skipped (no terminal available). Run 'Private setup' after install."
+        return 0
+    fi
+
+    echo ""
+    log_info "Starting setup wizard..."
+    echo ""
+
+    cd "$INSTALL_DIR"
+
+    # Run Private setup using the venv Python directly (no activation needed).
+    # Redirect stdin from /dev/tty so interactive prompts work when piped from curl.
+    if [ "$USE_VENV" = true ]; then
+        "$INSTALL_DIR/venv/bin/python" -m Private_cli.main setup < /dev/tty
+    else
+        python -m Private_cli.main setup < /dev/tty
+    fi
+}
+
+maybe_start_gateway() {
+    # Check if any messaging platform tokens were configured
+    ENV_FILE="$Private_HOME/.env"
+    if [ ! -f "$ENV_FILE" ]; then
+        return 0
+    fi
+
+    HAS_MESSAGING=false
+    for VAR in TELEGRAM_BOT_TOKEN DISCORD_BOT_TOKEN SLACK_BOT_TOKEN SLACK_APP_TOKEN WHATSAPP_ENABLED; do
+        VAL=$(grep "^${VAR}=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2-)
+        if [ -n "$VAL" ] && [ "$VAL" != "your-token-here" ]; then
+            HAS_MESSAGING=true
+            break
+        fi
+    done
+
+    if [ "$HAS_MESSAGING" = false ]; then
+        return 0
+    fi
+
+    echo ""
+    log_info "Messaging platform token detected!"
+    log_info "The gateway needs to be running for Private to send/receive messages."
+
+    # If WhatsApp is enabled and no session exists yet, run foreground first for QR scan
+    WHATSAPP_VAL=$(grep "^WHATSAPP_ENABLED=" "$ENV_FILE" 2>/dev/null | cut -d'=' -f2-)
+    WHATSAPP_SESSION="$Private_HOME/whatsapp/session/creds.json"
+    if [ "$WHATSAPP_VAL" = "true" ] && [ ! -f "$WHATSAPP_SESSION" ]; then
+        if [ "$IS_INTERACTIVE" = true ]; then
+            echo ""
+            log_info "WhatsApp is enabled but not yet paired."
+            log_info "Running 'Private whatsapp' to pair via QR code..."
+            echo ""
+            if prompt_yes_no "Pair WhatsApp now?" "yes"; then
+                Private_CMD="$(get_Private_command_path)"
+                $Private_CMD whatsapp || true
+            fi
+        else
+            log_info "WhatsApp pairing skipped (non-interactive). Run 'Private whatsapp' to pair."
+        fi
+    fi
+
+    # Probe by actually opening /dev/tty: a bare existence test passes
+    # in Docker builds where the device node is in the mount namespace
+    # but opening fails with ENXIO. See #16746.
+    if ! (: </dev/tty) 2>/dev/null; then
+        log_info "Gateway setup skipped (no terminal available). Run 'Private gateway install' later."
+        return 0
+    fi
+
+    echo ""
+    local should_install_gateway=false
+    if [ "$DISTRO" = "termux" ]; then
+        if prompt_yes_no "Would you like to start the gateway in the background?" "yes"; then
+            should_install_gateway=true
+        fi
+    else
+        if prompt_yes_no "Would you like to install the gateway as a background service?" "yes"; then
+            should_install_gateway=true
+        fi
+    fi
+
+    if [ "$should_install_gateway" = true ]; then
+        Private_CMD="$(get_Private_command_path)"
+
+        if [ "$DISTRO" != "termux" ] && command -v systemctl &> /dev/null; then
+            log_info "Installing systemd service..."
+            if $Private_CMD gateway install 2>/dev/null; then
+                log_success "Gateway service installed"
+                if $Private_CMD gateway start 2>/dev/null; then
+                    log_success "Gateway started! Your bot is now online."
+                else
+                    log_warn "Service installed but failed to start. Try: Private gateway start"
+                fi
+            else
+                log_warn "Systemd install failed. You can start manually: Private gateway"
+            fi
+        else
+            if [ "$DISTRO" = "termux" ]; then
+                log_info "Termux detected — starting gateway in best-effort background mode..."
+            else
+                log_info "systemd not available — starting gateway in background..."
+            fi
+            nohup $Private_CMD gateway > "$Private_HOME/logs/gateway.log" 2>&1 &
+            GATEWAY_PID=$!
+            log_success "Gateway started (PID $GATEWAY_PID). Logs: ~/.Private/logs/gateway.log"
+            log_info "To stop: kill $GATEWAY_PID"
+            log_info "To restart later: Private gateway"
+            if [ "$DISTRO" = "termux" ]; then
+                log_warn "Android may stop background processes when Termux is suspended or the system reclaims resources."
+            fi
+        fi
+    else
+        log_info "Skipped. Start the gateway later with: Private gateway"
+    fi
+}
+
+print_success() {
+    echo ""
+    echo -e "${GREEN}${BOLD}"
+    echo "┌─────────────────────────────────────────────────────────┐"
+    echo "│             ✓ Installation Complete!                    │"
+    echo "└─────────────────────────────────────────────────────────┘"
+    echo -e "${NC}"
+    echo ""
+
+    # Show file locations
+    echo -e "${CYAN}${BOLD}📁 Your files:${NC}"
+    echo ""
+    echo -e "   ${YELLOW}Config:${NC}    $Private_HOME/config.yaml"
+    echo -e "   ${YELLOW}API Keys:${NC}  $Private_HOME/.env"
+    echo -e "   ${YELLOW}Data:${NC}      $Private_HOME/cron/, sessions/, logs/"
+    echo -e "   ${YELLOW}Code:${NC}      $INSTALL_DIR"
+    echo ""
+
+    echo -e "${CYAN}─────────────────────────────────────────────────────────${NC}"
+    echo ""
+    echo -e "${CYAN}${BOLD}🚀 Commands:${NC}"
+    echo ""
+    echo -e "   ${GREEN}Private${NC}              Start chatting"
+    echo -e "   ${GREEN}Private setup${NC}        Configure API keys & settings"
+    echo -e "   ${GREEN}Private config${NC}       View/edit configuration"
+    echo -e "   ${GREEN}Private config edit${NC}  Open config in editor"
+    echo -e "   ${GREEN}Private gateway install${NC} Install gateway service (messaging + cron)"
+    echo -e "   ${GREEN}Private update${NC}       Update to latest version"
+    echo ""
+
+    echo -e "${CYAN}─────────────────────────────────────────────────────────${NC}"
+    echo ""
+    if [ "$DISTRO" = "termux" ]; then
+        echo -e "${YELLOW}⚡ 'Private' was linked into $(get_command_link_display_dir), which is already on PATH in Termux.${NC}"
+        echo ""
+    elif [ "$ROOT_FHS_LAYOUT" = true ]; then
+        echo -e "${YELLOW}⚡ 'Private' was linked into /usr/local/bin and is ready to use — no shell reload needed.${NC}"
+        echo ""
+    else
+        echo -e "${YELLOW}⚡ Reload your shell to use 'Private' command:${NC}"
+        echo ""
+        LOGIN_SHELL="$(basename "${SHELL:-/bin/bash}")"
+        if [ "$LOGIN_SHELL" = "zsh" ]; then
+            echo "   source ~/.zshrc"
+        elif [ "$LOGIN_SHELL" = "bash" ]; then
+            echo "   source ~/.bashrc"
+        elif [ "$LOGIN_SHELL" = "fish" ]; then
+            echo "   source ~/.config/fish/config.fish"
+        else
+            echo "   source ~/.bashrc   # or ~/.zshrc"
+        fi
+        echo ""
+    fi
+
+    # Show Node.js warning if auto-install failed
+    if [ "$HAS_NODE" = false ]; then
+        echo -e "${YELLOW}"
+        echo "Note: Node.js could not be installed automatically."
+        echo "Browser tools need Node.js. Install manually:"
+        if [ "$DISTRO" = "termux" ]; then
+            echo "  pkg install nodejs"
+        else
+            echo "  https://nodejs.org/en/download/"
+        fi
+        echo -e "${NC}"
+    fi
+
+    # Show ripgrep note if not installed
+    if [ "$HAS_RIPGREP" = false ]; then
+        echo -e "${YELLOW}"
+        echo "Note: ripgrep (rg) was not found. File search will use"
+        echo "grep as a fallback. For faster search in large codebases,"
+        if [ "$DISTRO" = "termux" ]; then
+            echo "install ripgrep: pkg install ripgrep"
+        else
+            echo "install ripgrep: sudo apt install ripgrep (or brew install ripgrep)"
+        fi
+        echo -e "${NC}"
+    fi
+}
+
+ensure_browser() {
+    if ! command -v node >/dev/null 2>&1; then
+        local node_bin="$Private_HOME/node/bin/node"
+        if [ -x "$node_bin" ]; then
+            export PATH="$Private_HOME/node/bin:$PATH"
+        else
+            log_error "Node.js not found. Run with --ensure node first."
+            return 1
+        fi
+    fi
+
+    local npm_bin
+    npm_bin="$(command -v npm 2>/dev/null || echo "$Private_HOME/node/bin/npm")"
+    if [ ! -x "$npm_bin" ]; then
+        log_error "npm not found"
+        return 1
+    fi
+
+    log_info "Installing agent-browser..."
+    local log_file
+    log_file="$(mktemp)"
+    if ! "$npm_bin" install -g --prefix "$Private_HOME/node" --silent --ignore-scripts \
+        "agent-browser@^0.26.0" \
+        "@askjo/camofox-browser@^1.5.2" \
+        >"$log_file" 2>&1; then
+        log_error "npm install failed:"
+        cat "$log_file" >&2
+        rm -f "$log_file"
+        return 1
+    fi
+    rm -f "$log_file"
+    export PATH="$Private_HOME/node/bin:$PATH"
+
+    local sys_browser
+    sys_browser="$(find_system_browser 2>/dev/null || true)"
+    if [ -n "$sys_browser" ]; then
+        configure_browser_env_from_system_browser "$sys_browser"
+        log_info "System browser detected -- skipping Chromium download"
+        return 0
+    fi
+
+    log_info "Installing Chromium via agent-browser install..."
+    local ab_bin="$Private_HOME/node/bin/agent-browser"
+    if [ -x "$ab_bin" ]; then
+        "$ab_bin" install 2>/dev/null || {
+            log_warn "Chromium install failed. Browser tools may not work without a system browser."
+
+            # OS-specific hints (detect_os sets $DISTRO)
+            case "${DISTRO:-unknown}" in
+                ubuntu|debian)
+                    log_info "Try: sudo apt-get install -y chromium-browser"
+                    ;;
+                arch)
+                    log_info "Try: sudo pacman -S chromium"
+                    ;;
+                fedora|rhel|centos)
+                    log_info "Try: sudo dnf install -y chromium"
+                    ;;
+            esac
+        }
+    else
+        log_warn "agent-browser not found at $ab_bin"
+    fi
+
+    return 0
+}
+
+ensure_mode() {
+    detect_os
+
+    IFS=',' read -ra DEPS <<< "$ENSURE_DEPS"
+    for dep in "${DEPS[@]}"; do
+        dep="$(echo "$dep" | tr -d '[:space:]')"
+        case "$dep" in
+            node)
+                check_node
+                ;;
+            browser)
+                check_node
+                if [ "$HAS_NODE" = true ]; then
+                    ensure_browser
+                fi
+                ;;
+            ripgrep)
+                if ! command -v rg &>/dev/null; then
+                    HAS_RIPGREP=false
+                    HAS_FFMPEG=true
+                    install_system_packages
+                fi
+                ;;
+            ffmpeg)
+                if ! command -v ffmpeg &>/dev/null; then
+                    HAS_FFMPEG=false
+                    HAS_RIPGREP=true
+                    install_system_packages
+                fi
+                ;;
+            *)
+                log_warn "Unknown dependency: $dep"
+                ;;
+        esac
+    done
+}
+
+postinstall_mode() {
+    print_banner
+    detect_os
+
+    log_info "Post-install mode: setting up Private for pip install"
+
+    check_node
+    check_network_prerequisites
+    install_system_packages
+
+    if [ "$HAS_NODE" = true ] && [ "$SKIP_BROWSER" = false ]; then
+        ensure_browser
+    fi
+
+    Private_CMD="$(command -v Private 2>/dev/null || echo "")"
+    if [ -n "$Private_CMD" ]; then
+        log_info "Running Private setup..."
+        "$Private_CMD" setup
+    else
+        log_warn "Private command not found on PATH"
+        log_info "Try: python -m Private_cli.main setup"
+    fi
+}
+
+# Clear the cached Electron download + any half-written unpacked output so the
+# next `npm run pack` re-downloads and re-stages from scratch. A corrupt zip in
+# the per-user Electron download cache - most often a partial/resumed download
+# that leaves concatenated junk - makes electron-builder's `unpack-electron`
+# extract a tree MISSING the electron binary, so the `electron`->`Private` rename
+# dies with ENOENT and every re-run repeats the broken extraction forever. This
+# is the bash sibling of install.ps1's Clear-ElectronBuildCache and the Python
+# _purge_electron_build_cache() used by `Private desktop`; install.sh was the only
+# build path lacking it. Echoes the removed paths (one per line); best-effort.
+clear_electron_build_cache() {
+    local desktop_dir="$1"
+    local removed=""
+
+    # Per-user Electron download cache dirs, honoring the overrides @electron/get
+    # respects, then the platform defaults (macOS: ~/Library/Caches/electron,
+    # Linux: $XDG_CACHE_HOME/electron or ~/.cache/electron).
+    local cache_dirs=()
+    [ -n "${electron_config_cache:-}" ] && cache_dirs+=("$electron_config_cache")
+    [ -n "${ELECTRON_CACHE:-}" ] && cache_dirs+=("$ELECTRON_CACHE")
+    if [ "$OS" = "macos" ]; then
+        cache_dirs+=("$HOME/Library/Caches/electron")
+    else
+        [ -n "${XDG_CACHE_HOME:-}" ] && cache_dirs+=("$XDG_CACHE_HOME/electron")
+        cache_dirs+=("$HOME/.cache/electron")
+    fi
+
+    local dir zip
+    for dir in "${cache_dirs[@]}"; do
+        [ -d "$dir" ] || continue
+        # Recurse: the bad copy may be the top-level zip OR a copy inside an
+        # @electron/get hash subdir.
+        while IFS= read -r zip; do
+            [ -n "$zip" ] || continue
+            if rm -f "$zip" 2>/dev/null; then
+                removed="$removed$zip\n"
+            fi
+        done <<EOF
+$(find "$dir" -type f -name 'electron-*.zip' 2>/dev/null)
+EOF
+    done
+
+    # A half-written unpacked dir from an interrupted prior pack poisons the
+    # rename even after the zip is fixed (mac-arm64-unpacked / linux-unpacked).
+    local release_dir="$desktop_dir/release"
+    if [ -d "$release_dir" ]; then
+        local unpacked
+        while IFS= read -r unpacked; do
+            [ -n "$unpacked" ] || continue
+            if rm -rf "$unpacked" 2>/dev/null; then
+                removed="$removed$unpacked\n"
+            fi
+        done <<EOF
+$(find "$release_dir" -maxdepth 1 -type d -name '*-unpacked' 2>/dev/null)
+EOF
+    fi
+
+    printf '%s' "$removed"
+}
+
+# Run the desktop pack in $1 (the apps/desktop dir). `npm run pack` = tsc +
+# vite build + electron-builder --dir, producing an unpacked app for the
+# current OS. Signing auto-discovery is disabled so electron-builder falls back
+# to an ad-hoc signature instead of grabbing an unrelated Developer ID from the
+# keychain (a real signed/notarized .dmg needs Apple credentials — a separate
+# release concern). Optional $2 = an ELECTRON_MIRROR base URL for this attempt,
+# used as a fallback when the default GitHub release download is blocked.
+_desktop_pack() {
+    local desktop_dir="$1"
+    local mirror="${2:-}"
+    if [ -n "$mirror" ]; then
+        ( cd "$desktop_dir" && ELECTRON_MIRROR="$mirror" CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack )
+    else
+        ( cd "$desktop_dir" && CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack )
+    fi
+}
+
+# Public Electron mirror used as a last-resort fallback when GitHub's release
+# host is blocked/throttled (the repeating "retrying" symptom). npmmirror.com is
+# the de-facto Electron community mirror (Alibaba). @electron/get SHASUM-checks
+# the download, but the SHASUMS come from the same mirror — that guards against a
+# corrupt/partial download, NOT a compromised mirror. Reaching for it is an
+# explicit trust trade-off we only make AFTER the canonical GitHub download has
+# failed, and we never override a user-pinned ELECTRON_MIRROR.
+DESKTOP_ELECTRON_FALLBACK_MIRROR="https://npmmirror.com/mirrors/electron/"
+
+# Build apps/desktop into a launchable native app. Mirrors install.ps1's
+# Install-Desktop: a root-level npm install so the apps/* workspace resolves
+# the desktop's own deps (Electron ~150MB), then `npm run pack`
+# (electron-builder --dir) which emits an unpacked app for the current OS. Only invoked
+# via the 'desktop' stage / --include-desktop, which the Electron app's own
+# first-launch bootstrap never requests (it must not rebuild itself).
+install_desktop() {
+    local desktop_dir="$INSTALL_DIR/apps/desktop"
+
+    # The desktop stage only runs when a build is explicitly requested
+    # (--include-desktop / 'desktop' stage), so a missing toolchain is a hard
+    # failure, not a silent skip — a silent skip yields a "complete" install
+    # with no app and a confusing "couldn't find a built desktop" at launch.
+    # Always re-resolve Node here. Stages run in separate processes, so we can't
+    # trust an earlier check; more importantly check_node now enforces the build
+    # floor (^20.19 || >=22.12) and prepends the Private-managed Node to PATH, so
+    # the build never runs on a too-old system Node — the cause of the opaque
+    # "Build desktop app … exit code 1" failure (Vite crashes on old Node).
+    check_node
+    if ! command -v npm >/dev/null 2>&1; then
+        log_error "Cannot build desktop app: Node.js / npm unavailable"
+        log_info "Install Node.js and retry: cd $desktop_dir && npm run pack"
+        return 1
+    fi
+    if [ ! -f "$desktop_dir/package.json" ]; then
+        log_warn "Skipping desktop build (apps/desktop not present in checkout)"
+        return 0
+    fi
+
+    # 1. Root workspace install so apps/desktop's deps (Electron, Vite,
+    #    node-pty prebuilds) resolve. The browser-tools install runs in the
+    #    repo-root package workspace, which does not pull apps/* deps.
+    #
+    #    Prefer `npm ci`: it deletes node_modules and reinstalls from the
+    #    lockfile, so it always produces a complete tree. Bare `npm install`
+    #    can report "up to date" against a stale node_modules/.package-lock.json
+    #    marker while node_modules is actually empty (Windows workspace-hoisting
+    #    flake) — leaving tsc/typescript unresolved and `npm run pack`'s
+    #    `tsc -b` failing with no obvious cause. Fall back to `npm install`
+    #    only if `npm ci` is unavailable or the lockfile is out of sync.
+    log_info "Installing desktop workspace dependencies (includes Electron ~150MB, 1-3min)..."
+    ( cd "$INSTALL_DIR" && npm ci ) || ( cd "$INSTALL_DIR" && npm install ) || {
+        log_error "Desktop workspace npm install failed"
+        # Common cause: a previous 'sudo npm'/'sudo npx' left root-owned files in
+        # ~/.npm, so this non-root install can't write the shared cache. npm hides
+        # it behind a confusing EEXIST / "File exists" message while the real errno
+        # is EACCES (-13). Point the user at the fix instead of a raw npm trace.
+        log_info "If the errors above mention EACCES / 'permission denied' / EEXIST while"
+        log_info "writing the npm cache, your ~/.npm likely holds root-owned files from an"
+        log_info "earlier 'sudo npm' or 'sudo npx'. Reclaim ownership and retry:"
+        log_info "  sudo chown -R \"\$(id -un)\" ~/.npm && npm cache verify"
+        log_info "Then re-run this installer, or build manually:"
+        log_info "  cd \"$INSTALL_DIR\" && npm ci && cd apps/desktop && npm run pack"
+        return 1
+    }
+    log_success "Desktop workspace dependencies installed"
+
+    # 2. Build, with up to three escalating attempts so a transient/blocked
+    #    Electron download self-heals instead of failing the whole install:
+    #      a) plain `npm run pack` (downloads Electron from GitHub),
+    #      b) on failure, purge a corrupt cached zip + stale unpacked dir and
+    #         retry (matches install.ps1 / `Private desktop`),
+    #      c) on still-failing, fall back to a public Electron mirror — this is
+    #         the GitHub-blocked/throttled case (the repeating "retrying" log).
+    log_info "Building desktop app (this takes 1-3 minutes)..."
+    local pack_ok=false
+    if _desktop_pack "$desktop_dir"; then
+        pack_ok=true
+    else
+        # (b) Corrupt cached Electron zip is the most common self-healable cause.
+        local purged
+        purged="$(clear_electron_build_cache "$desktop_dir")"
+        if [ -n "$purged" ]; then
+            log_warn "Desktop build failed; cleared cached Electron download and retrying once..."
+            if _desktop_pack "$desktop_dir"; then
+                pack_ok=true
+            fi
+        fi
+    fi
+
+    # (c) Still failing and the user hasn't pinned their own mirror: the GitHub
+    #     release host is likely blocked/throttled. Retry once via a public
+    #     Electron mirror (@electron/get still SHASUM-verifies the download).
+    if [ "$pack_ok" = false ] && [ -z "${ELECTRON_MIRROR:-}" ]; then
+        log_warn "Desktop build still failing — the Electron download from GitHub looks blocked."
+        log_warn "Retrying once via a public Electron mirror ($DESKTOP_ELECTRON_FALLBACK_MIRROR)..."
+        log_warn "  (set ELECTRON_MIRROR yourself to use a different/trusted mirror)"
+        if _desktop_pack "$desktop_dir" "$DESKTOP_ELECTRON_FALLBACK_MIRROR"; then
+            pack_ok=true
+        fi
+    fi
+
+    if [ "$pack_ok" = false ]; then
+        log_error "Desktop app build failed"
+        # If the log shows repeated "retrying" lines fetching the Electron zip,
+        # the binary download is blocked/throttled (firewall, proxy, region) and
+        # the mirror fallback above also couldn't reach a host. Try a mirror you
+        # trust and rebuild (@electron/get honors ELECTRON_MIRROR):
+        log_info "If the log shows Electron download retries, rebuild via a reachable mirror:"
+        log_info "  ELECTRON_MIRROR=<mirror-base-url> \\"
+        log_info "    bash -c 'cd \"$desktop_dir\" && CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack'"
+        log_info "Otherwise build manually: cd $desktop_dir && npm run pack"
+        return 1
+    fi
+
+    local app=""
+    if [ "$OS" = "linux" ]; then
+        if [ -x "$desktop_dir/release/linux-unpacked/Private" ]; then
+            app="$desktop_dir/release/linux-unpacked/Private"
+        elif [ -x "$desktop_dir/release/linux-unpacked/Private" ]; then
+            app="$desktop_dir/release/linux-unpacked/Private"
+        fi
+    else
+        local cand
+        for cand in \
+            "$desktop_dir/release/mac-arm64/Private.app" \
+            "$desktop_dir/release/mac/Private.app"; do
+            if [ -d "$cand" ]; then
+                app="$cand"
+                break
+            fi
+        done
+    fi
+    if [ -z "$app" ]; then
+        log_error "Desktop build completed but no app was found under $desktop_dir/release/"
+        return 1
+    fi
+    log_success "Desktop app built: $app"
+
+    # Linux: Electron's chrome-sandbox helper needs root:root 4755 or the
+    # sandboxed renderer will abort on startup.  Check the file is a regular
+    # file (not a symlink) before chown/chmod so we don't follow an
+    # attacker-controlled link to an arbitrary path.
+    if [ "$OS" = "linux" ]; then
+        local sandbox="$desktop_dir/release/linux-unpacked/chrome-sandbox"
+        if [ -f "$sandbox" ] && [ ! -L "$sandbox" ]; then
+            if [ "$(id -u)" -eq 0 ]; then
+                chown root:root "$sandbox" && chmod 4755 "$sandbox" || {
+                    log_error "Cannot configure Electron sandbox helper: $sandbox"
+                    return 1
+                }
+            elif command -v sudo >/dev/null 2>&1; then
+                sudo chown root:root "$sandbox" && sudo chmod 4755 "$sandbox" || {
+                    log_error "Cannot configure Electron sandbox helper (sudo failed): $sandbox"
+                    return 1
+                }
+            else
+                log_error "Cannot configure Electron sandbox helper without sudo: $sandbox"
+                return 1
+            fi
+        fi
+    fi
+
+    # macOS: make the locally-built (ad-hoc) app relaunchable after an in-place
+    # self-update. An ad-hoc bundle has no stable Designated Requirement, so a
+    # later in-place rebuild (new cdhash) plus the inherited quarantine flag
+    # trips Gatekeeper's tamper check ("Private is damaged and can't be opened").
+    # Strip quarantine + re-apply a clean deep ad-hoc signature (no
+    # hardened-runtime flag, which an ad-hoc build can't satisfy). Skipped when a
+    # real signing identity is configured so a signed build isn't clobbered.
+    if [ "$OS" = "macos" ] && [ -z "${CSC_LINK:-}" ] && [ -z "${APPLE_SIGNING_IDENTITY:-}" ] && command -v codesign >/dev/null 2>&1; then
+        xattr -cr "$app" 2>/dev/null || true
+        codesign --force --deep --sign - "$app" >/dev/null 2>&1 || true
+    fi
+
+    # `npm install` + `npm run pack` rewrite lockfiles; restore them so the
+    # checkout stays clean for the next `Private update`.
+    restore_dirty_lockfiles "$INSTALL_DIR"
+}
+
+# Each --stage runs in its own process, so (unlike the monolithic main() where
+# clone_repo cd's once and later steps inherit it) a stage that operates on the
+# checkout must cd into it explicitly. Without this, install_deps/setup_path run
+# from the desktop app's cwd and resolve `.` / the venv against the wrong tree.
+require_install_dir() {
+    if [ -z "$INSTALL_DIR" ] || [ ! -d "$INSTALL_DIR" ]; then
+        log_error "Install directory not found: ${INSTALL_DIR:-<unset>}"
+        log_info "The 'repository' stage must run before this one."
+        return 1
+    fi
+    cd "$INSTALL_DIR"
+}
+
+# Desktop bootstrap stage protocol. Mirrors the Windows install.ps1 surface
+# closely enough for the Electron bootstrap runner to show structured progress.
+run_stage_body() {
+    local stage="$1"
+
+    case "$stage" in
+        prerequisites)
+            print_banner
+            detect_os
+            resolve_install_layout
+            install_uv
+            check_python
+            check_git
+            check_node
+            check_network_prerequisites
+            install_system_packages
+            ;;
+        repository)
+            detect_os
+            resolve_install_layout
+            check_git
+            clone_repo
+            ;;
+        venv)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            install_uv
+            check_python
+            setup_venv
+            ;;
+        python-deps)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            install_uv
+            check_python
+            install_deps
+            ;;
+        node-deps)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            check_node
+            install_node_deps
+            ;;
+        path)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            setup_path
+            ;;
+        config)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            copy_config_templates
+            ;;
+        setup)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            run_setup_wizard
+            ;;
+        gateway)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            maybe_start_gateway
+            ;;
+        desktop)
+            detect_os
+            resolve_install_layout
+            require_install_dir
+            # Each stage runs in its own process, so the Private-managed Node
+            # provisioned during prerequisites/node-deps (at $Private_HOME/node/bin)
+            # isn't on PATH here. check_node re-adds it (or installs if missing)
+            # so install_desktop can find npm instead of silently skipping.
+            check_node
+            install_desktop
+            ;;
+        complete)
+            detect_os
+            resolve_install_layout
+            print_success
+            echo "git" > "$Private_HOME/.install_method"
+            ;;
+        *)
+            log_error "Unknown stage: $stage"
+            return 2
+            ;;
+    esac
+}
+
+run_stage_protocol() {
+    local stage="$1"
+    if [ -z "$stage" ]; then
+        log_error "--stage requires a stage name"
+        if [ "$JSON_OUTPUT" = true ]; then
+            emit_stage_json "" false false "missing stage name"
+        fi
+        return 2
+    fi
+
+    if [ "$NON_INTERACTIVE" = true ] && stage_needs_user_input "$stage"; then
+        log_info "Skipping $stage (non-interactive bootstrap)"
+        if [ "$JSON_OUTPUT" = true ]; then
+            emit_stage_json "$stage" true true
+        fi
+        return 0
+    fi
+
+    # Run the stage body in a subshell so a stage helper that calls `exit 1`
+    # on failure (clone_repo, install_deps, etc. were written for the monolithic
+    # flow) only exits the subshell — the parent still reaches the JSON result
+    # frame below. Without this, a failed --stage would terminate the process
+    # before emitting the frame and the Rust/Electron parser would see "no
+    # result frame" instead of a clean {ok:false} contract response.
+    set +e
+    ( run_stage_body "$stage" )
+    local code=$?
+    set -e
+
+    if [ "$JSON_OUTPUT" = true ]; then
+        if [ "$code" -eq 0 ]; then
+            emit_stage_json "$stage" true false
+        else
+            emit_stage_json "$stage" false false "exit code $code"
+        fi
+    fi
+    return "$code"
+}
+
+# ============================================================================
+# Main
+# ============================================================================
+
+main() {
+    print_banner
+
+    detect_os
+    resolve_install_layout
+    install_uv
+    check_python
+    check_git
+    check_node
+    check_network_prerequisites
+    install_system_packages
+
+    clone_repo
+    setup_venv
+    install_deps
+    install_node_deps
+    setup_path
+    copy_config_templates
+    run_setup_wizard
+    maybe_start_gateway
+
+    if [ "$INCLUDE_DESKTOP" = true ]; then
+        install_desktop
+    fi
+
+    print_success
+
+    echo "git" > "$Private_HOME/.install_method"
+}
+
+if [ "$MANIFEST_MODE" = true ]; then
+    emit_manifest
+elif [ -n "$STAGE_NAME" ]; then
+    run_stage_protocol "$STAGE_NAME"
+elif [ -n "$ENSURE_DEPS" ]; then
+    ensure_mode
+elif [ "$POSTINSTALL_MODE" = true ]; then
+    postinstall_mode
+else
+    main
+fi
